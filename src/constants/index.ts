@@ -14,3 +14,7 @@ export const SIZES = {
   small: 12,
   tiny: 10,
 }
+
+export const LAYOUT = {
+  maxWidth: 1000,
+}

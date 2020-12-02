@@ -30,7 +30,6 @@ const BASE_BUTTON = css<ButtonProps>`
 
   &:active,
   &:focus {
-    position: relative;
     box-shadow: 0 0 0 0.25rem ${({ $variant }) => lighten(0.3, BUTTON_VARIANT[$variant][3])};
   }
 `
@@ -50,5 +49,9 @@ export const ButtonGroup = styled.div`
   & > button:last-child {
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
+  }
+  & > button:active,
+  & > button:focus {
+    position: relative;
   }
 `

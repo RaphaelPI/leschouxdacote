@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { Button, ButtonGroup } from "src/components/Button"
 import { COLORS } from "src/constants"
 import LogoIcon from "src/assets/logo.svg"
+import Link from "src/components/Link"
 
 const Container = styled.div``
 const Header = styled.header`
@@ -29,7 +30,9 @@ const MainLayout: React.FC = ({ children }) => {
   return (
     <Container>
       <Header>
-        <LogoIcon />
+        <Link href="/">
+          <LogoIcon />
+        </Link>
         <Actions>
           <Button $variant="green">Publier une annonce</Button>
           <ButtonGroup>

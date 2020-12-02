@@ -1,32 +1,36 @@
-import { ChangeEvent, useState } from "react"
+import { useRouter } from "next/router"
 import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
-import LogoIcon from "src/assets/logo.svg"
-import { Input, InputGroup } from "src/components/Input"
+import { Section } from "src/layouts/Grid"
+import SearchBar from "src/components/SearchBar"
 
-const Container = styled.section`
-  text-align: center;
+import LogoIcon from "src/assets/logo.svg"
+
+const Container = styled(Section)`
   padding-top: 96px;
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
 `
 const Logo = styled(LogoIcon)`
   display: block;
   margin: 0 auto;
 `
-const SearchGroup = styled(InputGroup)`
-  margin-top: 80px;
+const SearchGroup = styled(SearchBar)`
+  margin: 80px auto 0;
+  width: 80%;
 `
 
-const Home = () => {
-  const [state, setState] = useState({ what: "", where: "" })
+const HomePage = () => {
+  const router = useRouter()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [event.currentTarget.name]: event.currentTarget.value,
+  const handleSearch = (what: string, where: string) => {
+    if (!what || !where) {
+      alert("veuillez saisir une recherche")
+      return
+    }
+
+    router.push({
+      pathname: "/recherche",
+      query: { what, where },
     })
   }
 
@@ -34,13 +38,10 @@ const Home = () => {
     <MainLayout>
       <Container>
         <Logo width="80" />
-        <SearchGroup>
-          <Input name="what" value={state.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
-          <Input name="where" value={state.where} onChange={handleChange} placeholder="Où ?" />
-        </SearchGroup>
+        <SearchGroup onSearch={handleSearch} />
       </Container>
     </MainLayout>
   )
 }
 
-export default Home
+export default HomePage
