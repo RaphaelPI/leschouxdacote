@@ -28,16 +28,16 @@ const InputGroup = styled.div`
   }
 `
 const Sumbit = styled(Button)`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   right: 10px;
-  top: 6px;
+  top: 7px;
 `
 
 interface Props {
