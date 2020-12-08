@@ -12,7 +12,6 @@ const GlobalStyle = createGlobalStyle`
   body {
     padding: 0;
     margin: 0;
-    font-family: ${FONT};
   }
 
   a {
@@ -23,6 +22,12 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
     font-family: ${FONT};
+  }
+
+  h1 {
+    font-size: 1.7em;
+    font-weight: 500;
+    margin: 0 0 20px;
   }
 `
 
@@ -63,7 +68,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <>
       <GlobalStyle />
       <Head>
-        <title>Les choux d’à côté</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, shrink-to-fit=no" />

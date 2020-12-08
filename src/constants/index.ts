@@ -6,7 +6,10 @@ export const COLORS = {
   input: "#686666",
   border: "#D6D6D6",
   green: "#47D25B",
-  shadow: "#0000001A",
+  shadow: {
+    light: "#0000001A",
+    regular: "#00000029",
+  },
 }
 
 export const SIZES = {
@@ -16,5 +19,6 @@ export const SIZES = {
 }
 
 export const LAYOUT = {
+  headerHeight: 80,
   maxWidth: 1000,
 }

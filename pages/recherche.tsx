@@ -1,15 +1,41 @@
-import { useRouter } from "next/router"
-
 import MainLayout from "src/layouts/MainLayout"
+import MapResults from "src/components/MapResults"
+import SearchResults from "src/components/SearchResults"
+import styled from "styled-components"
+
+const Row = styled.div`
+  display: flex;
+`
+const LeftCol = styled.div`
+  max-width: 840px;
+  width: 100%;
+`
+const RightCol = styled.div`
+  flex: 1;
+`
+
+const MOCK_DATA = Array.from(new Array(24).keys()).map((index) => ({
+  id: index,
+  producer: "Les jardins des Gallines",
+  location: "Toulouse",
+  desc: "Carottes",
+  quantity: 500,
+  price: 390,
+  // image: "https://img.cuisineaz.com/610x610/2017-07-17/i130792-carottes.jpeg",
+  image: "https://leschouxdacote.imgix.net/carotte.png",
+}))
 
 const SearchPage = () => {
-  const router = useRouter()
-  const { what, where } = router.query
-
   return (
     <MainLayout>
-      <div>{what}</div>
-      <div>{where}</div>
+      <Row>
+        <LeftCol>
+          <SearchResults products={MOCK_DATA} />
+        </LeftCol>
+        <RightCol>
+          <MapResults />
+        </RightCol>
+      </Row>
     </MainLayout>
   )
 }
