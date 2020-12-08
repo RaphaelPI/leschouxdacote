@@ -7,4 +7,8 @@ module.exports = {
 
     return config
   },
+  images: {
+    // loader: "imgix",
+    domains: ["leschouxdacote.imgix.net"],
+  },
 }

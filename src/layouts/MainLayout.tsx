@@ -1,18 +1,23 @@
 import styled from "styled-components"
 
 import { Button, ButtonGroup } from "src/components/Button"
-import { COLORS } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 import LogoIcon from "src/assets/logo.svg"
 import Link from "src/components/Link"
+import SEO from "src/components/Seo"
 
 const Container = styled.div``
 const Header = styled.header`
-  height: 80px;
+  position: fixed;
+  width: 100%;
+  padding: 0 24px;
+  z-index: 1;
+  background-color: ${COLORS.white};
+  height: ${LAYOUT.headerHeight}px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0px 3px 3px ${COLORS.shadow};
-  padding: 0 24px;
+  box-shadow: 0px 3px 3px ${COLORS.shadow.light};
 `
 const Actions = styled.div`
   display: flex;
@@ -22,27 +27,35 @@ const Actions = styled.div`
   }
 `
 const Main = styled.main`
-  padding: 24px 0;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - ${LAYOUT.headerHeight}px);
+  padding-top: 80px;
 `
 
-const MainLayout: React.FC = ({ children }) => {
+interface Props {
+  description?: string
+  title?: string
+}
+
+const MainLayout: React.FC<Props> = ({ description, title, children }) => {
   return (
-    <Container>
-      <Header>
-        <Link href="/">
-          <LogoIcon />
-        </Link>
-        <Actions>
-          <Button $variant="green">Publier une annonce</Button>
-          <ButtonGroup>
-            <Button $variant="white">Devenir vendeur</Button>
-            <Button $variant="white">Se connecter</Button>
-          </ButtonGroup>
-        </Actions>
-      </Header>
-      <Main>{children}</Main>
-    </Container>
+    <>
+      <SEO description={description} title={title} />
+      <Container>
+        <Header>
+          <Link href="/">
+            <LogoIcon />
+          </Link>
+          <Actions>
+            <Button $variant="green">Publier une annonce</Button>
+            <ButtonGroup>
+              <Button $variant="white">Devenir vendeur</Button>
+              <Button $variant="white">Se connecter</Button>
+            </ButtonGroup>
+          </Actions>
+        </Header>
+        <Main>{children}</Main>
+      </Container>
+    </>
   )
 }
 
