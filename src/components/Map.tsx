@@ -1,6 +1,5 @@
 import { memo } from "react"
 import { GoogleMap, LoadScript } from "@react-google-maps/api"
-import { GOOGLE_API_KEY } from "src/constants/config"
 
 interface Props {
   defaultZoom?: number
@@ -9,7 +8,7 @@ interface Props {
 
 const Map = ({ defaultZoom, defaultCenter }: Props) => {
   return (
-    <LoadScript googleMapsApiKey={GOOGLE_API_KEY}>
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_KEY}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         zoom={defaultZoom || 16}
