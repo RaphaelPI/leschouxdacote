@@ -12,12 +12,6 @@ const Container = styled.div`
 const ImageContainer = styled.div`
   height: 180px;
   position: relative;
-
-  img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-  }
 `
 const Content = styled.div`
   padding: 10px 15px;
