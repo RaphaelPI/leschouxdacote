@@ -57,7 +57,7 @@ const ProducerPage = ({ producer, products }: Props) => {
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return {
     paths: [{ params: { slug: MOCK_PRODUCTS[0].producer } }],
-    fallback: true,
+    fallback: false,
   }
 }
 
