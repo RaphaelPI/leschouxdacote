@@ -1,4 +1,6 @@
 import styled from "styled-components"
+import Image from "next/image"
+
 import { COLORS } from "src/constants"
 
 const Container = styled.div`
@@ -29,7 +31,7 @@ const ProductCard = ({ product }: Props) => {
   return (
     <Container>
       <ImageContainer>
-        <img src={product.image} alt={product.desc} />
+        <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
       </ImageContainer>
       <Content>
         <div>{product.producer}</div>
