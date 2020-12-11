@@ -2,13 +2,13 @@ import ProductCard from "src/cards/ProductCard"
 import styled from "styled-components"
 
 const Container = styled.div`
-  padding: 3em;
+  padding: 32px;
   height: 100%;
 `
 const Content = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -1em;
+  margin: 0 -16px;
 `
 
 interface Props {

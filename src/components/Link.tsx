@@ -1,6 +1,7 @@
+import { FC, PropsWithChildren } from "react"
 import NextLink, { LinkProps } from "next/link"
 
-const Link: React.FC<React.PropsWithChildren<LinkProps>> = ({ children, ...props }) => (
+const Link: FC<PropsWithChildren<LinkProps>> = ({ children, ...props }) => (
   <NextLink {...props}>
     <a>{children}</a>
   </NextLink>

@@ -47,10 +47,10 @@ const SearchBar = (props: Props) => {
   const [state, setState] = useState({ what: "", where: "" })
   const router = useRouter()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
-      [event.currentTarget.name]: event.currentTarget.value,
+      [currentTarget.name]: currentTarget.value,
     })
   }
 

@@ -7,17 +7,21 @@ import { formatAmount, getDecimalAmount, getIntegerAmount } from "src/helpers/te
 import Link from "src/components/Link"
 
 const Container = styled.div`
-  min-width: 300px;
-  flex: 1;
-  margin: 1em;
   box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
+  flex: 0 0 300px;
+  margin: 16px;
+  @media (max-width: 600px) {
+    flex: 1;
+    min-width: 250px;
+    max-width: 450px;
+  }
 `
 const ImageContainer = styled.div`
   height: 180px;
   position: relative;
 `
 const Content = styled.div`
-  padding: 10px 15px;
+  padding: 16px;
 `
 const ProductName = styled(Text)`
   margin-top: 16px;
@@ -49,7 +53,9 @@ const ProductCard = ({ product }: Props) => {
           <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
         </ImageContainer>
         <Content>
-          <Text $weight={100}>{product.producer}</Text>
+          <Link href="/jardins">
+            <Text $weight={100}>{product.producer}</Text>
+          </Link>
           <Text $size={SIZES.card}>{product.location}</Text>
           <ProductName $size={SIZES.subtitle}>{product.desc}</ProductName>
           <Bottom>

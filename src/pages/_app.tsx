@@ -8,26 +8,38 @@ import { ErrorBoundary } from "src/helpers/bugsnag"
 const FONT = "'Roboto', sans-serif"
 
 const GlobalStyle = createGlobalStyle`
+  html {
+    box-sizing: border-box;
+  }
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
   html,
   body {
     padding: 0;
     margin: 0;
+    font-weight: 300;
+  }
+
+  * {
+    font-family: ${FONT};
   }
 
   a {
     color: inherit;
     text-decoration: none;
   }
-
-  * {
-    box-sizing: border-box;
-    font-family: ${FONT};
-  }
-
   h1 {
     font-size: 1.7em;
     font-weight: 500;
-    margin: 0 0 20px;
+    margin: 0 0 24px;
+  }
+  h2 {
+    font-size: 1.2em;
+    font-weight: 500;
   }
 `
 
