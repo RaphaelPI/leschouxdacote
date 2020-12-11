@@ -23,5 +23,5 @@ export const SIZES = {
 
 export const LAYOUT = {
   headerHeight: 80,
-  maxWidth: 1000,
+  maxWidth: 1100,
 }
