@@ -1,3 +1,4 @@
+import { FC } from "react"
 import styled from "styled-components"
 
 import { Button, ButtonGroup } from "src/components/Button"
@@ -10,7 +11,7 @@ const Container = styled.div``
 const Header = styled.header`
   position: fixed;
   width: 100%;
-  padding: 0 24px;
+  padding: 0 32px;
   z-index: 1;
   background-color: ${COLORS.white};
   height: ${LAYOUT.headerHeight}px;
@@ -29,8 +30,7 @@ const Actions = styled.div`
 const Main = styled.main<{ $wide?: boolean }>`
   min-height: calc(100vh - ${LAYOUT.headerHeight}px);
   padding-top: 80px;
-  ${({ $wide }) =>
-    $wide ? `max-width: ${LAYOUT.maxWidth}px;margin: 0 auto;padding-left: 24px;padding-left: 24px;` : ``}
+  ${({ $wide }) => ($wide ? `max-width: ${LAYOUT.maxWidth}px;margin: 0 auto;padding: 112px 32px 32px;` : ``)}
 `
 
 interface Props {
@@ -39,7 +39,7 @@ interface Props {
   wide?: boolean
 }
 
-const MainLayout: React.FC<Props> = ({ description, title, wide, children }) => {
+const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
   return (
     <>
       <SEO description={description} title={title} />
