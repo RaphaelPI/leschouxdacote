@@ -2,6 +2,7 @@ import MainLayout from "src/layouts/MainLayout"
 import MapResults from "src/components/MapResults"
 import SearchResults from "src/components/SearchResults"
 import styled from "styled-components"
+import { MOCK_DATA } from "src/constants/mock"
 
 const Row = styled.div`
   display: flex;
@@ -13,17 +14,6 @@ const LeftCol = styled.div`
 const RightCol = styled.div`
   flex: 1;
 `
-
-const MOCK_DATA = Array.from(new Array(24).keys()).map((index) => ({
-  id: index,
-  producer: "Les jardins des Gallines",
-  location: "Toulouse",
-  desc: "Carottes",
-  quantity: 500,
-  price: 390,
-  unit: "kg",
-  image: "/carotte.png",
-}))
 
 const SearchPage = () => {
   return (

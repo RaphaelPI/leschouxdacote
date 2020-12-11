@@ -40,12 +40,7 @@ interface Props {
 }
 
 const ProductCard = ({ product }: Props) => {
-  const href = {
-    pathname: `/carotte`,
-    query: {
-      product: JSON.stringify(product),
-    },
-  }
+  const href = `/annonce/${product.id}`
 
   return (
     <Container>
