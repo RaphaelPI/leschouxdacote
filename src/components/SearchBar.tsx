@@ -1,23 +1,22 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState, FormEvent } from "react"
 import styled from "styled-components"
+import { useRouter } from "next/router"
 
 import { Input } from "./Input"
 import { Button } from "./Button"
 import SearchIcon from "src/assets/search.svg"
 
-const Container = styled.div`
+const Form = styled.form`
   position: relative;
 `
 const InputGroup = styled.div`
   & > input {
     width: 50%;
   }
-
   & > input:first-child {
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
   }
-
   & > input:not(first-child) {
     margin-left: -1px;
   }
@@ -41,12 +40,12 @@ const Sumbit = styled(Button)`
 `
 
 interface Props {
-  onSearch: (what: string, where: string) => void
-  className?: string // https://github.com/styled-components/styled-components/issues/8#issuecomment-262276155
+  className?: string
 }
 
-const SearchBar = ({ onSearch, className }: Props) => {
+const SearchBar = (props: Props) => {
   const [state, setState] = useState({ what: "", where: "" })
+  const router = useRouter()
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -55,20 +54,30 @@ const SearchBar = ({ onSearch, className }: Props) => {
     })
   }
 
-  const handleSearch = () => {
-    onSearch(state.what, state.where)
+  const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!state.what || !state.where) {
+      alert("veuillez saisir une recherche")
+      return
+    }
+
+    router.push({
+      pathname: "/recherche",
+      query: state,
+    })
   }
 
   return (
-    <Container className={className}>
+    <Form method="GET" action="/recherche" onSubmit={handleSearch} {...props}>
       <InputGroup>
-        <Input name="what" value={state.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
-        <Input name="where" value={state.where} onChange={handleChange} placeholder="Où ?" />
+        <Input name="what" value={state.what} onChange={handleChange} required placeholder="Que recherchez-vous ?" />
+        <Input name="where" value={state.where} onChange={handleChange} required placeholder="Où ?" />
       </InputGroup>
-      <Sumbit $variant="green" onClick={handleSearch}>
+      <Sumbit $variant="green" type="submit">
         <SearchIcon />
       </Sumbit>
-    </Container>
+    </Form>
   )
 }
 
