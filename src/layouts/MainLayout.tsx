@@ -26,17 +26,20 @@ const Actions = styled.div`
     margin-right: 48px;
   }
 `
-const Main = styled.main`
+const Main = styled.main<{ $wide?: boolean }>`
   min-height: calc(100vh - ${LAYOUT.headerHeight}px);
   padding-top: 80px;
+  ${({ $wide }) =>
+    $wide ? `max-width: ${LAYOUT.maxWidth}px;margin: 0 auto;padding-left: 24px;padding-left: 24px;` : ``}
 `
 
 interface Props {
   description?: string
   title?: string
+  wide?: boolean
 }
 
-const MainLayout: React.FC<Props> = ({ description, title, children }) => {
+const MainLayout: React.FC<Props> = ({ description, title, wide, children }) => {
   return (
     <>
       <SEO description={description} title={title} />
@@ -53,7 +56,7 @@ const MainLayout: React.FC<Props> = ({ description, title, children }) => {
             </ButtonGroup>
           </Actions>
         </Header>
-        <Main>{children}</Main>
+        <Main $wide={wide}>{children}</Main>
       </Container>
     </>
   )

@@ -2,12 +2,11 @@ import { useRouter } from "next/router"
 import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
-import { Section } from "src/layouts/Grid"
 import SearchBar from "src/components/SearchBar"
 
 import LogoIcon from "src/assets/logo.svg"
 
-const Container = styled(Section)`
+const Container = styled.section`
   padding-top: 96px;
 `
 const Logo = styled(LogoIcon)`
@@ -36,7 +35,7 @@ const HomePage = () => {
   }
 
   return (
-    <MainLayout>
+    <MainLayout wide>
       <Container>
         <Logo />
         <SearchGroup onSearch={handleSearch} />
