@@ -13,6 +13,9 @@ export const COLORS = {
 }
 
 export const SIZES = {
+  price: 35,
+  subtitle: 22,
+  card: 16,
   regular: 14,
   small: 12,
   tiny: 10,
