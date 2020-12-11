@@ -13,6 +13,7 @@ const Container = styled(Section)`
 const Logo = styled(LogoIcon)`
   display: block;
   margin: 0 auto;
+  width: 80px;
 `
 const SearchGroup = styled(SearchBar)`
   margin: 80px auto 0;
@@ -37,7 +38,7 @@ const HomePage = () => {
   return (
     <MainLayout>
       <Container>
-        <Logo width="80" />
+        <Logo />
         <SearchGroup onSearch={handleSearch} />
       </Container>
     </MainLayout>

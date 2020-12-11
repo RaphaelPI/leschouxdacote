@@ -1,10 +1,16 @@
 {
-  "name": "Antoine's Next.js starter",
-  "short_name": "next-starter-antoine",
+  "name": "Les choux d'à côté",
+  "short_name": "Les choux d'à côté",
   "icons": [
     {
-      "src": "/favicon.ico",
-      "sizes": "48x48"
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ],
   "theme_color": "#ffffff",
