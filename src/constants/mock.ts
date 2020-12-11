@@ -1,4 +1,4 @@
-export const MOCK_DATA = Array.from(new Array(24).keys()).map((index) => ({
+export const MOCK_DATA = Array.from(new Array(23).keys()).map((index) => ({
   id: index,
   producer: "Les jardins des Gallines",
   location: "Toulouse",

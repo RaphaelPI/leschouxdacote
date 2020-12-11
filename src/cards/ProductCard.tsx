@@ -8,13 +8,6 @@ import Link from "src/components/Link"
 
 const Container = styled.div`
   box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
-  flex: 0 0 300px;
-  margin: 16px;
-  @media (max-width: 600px) {
-    flex: 1;
-    min-width: 250px;
-    max-width: 450px;
-  }
 `
 const ImageContainer = styled.div`
   height: 180px;
@@ -53,9 +46,7 @@ const ProductCard = ({ product }: Props) => {
           <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
         </ImageContainer>
         <Content>
-          <Link href="/jardins">
-            <Text $weight={100}>{product.producer}</Text>
-          </Link>
+          <Text $weight={100}>{product.producer}</Text>
           <Text $size={SIZES.card}>{product.location}</Text>
           <ProductName $size={SIZES.subtitle}>{product.desc}</ProductName>
           <Bottom>

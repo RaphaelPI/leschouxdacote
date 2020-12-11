@@ -1,23 +1,7 @@
 import MainLayout from "src/layouts/MainLayout"
-import styled from "styled-components"
+import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
-
-const MOCK_DATA = Array.from(new Array(24).keys()).map((index) => ({
-  id: index,
-  producer: "Les jardins des Gallines",
-  location: "Toulouse",
-  desc: "Carottes",
-  quantity: 500,
-  price: 390,
-  unit: "kg",
-  image: "/carotte.png",
-}))
-
-const Products = styled.section`
-  display: flex;
-  flex-wrap: wrap;
-  margin: -16px;
-`
+import { MOCK_DATA } from "src/constants/mock"
 
 const ProducerPage = () => {
   return (
@@ -41,7 +25,7 @@ const ProducerPage = () => {
         <a href="tel:+33102030405">01 02 03 04 05</a>
       </p>
       <h2>3 annonces en ligne</h2>
-      <Products>
+      <Products $col={3}>
         {MOCK_DATA.slice(0, 3).map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
