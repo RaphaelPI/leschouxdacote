@@ -21,8 +21,7 @@ const MOCK_DATA = Array.from(new Array(24).keys()).map((index) => ({
   desc: "Carottes",
   quantity: 500,
   price: 390,
-  // image: "https://img.cuisineaz.com/610x610/2017-07-17/i130792-carottes.jpeg",
-  image: "https://leschouxdacote.imgix.net/carotte.png",
+  image: "/carotte.png",
 }))
 
 const SearchPage = () => {
