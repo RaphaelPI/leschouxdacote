@@ -1,8 +1,10 @@
+import styled from "styled-components"
+
 import MainLayout from "src/layouts/MainLayout"
 import MapResults from "src/components/MapResults"
 import SearchResults from "src/components/SearchResults"
-import styled from "styled-components"
-import { MOCK_DATA } from "src/constants/mock"
+
+import { MOCK_PRODUCTS } from "src/constants/mock"
 
 const Row = styled.div`
   display: flex;
@@ -20,7 +22,7 @@ const SearchPage = () => {
     <MainLayout>
       <Row>
         <LeftCol>
-          <SearchResults products={MOCK_DATA} />
+          <SearchResults products={MOCK_PRODUCTS} />
         </LeftCol>
         <RightCol>
           <MapResults />

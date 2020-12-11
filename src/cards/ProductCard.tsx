@@ -34,9 +34,10 @@ const Price = styled.div`
 
 interface Props {
   product: Product
+  producer: Producer
 }
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, producer }: Props) => {
   const href = `/annonce/${product.id}`
 
   return (
@@ -46,7 +47,7 @@ const ProductCard = ({ product }: Props) => {
           <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
         </ImageContainer>
         <Content>
-          <Text $weight={100}>{product.producer}</Text>
+          <Text $weight={100}>{producer.name}</Text>
           <Text $size={SIZES.card}>{product.location}</Text>
           <ProductName $size={SIZES.subtitle}>{product.desc}</ProductName>
           <Bottom>

@@ -1,5 +1,6 @@
-import { SIZES } from "src/constants"
 import styled from "styled-components"
+
+import { SIZES } from "src/constants"
 
 interface TextProps {
   $size?: number
