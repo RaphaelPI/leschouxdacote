@@ -26,7 +26,8 @@
     "dev": "next dev",
     "lint": "tsc --skipLibCheck && eslint --fix \"**/*.{ts,tsx,js,jsx,json}\"",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "build": "next build && next export"
+    "build": "next build",
+    "export": "next export"
   },
   "dependencies": {
     "@bugsnag/js": "^7.5.1",
