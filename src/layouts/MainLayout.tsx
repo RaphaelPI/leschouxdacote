@@ -3,9 +3,10 @@ import styled from "styled-components"
 
 import { Button, ButtonGroup } from "src/components/Button"
 import { COLORS, LAYOUT } from "src/constants"
-import LogoIcon from "src/assets/logo.svg"
 import Link from "src/components/Link"
 import SEO from "src/components/Seo"
+
+import LogoIcon from "src/assets/logo.svg"
 
 const Container = styled.div``
 const Header = styled.header`

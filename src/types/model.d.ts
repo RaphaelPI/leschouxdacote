@@ -8,3 +8,11 @@ interface Product {
   image: string
   unit: string
 }
+
+interface Producer {
+  name: string
+  description: string
+  email: string
+  phone: string
+  address: string
+}

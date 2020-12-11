@@ -1,22 +1,24 @@
-import { MOCK_DATA } from "src/constants/mock"
 import styled from "styled-components"
 import Image from "next/image"
 import { GetServerSideProps } from "next"
+import { ParsedUrlQuery } from "querystring"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES } from "src/constants"
 import { formatAmount, getDecimalAmount, getIntegerAmount } from "src/helpers/textHelper"
 import Link from "src/components/Link"
-
-import PinIcon from "src/assets/pin.svg"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
+
+import PinIcon from "src/assets/pin.svg"
+
+import { MOCK_PRODUCTS, MOCK_PRODUCERS } from "src/constants/mock"
 
 const Top = styled.div`
   display: flex;
 `
-const H1 = styled.h1`
+const Title = styled.h1`
   margin: 0;
 `
 const Data = styled.div`
@@ -57,8 +59,13 @@ const Address = styled.div`
   }
 `
 
-const ProductPage = ({ slug }) => {
-  const product = MOCK_DATA[Number(slug)]
+interface Params extends ParsedUrlQuery {
+  id: string
+}
+
+const ProductPage = ({ id }: Params) => {
+  const product = MOCK_PRODUCTS[Number(id)]
+  const producer = MOCK_PRODUCERS[product.producer]
 
   return (
     <MainLayout wide>
@@ -68,7 +75,7 @@ const ProductPage = ({ slug }) => {
             <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
           </ImageContainer>
           <Data>
-            <H1>{product.desc}</H1>
+            <Title>{product.desc}</Title>
             <Text $size={SIZES.small}>
               {product.quantity} {product.unit}
             </Text>
@@ -85,38 +92,31 @@ const ProductPage = ({ slug }) => {
                 </Text>
               </Price>
             </PriceContainer>
-            <Link href="/jardins">{product.producer}</Link>
+            <Link href="/producteur/gallines">{producer.name}</Link>
             <Address>
               <PinIcon />
-              <Text $color={COLORS.input}>20 rue des choux, 31000 Ramonville</Text>
+              <Text $color={COLORS.input}>{producer.address}</Text>
             </Address>
           </Data>
         </Top>
       </section>
       <section>
         <h2>Description</h2>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequatnim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip exLorem ipsum dolor
-          sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-          enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequatnim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-        </p>
+        <p>{producer.description}</p>
         <h2>E-mail</h2>
         <p>
-          <a href="mailto:prenom.nom@gmail.com">prenom.nom@gmail.com</a>
+          <a href={`mailto:${producer.email}`}>{producer.email}</a>
         </p>
         <h2>Téléphone</h2>
         <p>
-          <a href="tel:+33102030405">01 02 03 04 05</a>
+          <a href={`tel:${producer.phone}`}>{producer.phone}</a>
         </p>
       </section>
       <section>
         <h2>Ce producteur vend aussi</h2>
         <Products $col={3}>
-          {MOCK_DATA.slice(0, 3).map((_product) => (
-            <ProductCard key={_product.id} product={_product} />
+          {MOCK_PRODUCTS.slice(0, 3).map((_product) => (
+            <ProductCard key={_product.id} product={_product} producer={producer} />
           ))}
         </Products>
       </section>
@@ -124,11 +124,9 @@ const ProductPage = ({ slug }) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<Params, Params> = async ({ params }) => {
   return {
-    props: {
-      ...context.params,
-    }, // will be passed to the page component as props
+    props: params, // map query params to component props
   }
 }
 

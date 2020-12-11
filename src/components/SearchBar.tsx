@@ -2,8 +2,9 @@ import { ChangeEvent, useState, FormEvent } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 
-import { Input } from "./Input"
-import { Button } from "./Button"
+import { Input } from "src/components/Input"
+import { Button } from "src/components/Button"
+
 import SearchIcon from "src/assets/search.svg"
 
 const Form = styled.form`
