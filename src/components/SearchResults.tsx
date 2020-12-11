@@ -1,14 +1,11 @@
-import ProductCard from "src/cards/ProductCard"
 import styled from "styled-components"
+
+import Products from "src/components/Products"
+import ProductCard from "src/cards/ProductCard"
 
 const Container = styled.div`
   padding: 32px;
   height: 100%;
-`
-const Content = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -16px;
 `
 
 interface Props {
@@ -19,11 +16,11 @@ const SearchResults = ({ products }: Props) => {
   return (
     <Container>
       <h1>Les producteurs près de chez vous</h1>
-      <Content>
+      <Products $col={2}>
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
-      </Content>
+      </Products>
     </Container>
   )
 }
