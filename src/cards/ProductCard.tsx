@@ -4,6 +4,7 @@ import Image from "next/image"
 import { COLORS, SIZES } from "src/constants"
 import { Text } from "src/components/Text"
 import { formatAmount, getDecimalAmount, getIntegerAmount } from "src/helpers/textHelper"
+import Link from "src/components/Link"
 
 const Container = styled.div`
   min-width: 300px;
@@ -39,29 +40,38 @@ interface Props {
 }
 
 const ProductCard = ({ product }: Props) => {
+  const href = {
+    pathname: `/carotte`,
+    query: {
+      product: JSON.stringify(product),
+    },
+  }
+
   return (
     <Container>
-      <ImageContainer>
-        <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
-      </ImageContainer>
-      <Content>
-        <Text $weight={100}>{product.producer}</Text>
-        <Text $size={SIZES.card}>{product.location}</Text>
-        <ProductName $size={SIZES.subtitle}>{product.desc}</ProductName>
-        <Bottom>
-          <Text $weight={100} $size={SIZES.small}>
-            {formatAmount(product.price)} / {product.unit}
-          </Text>
-          <Price>
-            <Text $weight={600} $size={SIZES.price}>
-              {getIntegerAmount(product.price)}
+      <Link href={href}>
+        <ImageContainer>
+          <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
+        </ImageContainer>
+        <Content>
+          <Text $weight={100}>{product.producer}</Text>
+          <Text $size={SIZES.card}>{product.location}</Text>
+          <ProductName $size={SIZES.subtitle}>{product.desc}</ProductName>
+          <Bottom>
+            <Text $weight={100} $size={SIZES.small}>
+              {formatAmount(product.price)} / {product.unit}
             </Text>
-            <Text $weight={600} $size={SIZES.small}>
-              .{getDecimalAmount(product.price)}
-            </Text>
-          </Price>
-        </Bottom>
-      </Content>
+            <Price>
+              <Text $weight={600} $size={SIZES.price}>
+                {getIntegerAmount(product.price)}
+              </Text>
+              <Text $weight={600} $size={SIZES.small}>
+                .{getDecimalAmount(product.price)}
+              </Text>
+            </Price>
+          </Bottom>
+        </Content>
+      </Link>
     </Container>
   )
 }
