@@ -11,42 +11,48 @@ const Form = styled.form`
   position: relative;
 `
 const InputGroup = styled.div`
-  & > input {
+  input {
     width: 50%;
-  }
-  & > input:first-child {
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-  }
-  & > input:not(first-child) {
-    margin-left: -1px;
-  }
-  & > input:last-child {
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    padding-right: 70px;
+    &:first-child {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    &:not(:first-child) {
+      margin-left: -1px;
+    }
+    &:last-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      padding-right: 8%;
+    }
   }
 `
 const Sumbit = styled(Button)`
-  width: 48px;
-  height: 48px;
-  border-radius: 24px;
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
   padding: 0;
+  right: 6px;
+  top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  right: 10px;
-  top: 7px;
+  svg {
+    width: 50%;
+    height: 50%;
+    min-width: 12px;
+    min-height: 12px;
+  }
 `
 
 interface Props {
   className?: string
 }
 
-const SearchBar = (props: Props) => {
-  const [state, setState] = useState({ what: "", where: "" })
+const SearchBar = ({ className }: Props) => {
   const router = useRouter()
+  const [state, setState] = useState({ what: "", where: "", ...router.query })
 
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
     setState({
@@ -70,7 +76,7 @@ const SearchBar = (props: Props) => {
   }
 
   return (
-    <Form method="GET" action="/recherche" onSubmit={handleSearch} {...props}>
+    <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
       <InputGroup>
         <Input name="what" value={state.what} onChange={handleChange} required placeholder="Que recherchez-vous ?" />
         <Input name="where" value={state.where} onChange={handleChange} required placeholder="Où ?" />

@@ -1,10 +1,12 @@
 import { FC } from "react"
 import styled from "styled-components"
+import { useRouter } from "next/router"
 
 import { Button, ButtonGroup } from "src/components/Button"
 import { COLORS, LAYOUT } from "src/constants"
 import Link from "src/components/Link"
 import SEO from "src/components/Seo"
+import SearchBar from "src/components/SearchBar"
 
 import LogoIcon from "src/assets/logo.svg"
 
@@ -23,9 +25,12 @@ const Header = styled.header`
 `
 const Actions = styled.div`
   display: flex;
-
-  & > button:first-child {
-    margin-right: 48px;
+  align-items: center;
+  & > button {
+    margin: 0 36px;
+  }
+  form {
+    width: 35vw;
   }
 `
 const Main = styled.main<{ $wide?: boolean }>`
@@ -41,6 +46,8 @@ interface Props {
 }
 
 const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
+  const router = useRouter()
+
   return (
     <>
       <SEO description={description} title={title} />
@@ -50,6 +57,7 @@ const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
             <LogoIcon />
           </Link>
           <Actions>
+            {router.pathname !== "/" && <SearchBar />}
             <Button $variant="green">Publier une annonce</Button>
             <ButtonGroup>
               <Button $variant="white">Devenir vendeur</Button>
