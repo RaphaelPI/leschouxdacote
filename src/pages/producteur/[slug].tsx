@@ -1,19 +1,24 @@
 import { GetStaticPaths, GetStaticProps } from "next"
-import { ParsedUrlQuery } from "querystring"
+import type { ParsedUrlQuery } from "querystring"
 import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
+import { getMapsLink } from "src/helpers/textHelper"
+import { COLORS, SIZES } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
 
 import { MOCK_PRODUCTS, MOCK_PRODUCERS } from "src/constants/mock"
 
 const Address = styled.a`
-  font-size: 18px;
+  font-size: ${SIZES.card}px;
   font-weight: 300;
-  margin-left: 24px;
+  color: ${COLORS.input};
+  svg {
+    margin: 0 8px 0 24px;
+  }
 `
 
 interface Params extends ParsedUrlQuery {
@@ -30,7 +35,7 @@ const ProducerPage = ({ producer, products }: Props) => {
     <MainLayout wide>
       <h1>
         {producer.name}
-        <Address href={`https://www.google.com/maps/search/${encodeURIComponent(producer.address)}/`}>
+        <Address href={getMapsLink(producer)} target="_blank">
           <PinIcon /> {producer.address}
         </Address>
       </h1>

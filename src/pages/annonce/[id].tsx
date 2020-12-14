@@ -6,7 +6,7 @@ import { ParsedUrlQuery } from "querystring"
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES } from "src/constants"
-import { formatAmount, getDecimalAmount, getIntegerAmount } from "src/helpers/textHelper"
+import { formatAmount, getDecimalAmount, getIntegerAmount, getMapsLink } from "src/helpers/textHelper"
 import Link from "src/components/Link"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
@@ -50,12 +50,11 @@ const ImageContainer = styled.div`
     box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
   }
 `
-const Address = styled.div`
-  display: flex;
+const Address = styled.a`
   padding: 8px 0;
-
   svg {
-    margin-right: 8px;
+    margin: 8px 8px 0 0;
+    vertical-align: -2px;
   }
 `
 
@@ -93,9 +92,12 @@ const ProductPage = ({ id }: Params) => {
               </Price>
             </PriceContainer>
             <Link href="/producteur/gallines">{producer.name}</Link>
-            <Address>
+            <br />
+            <Address href={getMapsLink(producer)} target="_blank">
               <PinIcon />
-              <Text $color={COLORS.input}>{producer.address}</Text>
+              <Text as="span" $color={COLORS.input}>
+                {producer.address}
+              </Text>
             </Address>
           </Data>
         </Top>
