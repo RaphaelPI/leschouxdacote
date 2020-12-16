@@ -62,10 +62,12 @@ interface Params extends ParsedUrlQuery {
   id: string
 }
 
-const ProductPage = ({ id }: Params) => {
-  const product = MOCK_PRODUCTS[Number(id)]
-  const producer = MOCK_PRODUCERS[product.producer]
+interface Props {
+  product: Product
+  producer: Producer
+}
 
+const ProductPage = ({ product, producer }: Props) => {
   return (
     <MainLayout wide>
       <section>
@@ -126,9 +128,15 @@ const ProductPage = ({ id }: Params) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Params, Params> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
+  const product = MOCK_PRODUCTS.find(({ id }) => id === Number(params.id))
+  const producer = MOCK_PRODUCERS[product.producer]
+
   return {
-    props: params, // map query params to component props
+    props: {
+      product,
+      producer,
+    },
   }
 }
 
