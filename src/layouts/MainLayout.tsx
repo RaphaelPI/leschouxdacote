@@ -8,8 +8,6 @@ import Link from "src/components/Link"
 import SEO from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 
-import LogoIcon from "src/assets/logo.svg"
-
 const Container = styled.div``
 const Header = styled.header`
   position: fixed;
@@ -22,6 +20,9 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   box-shadow: 0px 3px 3px ${COLORS.shadow.light};
+`
+const Logo = styled.img`
+  width: 120px;
 `
 const Actions = styled.div`
   display: flex;
@@ -54,7 +55,7 @@ const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
       <Container>
         <Header>
           <Link href="/">
-            <LogoIcon />
+            <Logo src="/logo.png" />
           </Link>
           <Actions>
             {router.pathname !== "/" && <SearchBar />}
