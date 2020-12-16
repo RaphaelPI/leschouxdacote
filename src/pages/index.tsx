@@ -3,18 +3,13 @@ import styled from "styled-components"
 import MainLayout from "src/layouts/MainLayout"
 import SearchBar from "src/components/SearchBar"
 
-import LogoIcon from "src/assets/logo.svg"
-
-const Container = styled.section`
-  padding-top: 96px;
-`
-const Logo = styled(LogoIcon)`
+const Logo = styled.img`
   display: block;
-  margin: 0 auto;
-  width: 80px;
+  margin: 5vh auto;
+  width: 250px;
 `
 const SearchGroup = styled(SearchBar)`
-  margin: 80px auto 0;
+  margin: 5vh auto;
   width: 80%;
   input {
     padding: 16px 32px;
@@ -32,10 +27,8 @@ const SearchGroup = styled(SearchBar)`
 const HomePage = () => {
   return (
     <MainLayout wide>
-      <Container>
-        <Logo />
-        <SearchGroup />
-      </Container>
+      <Logo src="/logo.png" />
+      <SearchGroup />
     </MainLayout>
   )
 }
