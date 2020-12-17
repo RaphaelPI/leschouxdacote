@@ -44,12 +44,12 @@ const ProductCard = ({ product, producer }: Props) => {
     <Container>
       <Link href={href}>
         <ImageContainer>
-          <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
+          <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" />
         </ImageContainer>
         <Content>
           <Text $weight={100}>{producer.name}</Text>
           <Text $size={SIZES.card}>{product.location}</Text>
-          <ProductName $size={SIZES.subtitle}>{product.desc}</ProductName>
+          <ProductName $size={SIZES.subtitle}>{product.name}</ProductName>
           <Bottom>
             <Text $weight={100} $size={SIZES.small}>
               {formatAmount(product.price)} / {product.unit}
