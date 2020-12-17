@@ -15,4 +15,10 @@ interface Producer {
   email: string
   phone: string
   address: string
+  position: [number, number]
+}
+
+interface MapMarker {
+  position: import("leaflet").LatLngExpression
+  content: import("react").ReactNode
 }

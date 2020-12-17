@@ -32,8 +32,8 @@
   "dependencies": {
     "@bugsnag/js": "^7.5.1",
     "@bugsnag/plugin-react": "^7.3.5",
-    "@react-google-maps/api": "^1.13.0",
     "@svgr/webpack": "^5.5.0",
+    "@types/leaflet": "^1.5.19",
     "@types/node": "^14.14.10",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -47,11 +47,13 @@
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "graphql": "^15.4.0",
+    "leaflet": "^1.7.1",
     "next": "10.0.3",
     "polished": "^4.0.5",
     "prettier": "^2.2.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-leaflet": "^3.0.4",
     "styled-components": "^5.2.1",
     "typescript": "^4.1.2"
   },
@@ -64,7 +66,6 @@
     "node": ">=10.13"
   },
   "devDependencies": {
-    "@types/googlemaps": "^3.40.3",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.2"
   }
