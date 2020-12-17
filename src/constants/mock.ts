@@ -112,6 +112,7 @@ export const MOCK_PRODUCERS: Record<string, Producer> = {
     email: "contact@opotager.com",
     phone: MOCK_PHONE,
     address: "Chemin des Sables, 31120 Portet-sur-Garonne",
+    position: [43.539, 1.424],
   },
   gallines: {
     name: "Le Jardin des Gallines",
@@ -119,6 +120,7 @@ export const MOCK_PRODUCERS: Record<string, Producer> = {
     email: "contact@gallines.com",
     phone: MOCK_PHONE,
     address: "Carpette, 31700 Mondonville",
+    position: [43.674, 1.305],
   },
   "maraicher-du-midi": {
     name: "Maraîcher du Midi",
@@ -126,6 +128,7 @@ export const MOCK_PRODUCERS: Record<string, Producer> = {
     email: "contact@maraicherdumidi.com",
     phone: MOCK_PHONE,
     address: "83 Chemin de Ribaute, 31400 Toulouse",
+    position: [43.577, 1.508],
   },
   fourche: {
     name: "La fourche de Jean-Louis",
@@ -133,6 +136,7 @@ export const MOCK_PRODUCERS: Record<string, Producer> = {
     email: "contact@lafourche.com",
     phone: MOCK_PHONE,
     address: "Chemin de Carbounel, 31840 Aussonne",
+    position: [43.697, 1.34],
   },
   cathy: {
     name: "Le Jardin de Cathy",
@@ -140,5 +144,6 @@ export const MOCK_PRODUCERS: Record<string, Producer> = {
     email: "contact@cathy.com",
     phone: MOCK_PHONE,
     address: "24 Prom. de l'Esplanade, 31180 Lapeyrouse-Fossat",
+    position: [43.693, 1.517],
   },
 }

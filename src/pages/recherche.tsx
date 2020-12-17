@@ -1,8 +1,8 @@
 import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
-import MapResults from "src/components/MapResults"
-import SearchResults from "src/components/SearchResults"
+import ResultsMap from "src/components/ResultsMap"
+import ResultsList from "src/components/ResultsList"
 
 import { MOCK_PRODUCTS } from "src/constants/mock"
 
@@ -18,16 +18,16 @@ const RightCol = styled.div`
 `
 
 const SearchPage = () => {
-  const results = MOCK_PRODUCTS.filter(({ name }) => name.toLowerCase().includes("chou"))
+  const products = MOCK_PRODUCTS.filter(({ name }) => name.toLowerCase().includes("chou"))
 
   return (
     <MainLayout>
       <Row>
         <LeftCol>
-          <SearchResults products={results} />
+          <ResultsList products={products} />
         </LeftCol>
         <RightCol>
-          <MapResults />
+          <ResultsMap products={products} />
         </RightCol>
       </Row>
     </MainLayout>
