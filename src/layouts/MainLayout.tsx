@@ -33,8 +33,14 @@ const Actions = styled.div`
     width: 35vw;
   }
 `
+const Container = styled.div<{ $bg: boolean }>`
+  background-image: ${({ $bg }) => ($bg ? "url(/background.svg)" : "none")};
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: contain;
+  min-height: 100vh;
+`
 const Main = styled.main<{ $wide?: boolean }>`
-  min-height: calc(100vh - ${LAYOUT.headerHeight}px);
   padding-top: 80px;
   ${({ $wide }) => ($wide ? `max-width: ${LAYOUT.maxWidth}px;margin: 0 auto;padding: 112px 32px 32px;` : ``)}
 `
@@ -69,7 +75,9 @@ const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
           </ButtonGroup>
         </Actions>
       </Header>
-      <Main $wide={wide}>{children}</Main>
+      <Container $bg={isHome}>
+        <Main $wide={wide}>{children}</Main>
+      </Container>
     </>
   )
 }
