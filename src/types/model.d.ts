@@ -1,8 +1,8 @@
 interface Product {
-  id: number
+  id: string
+  name: string
   producer: string
   location: string
-  desc: string
   quantity: number
   price: number
   image: string

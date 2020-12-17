@@ -65,18 +65,19 @@ interface Params extends ParsedUrlQuery {
 interface Props {
   product: Product
   producer: Producer
+  otherProducts: Product[]
 }
 
-const ProductPage = ({ product, producer }: Props) => {
+const ProductPage = ({ product, producer, otherProducts }: Props) => {
   return (
     <MainLayout wide>
       <section>
         <Top>
           <ImageContainer>
-            <Image src={product.image} alt={product.desc} layout="fill" objectFit="cover" />
+            <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" />
           </ImageContainer>
           <Data>
-            <Title>{product.desc}</Title>
+            <Title>{product.name}</Title>
             <Text $size={SIZES.small}>
               {product.quantity} {product.unit}
             </Text>
@@ -119,8 +120,8 @@ const ProductPage = ({ product, producer }: Props) => {
       <section>
         <h2>Ce producteur vend aussi</h2>
         <Products $col={3}>
-          {MOCK_PRODUCTS.slice(0, 3).map((_product) => (
-            <ProductCard key={_product.id} product={_product} producer={producer} />
+          {otherProducts.map((prod) => (
+            <ProductCard key={prod.id} product={prod} producer={producer} />
           ))}
         </Products>
       </section>
@@ -129,13 +130,15 @@ const ProductPage = ({ product, producer }: Props) => {
 }
 
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
-  const product = MOCK_PRODUCTS.find(({ id }) => id === Number(params.id))
+  const product = MOCK_PRODUCTS.find(({ id }) => id === params.id)
   const producer = MOCK_PRODUCERS[product.producer]
+  const otherProducts = MOCK_PRODUCTS.filter((prod) => product.producer === prod.producer && prod.id !== product.id)
 
   return {
     props: {
       product,
       producer,
+      otherProducts,
     },
   }
 }

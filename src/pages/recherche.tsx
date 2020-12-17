@@ -18,11 +18,13 @@ const RightCol = styled.div`
 `
 
 const SearchPage = () => {
+  const results = MOCK_PRODUCTS.filter(({ name }) => name.toLowerCase().includes("chou"))
+
   return (
     <MainLayout>
       <Row>
         <LeftCol>
-          <SearchResults products={MOCK_PRODUCTS} />
+          <SearchResults products={results} />
         </LeftCol>
         <RightCol>
           <MapResults />
