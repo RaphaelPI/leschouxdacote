@@ -8,7 +8,6 @@ import Link from "src/components/Link"
 import SEO from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 
-const Container = styled.div``
 const Header = styled.header`
   position: fixed;
   width: 100%;
@@ -48,26 +47,29 @@ interface Props {
 
 const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
   const router = useRouter()
+  const isHome = router.pathname === "/"
 
   return (
     <>
       <SEO description={description} title={title} />
-      <Container>
-        <Header>
+      <Header>
+        {isHome ? (
+          <div />
+        ) : (
           <Link href="/">
             <Logo src="/logo.png" />
           </Link>
-          <Actions>
-            {router.pathname !== "/" && <SearchBar />}
-            <Button $variant="green">Publier une annonce</Button>
-            <ButtonGroup>
-              <Button $variant="white">Devenir vendeur</Button>
-              <Button $variant="white">Se connecter</Button>
-            </ButtonGroup>
-          </Actions>
-        </Header>
-        <Main $wide={wide}>{children}</Main>
-      </Container>
+        )}
+        <Actions>
+          {!isHome && <SearchBar />}
+          <Button $variant="green">Publier une annonce</Button>
+          <ButtonGroup>
+            <Button $variant="white">Devenir vendeur</Button>
+            <Button $variant="white">Se connecter</Button>
+          </ButtonGroup>
+        </Actions>
+      </Header>
+      <Main $wide={wide}>{children}</Main>
     </>
   )
 }
