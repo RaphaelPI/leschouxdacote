@@ -1,9 +1,8 @@
 import styled from "styled-components"
 import Image from "next/image"
 
-import { COLORS, SIZES } from "src/constants"
-import { Text } from "src/components/Text"
-import { formatAmount, getDecimalAmount, getIntegerAmount } from "src/helpers/textHelper"
+import { COLORS } from "src/constants"
+import { formatAmount } from "src/helpers/textHelper"
 import Link from "src/components/Link"
 
 const Container = styled.div`
@@ -14,22 +13,31 @@ const ImageContainer = styled.div`
   position: relative;
 `
 const Content = styled.div`
-  padding: 16px;
+  padding: 8px 10px 6px;
+  position: relative;
 `
-const ProductName = styled(Text)`
-  margin-top: 16px;
+const Title = styled.h2`
+  margin: 0;
+  font-size: 1.4em;
 `
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+const Producer = styled.h3`
+  margin: 8px 0 0;
+  font-weight: 300;
+  color: ${COLORS.green};
+`
+const Location = styled.h4`
+  margin: 2px 0 0;
+  font-weight: 300;
 `
 const Price = styled.div`
-  display: flex;
-
-  & > p:last-child {
-    margin-top: 4px;
-  }
+  margin: 12px 0 0;
+  font-size: 1.7em;
+  font-weight: 500;
+`
+const Info = styled.div`
+  position: absolute;
+  right: 10px;
+  bottom: 9px;
 `
 
 interface Props {
@@ -38,31 +46,20 @@ interface Props {
 }
 
 const ProductCard = ({ product, producer }: Props) => {
-  const href = `/annonce/${product.id}`
-
   return (
     <Container>
-      <Link href={href}>
+      <Link href={`/annonce/${product.id}`}>
         <ImageContainer>
           <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" />
         </ImageContainer>
         <Content>
-          <Text $weight={100}>{producer.name}</Text>
-          <Text $size={SIZES.card}>{product.location}</Text>
-          <ProductName $size={SIZES.subtitle}>{product.name}</ProductName>
-          <Bottom>
-            <Text $weight={100} $size={SIZES.small}>
-              {formatAmount(product.price)} / {product.unit}
-            </Text>
-            <Price>
-              <Text $weight={600} $size={SIZES.price}>
-                {getIntegerAmount(product.price)}
-              </Text>
-              <Text $weight={600} $size={SIZES.small}>
-                .{getDecimalAmount(product.price)}
-              </Text>
-            </Price>
-          </Bottom>
+          <Title>{product.name}</Title>
+          <Producer>{producer.name}</Producer>
+          <Location>{product.location}</Location>
+          <Info>
+            {formatAmount(product.price)} / {product.unit}
+          </Info>
+          <Price>{formatAmount(product.price)}</Price>
         </Content>
       </Link>
     </Container>
