@@ -6,7 +6,7 @@ import SearchBar from "src/components/SearchBar"
 const Logo = styled.img`
   display: block;
   margin: 5vh auto;
-  width: 250px;
+  width: 300px;
 `
 const SearchGroup = styled(SearchBar)`
   margin: 5vh auto;
