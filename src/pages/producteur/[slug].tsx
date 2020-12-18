@@ -1,5 +1,6 @@
-import { GetStaticPaths, GetStaticProps } from "next"
+import type { GetStaticPaths, GetStaticProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
+
 import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
@@ -61,7 +62,7 @@ const ProducerPage = ({ producer, products }: Props) => {
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return {
-    paths: [{ params: { slug: MOCK_PRODUCTS[0].producer } }],
+    paths: Object.keys(MOCK_PRODUCERS).map((id) => ({ params: { slug: id } })),
     fallback: false,
   }
 }
