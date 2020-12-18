@@ -71,7 +71,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
   return {
     props: {
       producer: MOCK_PRODUCERS[params.slug],
-      products: MOCK_PRODUCTS.slice(0, 3),
+      products: MOCK_PRODUCTS.filter(({ producer }) => producer === params.slug),
     },
   }
 }
