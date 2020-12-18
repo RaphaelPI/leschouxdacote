@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import { Button, ButtonGroup } from "src/components/Button"
 import { COLORS, LAYOUT } from "src/constants"
 import Link from "src/components/Link"
-import SEO from "src/components/Seo"
+import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 
 const Header = styled.header`
@@ -46,18 +46,16 @@ const Main = styled.main<{ $wide?: boolean }>`
 `
 
 interface Props {
-  description?: string
-  title?: string
   wide?: boolean
 }
 
-const MainLayout: FC<Props> = ({ description, title, wide, children }) => {
+const MainLayout: FC<Props & SEOProps> = ({ wide, children, ...props }) => {
   const router = useRouter()
   const isHome = router.pathname === "/"
 
   return (
     <>
-      <SEO description={description} title={title} />
+      <SEO {...props} />
       <Header>
         {isHome ? (
           <div />

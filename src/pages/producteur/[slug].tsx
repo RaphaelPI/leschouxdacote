@@ -33,7 +33,7 @@ interface Props {
 
 const ProducerPage = ({ producer, products }: Props) => {
   return (
-    <MainLayout wide>
+    <MainLayout wide title={producer.name} description={producer.description}>
       <h1>
         {producer.name}
         <Address href={getMapsLink(producer)} target="_blank">

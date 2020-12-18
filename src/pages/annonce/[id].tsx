@@ -70,8 +70,11 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
+  const pricePerUnit = `${formatAmount(product.price)} / ${product.unit}`
+  const description = `${pricePerUnit} chez ${producer.name} à ${product.location}`
+
   return (
-    <MainLayout wide>
+    <MainLayout wide title={product.name} description={description}>
       <section>
         <Top>
           <ImageContainer>
