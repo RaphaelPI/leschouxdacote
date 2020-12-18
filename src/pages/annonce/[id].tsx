@@ -1,7 +1,8 @@
+import type { GetStaticPaths, GetStaticProps } from "next"
+import type { ParsedUrlQuery } from "querystring"
+
 import styled from "styled-components"
 import Image from "next/image"
-import { GetServerSideProps } from "next"
-import { ParsedUrlQuery } from "querystring"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
@@ -94,7 +95,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
                 </Text>
               </Price>
             </PriceContainer>
-            <Link href="/producteur/gallines">{producer.name}</Link>
+            <Link href={`/producteur/${product.producer}`}>{producer.name}</Link>
             <br />
             <Address href={getMapsLink(producer)} target="_blank">
               <PinIcon />
@@ -129,7 +130,14 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
+  return {
+    paths: MOCK_PRODUCTS.map(({ id }) => ({ params: { id } })),
+    fallback: false,
+  }
+}
+
+export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   const product = MOCK_PRODUCTS.find(({ id }) => id === params.id)
   const producer = MOCK_PRODUCERS[product.producer]
   const otherProducts = MOCK_PRODUCTS.filter((prod) => product.producer === prod.producer && prod.id !== product.id)
