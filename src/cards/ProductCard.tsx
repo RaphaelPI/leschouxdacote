@@ -2,7 +2,7 @@ import styled from "styled-components"
 import Image from "next/image"
 
 import { COLORS } from "src/constants"
-import { formatAmount } from "src/helpers/textHelper"
+import { formatAmount, formatPricePerUnit } from "src/helpers/text"
 import Link from "src/components/Link"
 
 const Container = styled.div`
@@ -34,10 +34,17 @@ const Price = styled.div`
   font-size: 1.7em;
   font-weight: 500;
 `
-const Info = styled.div`
+const PPU = styled.div`
   position: absolute;
   right: 10px;
   bottom: 9px;
+`
+const Quantity = styled.div`
+  position: absolute;
+  right: 10px;
+  bottom: 32px;
+  font-size: 0.8em;
+  font-weight: 400;
 `
 
 interface Props {
@@ -56,10 +63,11 @@ const ProductCard = ({ product, producer }: Props) => {
           <Title>{product.name}</Title>
           <Producer>{producer.name}</Producer>
           <Location>{product.location}</Location>
-          <Info>
-            {formatAmount(product.price)} / {product.unit}
-          </Info>
           <Price>{formatAmount(product.price)}</Price>
+          <PPU>{formatPricePerUnit(product)}</PPU>
+          <Quantity>
+            {product.quantity} {product.unit}
+          </Quantity>
         </Content>
       </Link>
     </Container>

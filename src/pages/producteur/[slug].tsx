@@ -6,7 +6,7 @@ import styled from "styled-components"
 import MainLayout from "src/layouts/MainLayout"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
-import { getMapsLink } from "src/helpers/textHelper"
+import { getMapsLink } from "src/helpers/text"
 import { COLORS, SIZES } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
