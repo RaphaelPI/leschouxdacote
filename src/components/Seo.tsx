@@ -2,23 +2,20 @@ import Head from "next/head"
 
 const config = {
   title: "Les choux d'à côté",
-  description: "Un site super bien",
-  author: {
-    name: "LCDC inc",
-    summary: "Mofo",
-  },
+  tagline: "L'alimentaire sans intermédiaire",
+  description: "Producteurs et acheteurs, pratiquez le circuit court !",
   social: {
     twitter: "https://twitter.com/leschouxdacote",
   },
 }
 
-interface Props {
+export interface SEOProps {
   title?: string
   description?: string
 }
 
-const SEO = ({ title, description }: Props) => {
-  const pageTitle = title ? `${title} | ${config.title}` : config.title
+const SEO = ({ title, description }: SEOProps) => {
+  const pageTitle = title ? `${title} | ${config.title}` : `${config.title} | ${config.tagline}`
   const pageDesc = description || config.description
 
   return (
