@@ -7,7 +7,7 @@ import Image from "next/image"
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES } from "src/constants"
-import { formatAmount, getDecimalAmount, getIntegerAmount, getMapsLink } from "src/helpers/textHelper"
+import { formatAmount, getMapsLink, formatPricePerUnit } from "src/helpers/text"
 import Link from "src/components/Link"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
@@ -70,8 +70,9 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
-  const pricePerUnit = `${formatAmount(product.price)} / ${product.unit}`
+  const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit} chez ${producer.name} à ${product.location}`
+  const priceParts = formatAmount(product.price).split(",")
 
   return (
     <MainLayout wide title={product.name} description={description}>
@@ -87,14 +88,14 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             </Text>
             <PriceContainer>
               <Text $weight={100} $size={SIZES.subtitle}>
-                {formatAmount(product.price)} / {product.unit}
+                {pricePerUnit}
               </Text>
               <Price>
                 <Text $weight={600} $size={SIZES.price}>
-                  {getIntegerAmount(product.price)}
+                  {priceParts[0]}
                 </Text>
                 <Text $weight={600} $size={SIZES.small}>
-                  .{getDecimalAmount(product.price)}
+                  .{priceParts[1]}
                 </Text>
               </Price>
             </PriceContainer>
