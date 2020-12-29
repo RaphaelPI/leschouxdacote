@@ -7,7 +7,7 @@ import Image from "next/image"
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES } from "src/constants"
-import { formatAmount, getMapsLink, formatPricePerUnit } from "src/helpers/text"
+import { getMapsLink, formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import Link from "src/components/Link"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
@@ -72,7 +72,7 @@ interface Props {
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit} chez ${producer.name} à ${product.location}`
-  const priceParts = formatAmount(product.price).split(",")
+  const priceParts = formatPrice(product).split(",")
 
   return (
     <MainLayout wide title={product.name} description={description}>
@@ -83,9 +83,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
           </ImageContainer>
           <Data>
             <Title>{product.name}</Title>
-            <Text $size={SIZES.small}>
-              {product.quantity} {product.unit}
-            </Text>
+            <Text $size={SIZES.small}>{formatQuantity(product)}</Text>
             <PriceContainer>
               <Text $weight={100} $size={SIZES.subtitle}>
                 {pricePerUnit}

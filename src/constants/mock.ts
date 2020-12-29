@@ -63,12 +63,11 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "chv",
-    name: "Chou vert",
+    name: "Chou vert, lot de 10",
     producer: "o-potager",
     location: "Toulouse",
-    quantity: 1,
-    price: 250,
-    unit: "unité",
+    quantity: 10,
+    price: 200,
     image: "/photos/chou-vert.jpg",
   },
   {
@@ -88,7 +87,6 @@ export const MOCK_PRODUCTS: Product[] = [
     location: "Toulouse",
     quantity: 1,
     price: 240,
-    unit: "unité",
     image: "/photos/chou.jpg",
   },
   {
@@ -103,12 +101,11 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "chc",
-    name: "Chou chinois",
+    name: "Chou chinois, en lot ou à l'unité",
     producer: "maraicher-du-midi",
     location: "Toulouse",
-    quantity: 1,
-    price: 260,
-    unit: "unité",
+    quantity: 100,
+    price: 150,
     image: "/photos/chou-chinois.jpg",
   },
   {
@@ -148,7 +145,6 @@ export const MOCK_PRODUCTS: Product[] = [
     location: "Toulouse",
     quantity: 1,
     price: 260,
-    unit: "unité",
     image: "/photos/chou-kale.jpg",
   },
 ]
