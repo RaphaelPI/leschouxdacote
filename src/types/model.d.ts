@@ -6,7 +6,7 @@ interface Product {
   quantity: number
   price: number
   image: string
-  unit: string
+  unit?: string // default "u"
 }
 
 interface Producer {
