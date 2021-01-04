@@ -75,7 +75,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const priceParts = formatPrice(product).split(",")
 
   return (
-    <MainLayout wide title={product.name} description={description}>
+    <MainLayout title={product.name} description={description}>
       <section>
         <Top>
           <ImageContainer>

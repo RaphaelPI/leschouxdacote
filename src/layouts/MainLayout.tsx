@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 
 import { Button, ButtonGroup } from "src/components/Button"
 import { COLORS, LAYOUT } from "src/constants"
-import Link from "src/components/Link"
+import Link, { ButtonLink } from "src/components/Link"
 import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 
@@ -12,6 +12,7 @@ import LogoSvg from "src/assets/logo.svg"
 
 const Header = styled.header`
   position: fixed;
+  top: 0;
   width: 100%;
   padding: 0 32px;
   z-index: 1;
@@ -43,17 +44,17 @@ const Container = styled.div<{ $bg: boolean }>`
   background-position: bottom center;
   background-size: contain;
   min-height: 100vh;
+  padding-top: ${LAYOUT.headerHeight}px;
 `
-const Main = styled.main<{ $wide?: boolean }>`
-  padding-top: 80px;
-  ${({ $wide }) => ($wide ? `max-width: ${LAYOUT.maxWidth}px;margin: 0 auto;padding: 112px 32px 32px;` : ``)}
+const Main = styled.main<{ $full?: boolean }>`
+  ${({ $full }) => ($full ? `` : `max-width: ${LAYOUT.maxWidth}px; margin: 0 auto; padding: 32px;`)}
 `
 
 interface Props {
-  wide?: boolean
+  full?: boolean
 }
 
-const MainLayout: FC<Props & SEOProps> = ({ wide, children, ...props }) => {
+const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
   const router = useRouter()
   const isHome = router.pathname === "/"
 
@@ -72,13 +73,13 @@ const MainLayout: FC<Props & SEOProps> = ({ wide, children, ...props }) => {
           {!isHome && <SearchBar />}
           <Button $variant="green">Publier une annonce</Button>
           <ButtonGroup>
-            <Button $variant="white">Devenir vendeur</Button>
-            <Button $variant="white">Se connecter</Button>
+            <ButtonLink href="/inscription">Devenir vendeur</ButtonLink>
+            <ButtonLink href="/connexion">Se connecter</ButtonLink>
           </ButtonGroup>
         </Actions>
       </Header>
       <Container $bg={isHome}>
-        <Main $wide={wide}>{children}</Main>
+        <Main $full={full}>{children}</Main>
       </Container>
     </>
   )

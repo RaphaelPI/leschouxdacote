@@ -64,11 +64,6 @@ const SearchBar = ({ className }: Props) => {
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!state.what || !state.where) {
-      alert("veuillez saisir une recherche")
-      return
-    }
-
     router.push({
       pathname: "/recherche",
       query: state,
@@ -78,8 +73,8 @@ const SearchBar = ({ className }: Props) => {
   return (
     <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
       <InputGroup>
-        <Input name="what" value={state.what} onChange={handleChange} required placeholder="Que recherchez-vous ?" />
-        <Input name="where" value={state.where} onChange={handleChange} required placeholder="Où ?" />
+        <Input name="what" value={state.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
+        <Input name="where" value={state.where} onChange={handleChange} placeholder="Où ?" />
       </InputGroup>
       <Sumbit $variant="green" type="submit">
         <SearchIcon />

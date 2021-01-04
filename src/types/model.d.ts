@@ -11,11 +11,23 @@ interface Product {
 
 interface Producer {
   name: string
+  address: string
   description: string
   email: string
   phone: string
-  address: string
   position: [number, number]
+}
+
+interface RegisteringProducer {
+  siret: string
+  name: string
+  address: string
+  firstname: string
+  lastname: string
+  description: string
+  email: string
+  phone: string
+  password: string
 }
 
 interface MapMarker {

@@ -29,7 +29,7 @@ const SearchGroup = styled(SearchBar)`
 
 const HomePage = () => {
   return (
-    <MainLayout wide>
+    <MainLayout>
       <Logo />
       <SearchGroup />
     </MainLayout>
