@@ -4,6 +4,7 @@ export const COLORS = {
   dark: "#101010",
   grey: "#a6a6a6",
   input: "#686666",
+  error: "#CC0000",
   border: "#D6D6D6",
   green: "#47D25B",
   shadow: {
@@ -24,4 +25,7 @@ export const SIZES = {
 export const LAYOUT = {
   headerHeight: 80,
   maxWidth: 1100,
+  formWidth: 500,
 }
+
+export const FONT = "'Roboto', sans-serif"

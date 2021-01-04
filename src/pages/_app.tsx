@@ -4,12 +4,12 @@ import Head from "next/head"
 import { AppProps } from "next/app"
 
 import { ErrorBoundary } from "src/helpers/bugsnag"
-
-const FONT = "'Roboto', sans-serif"
+import { LAYOUT, FONT } from "src/constants"
 
 const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
+    scroll-padding-top: ${LAYOUT.headerHeight + 30}px;
   }
   *,
   *:before,

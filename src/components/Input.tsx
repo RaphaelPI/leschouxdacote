@@ -6,7 +6,6 @@ import { COLORS } from "src/constants"
 const BASE_INPUT = css`
   color: ${COLORS.input};
   border-radius: 32px;
-  border: none;
   padding: 6px 16px;
   border: 1px solid ${COLORS.border};
   outline: none;

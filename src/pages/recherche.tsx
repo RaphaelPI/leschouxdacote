@@ -21,7 +21,7 @@ const SearchPage = () => {
   const products = MOCK_PRODUCTS.filter(({ name }) => name.toLowerCase().includes("chou"))
 
   return (
-    <MainLayout title="Recherche">
+    <MainLayout title="Recherche" full>
       <Row>
         <LeftCol>
           <ResultsList products={products} />
