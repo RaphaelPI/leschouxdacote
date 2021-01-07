@@ -23,6 +23,7 @@ export const Label = styled.label<{ $error: boolean }>`
     border: 1px solid ${COLORS.border};
     display: block;
     width: 100%;
+    font-size: 1em;
   }
 `
 export const ErrorMessage = styled.span`
