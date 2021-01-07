@@ -8,6 +8,8 @@ import Link from "src/components/Link"
 import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 
+import LogoSvg from "src/assets/logo.svg"
+
 const Header = styled.header`
   position: fixed;
   width: 100%;
@@ -20,8 +22,10 @@ const Header = styled.header`
   align-items: center;
   box-shadow: 0px 3px 3px ${COLORS.shadow.light};
 `
-const Logo = styled.img`
-  width: 120px;
+const Logo = styled(LogoSvg)`
+  height: 45px;
+  margin-left: -8px;
+  display: block;
 `
 const Actions = styled.div`
   display: flex;
@@ -61,7 +65,7 @@ const MainLayout: FC<Props & SEOProps> = ({ wide, children, ...props }) => {
           <div />
         ) : (
           <Link href="/">
-            <Logo src="/logo.png" />
+            <Logo />
           </Link>
         )}
         <Actions>
