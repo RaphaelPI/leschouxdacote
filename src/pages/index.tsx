@@ -3,10 +3,13 @@ import styled from "styled-components"
 import MainLayout from "src/layouts/MainLayout"
 import SearchBar from "src/components/SearchBar"
 
-const Logo = styled.img`
+import LogoSvg from "src/assets/logo.svg"
+
+const Logo = styled(LogoSvg)`
   display: block;
-  margin: 5vh auto;
-  width: 300px;
+  margin: 10vh auto;
+  width: 80%;
+  max-width: 800px;
 `
 const SearchGroup = styled(SearchBar)`
   margin: 5vh auto;
@@ -27,7 +30,7 @@ const SearchGroup = styled(SearchBar)`
 const HomePage = () => {
   return (
     <MainLayout wide>
-      <Logo src="/logo.png" />
+      <Logo />
       <SearchGroup />
     </MainLayout>
   )
