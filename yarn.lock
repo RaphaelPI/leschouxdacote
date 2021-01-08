@@ -1663,6 +1663,18 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
+"@types/standard-error@*":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/standard-error/-/standard-error-1.1.0.tgz#7625b53aa5e60ea510b11452bdcc6731b7775bf6"
+  integrity sha512-lZshsx/QFLUJcu9prwm3Gtsl+b38HAqO6XUGH8PGwSmiswQhscd2MKrfk3LX3W3HyvNVUKcpsiuhU9r8DX32ww==
+
+"@types/standard-http-error@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/standard-http-error/-/standard-http-error-2.0.0.tgz#b13aa73bf45452d43b270de1feadb7bd8d7e29cd"
+  integrity sha512-HBr17A2tj2FkOVNxV1zzhShe1mg1VjzQ3Wlr2tI+sELZxJCY1RrJmWulV1Yft5X8HDSn3Ds6dYmlk0HWUjwamw==
+  dependencies:
+    "@types/standard-error" "*"
+
 "@types/styled-components@^5.1.4":
   version "5.1.7"
   resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-5.1.7.tgz#3cd10b088c1cb1acde2e4b166b3e8275a3083710"
@@ -6856,6 +6868,18 @@ stacktrace-parser@0.1.10:
   integrity sha512-KJP1OCML99+8fhOHxwwzyWrlUuVX5GQ0ZpJTd1DFXhdkrvg1szxfHhawXUZ3g9TkXORQd4/WG68jMlQZ2p8wlg==
   dependencies:
     type-fest "^0.7.1"
+
+"standard-error@>= 1.1.0 < 2":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/standard-error/-/standard-error-1.1.0.tgz#23e5168fa1c0820189e5812701a79058510d0d34"
+  integrity sha1-I+UWj6HAggGJ5YEnAaeQWFENDTQ=
+
+standard-http-error@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/standard-http-error/-/standard-http-error-2.0.1.tgz#f8ae9172e3cef9cb38d2e7084a1925f57a7c34bd"
+  integrity sha1-+K6RcuPO+cs40ucIShkl9Xp8NL0=
+  dependencies:
+    standard-error ">= 1.1.0 < 2"
 
 static-extend@^0.1.1:
   version "0.1.2"

@@ -2,6 +2,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
+import api from "src/helpers/api"
 
 const validateLength = (length: number, message: string) => (value: string) =>
   value.replace(/\s+/g, "").length === length || message
@@ -23,11 +24,16 @@ const validatePassword = (value: string) => {
 }
 
 const RegisterPage = () => {
-  const { register, handleSubmit, errors } = useForm<RegisteringProducer>()
+  const { register, handleSubmit, errors, setError, formState } = useForm<RegisteringProducer>()
 
-  const onValid: SubmitHandler<RegisteringProducer> = (data) => {
-    console.log(data)
-    alert("En construction ;)")
+  const onValid: SubmitHandler<RegisteringProducer> = async (data) => {
+    const response = await api.post<ApiResponse<RegisteringProducer>>("user", data)
+    Object.keys(response.errors).forEach((key) => {
+      setError(key, {
+        message: response.errors[key],
+        shouldFocus: true,
+      })
+    })
   }
 
   return (
@@ -56,7 +62,6 @@ const RegisterPage = () => {
           minLength={15}
           maxLength={4000}
         />
-        <TextInput ref={register} name="email" label="E-mail" type="email" required />
         <TextInput
           name="phone"
           ref={register({
@@ -67,6 +72,7 @@ const RegisterPage = () => {
           type="tel"
           required
         />
+        <TextInput ref={register} name="email" label="E-mail" type="email" required />
         <TextInput
           name="password"
           ref={register({
@@ -79,8 +85,8 @@ const RegisterPage = () => {
           minLength={12}
           autoComplete="new-password"
         />
-        <SubmitButton type="submit" $variant="green">
-          Valider
+        <SubmitButton type="submit" $variant="green" disabled={formState.isSubmitting}>
+          {formState.isSubmitting ? "Chargement…" : "Valider"}
         </SubmitButton>
       </Form>
     </MainLayout>
