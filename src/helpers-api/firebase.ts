@@ -10,5 +10,6 @@ const app = admin.apps.length
       }),
     })
 
+export const auth = app.auth()
 export const firestore = app.firestore()
 export const storage = app.storage()
