@@ -1,4 +1,4 @@
 interface ApiResponse<T> {
-  ok: boolean
+  ok?: boolean
   errors?: Partial<Record<keyof T, string>>
 }

@@ -12,9 +12,10 @@ const config = {
 export interface SEOProps {
   title?: string
   description?: string
+  noindex?: boolean
 }
 
-const SEO = ({ title, description }: SEOProps) => {
+const SEO = ({ title, description, noindex }: SEOProps) => {
   const pageTitle = title ? `${title} | ${config.title}` : `${config.title} | ${config.tagline}`
   const pageDesc = description || config.description
 
@@ -30,6 +31,7 @@ const SEO = ({ title, description }: SEOProps) => {
       <meta property="twitter:creator" content={config.social.twitter} />
       <meta property="twitter:title" content={pageTitle} />
       <meta property="twitter:description" content={pageDesc} />
+      {noindex && <meta name="robots" content="noindex, follow" />}
     </Head>
   )
 }

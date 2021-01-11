@@ -1,8 +1,10 @@
 import { useForm, SubmitHandler } from "react-hook-form"
+import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
+import { auth } from "src/helpers/firebase"
 
 const validateLength = (length: number, message: string) => (value: string) =>
   value.replace(/\s+/g, "").length === length || message
@@ -25,15 +27,35 @@ const validatePassword = (value: string) => {
 
 const RegisterPage = () => {
   const { register, handleSubmit, errors, setError, formState } = useForm<RegisteringProducer>()
+  const { push } = useRouter()
 
   const onValid: SubmitHandler<RegisteringProducer> = async (data) => {
-    const response = await api.post<ApiResponse<RegisteringProducer>>("user", data)
-    Object.keys(response.errors).forEach((key) => {
-      setError(key, {
-        message: response.errors[key],
-        shouldFocus: true,
-      })
-    })
+    try {
+      const response = await api.post<ApiResponse<RegisteringProducer>>("user", data)
+      if (response.ok) {
+        const { user } = await auth.signInWithEmailAndPassword(data.email, data.password)
+        await user.sendEmailVerification({
+          url: window.location.host + "/connexion",
+        })
+        await auth.signOut()
+        // TODO: send email with API
+        push("/confirmation")
+      } else {
+        Object.keys(response.errors).forEach((key) => {
+          setError(key, {
+            message: response.errors[key],
+            shouldFocus: true,
+          })
+        })
+      }
+    } catch (error) {
+      console.error(error)
+      // TODO: report
+      alert(
+        "Une erreur est survenue. Vérifiez votre connexion ou réessayez plus tard.\n" +
+          "Si le problème persiste, contactez-nous à cette adresse : contact@leschouxdacote.fr"
+      )
+    }
   }
 
   return (
@@ -49,12 +71,13 @@ const RegisterPage = () => {
           label="SIRET"
           required
         />
-        <TextInput ref={register} name="name" label="Nom commercial" required maxLength={180} />
-        <TextInput ref={register} name="address" label="Adresse" rows={3} required />
-        <TextInput ref={register} name="firstname" label="Prénom" required maxLength={50} />
-        <TextInput ref={register} name="lastname" label="Nom" required maxLength={50} />
+        <TextInput ref={register} error={errors.name} name="name" label="Nom commercial" required maxLength={180} />
+        <TextInput ref={register} error={errors.address} name="address" label="Adresse" rows={3} required />
+        <TextInput ref={register} error={errors.firstname} name="firstname" label="Prénom" required maxLength={50} />
+        <TextInput ref={register} error={errors.lastname} name="lastname" label="Nom" required maxLength={50} />
         <TextInput
           ref={register}
+          error={errors.description}
           name="description"
           label="Description"
           rows={6}
@@ -72,7 +95,7 @@ const RegisterPage = () => {
           type="tel"
           required
         />
-        <TextInput ref={register} name="email" label="E-mail" type="email" required />
+        <TextInput ref={register} error={errors.email} name="email" label="E-mail" type="email" required />
         <TextInput
           name="password"
           ref={register({
