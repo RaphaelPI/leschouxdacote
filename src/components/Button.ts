@@ -33,6 +33,7 @@ const BASE_BUTTON = css<ButtonProps>`
   &:active,
   &:focus {
     box-shadow: 0 0 0 0.25rem ${({ $variant }) => lighten(0.3, BUTTON_VARIANT[$variant || "white"][3])};
+    z-index: 1;
   }
 
   &:disabled {
