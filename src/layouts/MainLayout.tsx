@@ -7,6 +7,7 @@ import { COLORS, LAYOUT } from "src/constants"
 import Link, { ButtonLink } from "src/components/Link"
 import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
+import { useUser } from "src/helpers/auth"
 
 import LogoSvg from "src/assets/logo.svg"
 
@@ -31,7 +32,7 @@ const Logo = styled(LogoSvg)`
 const Actions = styled.div`
   display: flex;
   align-items: center;
-  & > button {
+  & > a {
     margin: 0 36px;
   }
   form {
@@ -56,8 +57,8 @@ interface Props {
 
 const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
   const router = useRouter()
+  const { signout, user } = useUser()
   const isHome = router.pathname === "/"
-
   return (
     <>
       <SEO {...props} />
@@ -71,11 +72,19 @@ const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
         )}
         <Actions>
           {!isHome && <SearchBar />}
-          <Button $variant="green">Publier une annonce</Button>
-          <ButtonGroup>
-            <ButtonLink href="/inscription">Devenir vendeur</ButtonLink>
-            <ButtonLink href="/connexion">Se connecter</ButtonLink>
-          </ButtonGroup>
+          <ButtonLink href="/publier-une-annonce" $variant="green">
+            Publier une annonce
+          </ButtonLink>
+          {user ? (
+            <Button $variant="white" onClick={signout}>
+              Se déconnecter
+            </Button>
+          ) : (
+            <ButtonGroup>
+              <ButtonLink href="/inscription">Devenir vendeur</ButtonLink>
+              <ButtonLink href="/connexion">Se connecter</ButtonLink>
+            </ButtonGroup>
+          )}
         </Actions>
       </Header>
       <Container $bg={isHome}>
