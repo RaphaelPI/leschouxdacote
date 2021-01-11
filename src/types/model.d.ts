@@ -30,6 +30,11 @@ interface RegisteringProducer {
   password: string
 }
 
+interface Signin {
+  email: string
+  password: string
+}
+
 interface MapMarker {
   position: import("leaflet").LatLngExpression
   content: import("react").ReactNode

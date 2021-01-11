@@ -9,17 +9,17 @@ const BUTTON_VARIANT: Record<string, string[]> = {
   white: [COLORS.white, COLORS.input, COLORS.border, COLORS.grey],
 }
 
-interface ButtonProps {
-  $variant: "green" | "white"
+export interface ButtonProps {
+  $variant?: "green" | "white"
 }
 
 const BASE_BUTTON = css<ButtonProps>`
-  background-color: ${({ $variant }) => BUTTON_VARIANT[$variant][0]};
-  color: ${({ $variant }) => BUTTON_VARIANT[$variant][1]};
+  background-color: ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][0]};
+  color: ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][1]};
   padding: 8px 16px;
   cursor: pointer;
   transition: background-color 150ms;
-  border: 1px solid ${({ $variant }) => BUTTON_VARIANT[$variant][2]};
+  border: 1px solid ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][2]};
   border-radius: 8px;
   outline: none;
   position: relative;
@@ -27,12 +27,12 @@ const BASE_BUTTON = css<ButtonProps>`
   font-weight: 400;
 
   &:hover {
-    background-color: ${({ $variant }) => darken(0.1, BUTTON_VARIANT[$variant][0])};
+    background-color: ${({ $variant }) => darken(0.1, BUTTON_VARIANT[$variant || "white"][0])};
   }
 
   &:active,
   &:focus {
-    box-shadow: 0 0 0 0.25rem ${({ $variant }) => lighten(0.3, BUTTON_VARIANT[$variant][3])};
+    box-shadow: 0 0 0 0.25rem ${({ $variant }) => lighten(0.3, BUTTON_VARIANT[$variant || "white"][3])};
   }
 
   &:disabled {

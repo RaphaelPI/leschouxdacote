@@ -5,6 +5,7 @@ import { AppProps } from "next/app"
 
 import { ErrorBoundary } from "src/helpers/bugsnag"
 import { LAYOUT, FONT } from "src/constants"
+import { UserProvider } from "src/helpers/auth"
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -75,7 +76,7 @@ const ErrorComponent = ({ error }: FallbackProps) => (
   </ErrorContainer>
 )
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+const MyApp = ({ Component, pageProps }: AppProps) => {
   const children = (
     <>
       <GlobalStyle />
@@ -92,9 +93,13 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           rel="stylesheet"
         />
       </Head>
-      <Component {...pageProps} />
+      <UserProvider>
+        <Component {...pageProps} />
+      </UserProvider>
     </>
   )
 
   return ErrorBoundary ? <ErrorBoundary FallbackComponent={ErrorComponent}>{children}</ErrorBoundary> : children
 }
+
+export default MyApp
