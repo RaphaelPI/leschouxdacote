@@ -50,7 +50,7 @@ const SignInPage = () => {
       )}
       <Form method="POST" onSubmit={handleSubmit(onValid)}>
         <h1>Connexion au compte vendeur</h1>
-        <TextInput name="email" ref={register} error={errors.email} label="Adresse email" required />
+        <TextInput name="email" ref={register} error={errors.email} label="Adresse email" type="email" required />
         <TextInput
           ref={register}
           name="password"
