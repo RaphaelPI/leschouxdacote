@@ -55,8 +55,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
         email: producer.email,
         password: producer.password,
         displayName: producer.name,
-        phoneNumber: producer.phone.replace(/\s+/g, "").replace(/^0/, "+33"),
-        emailVerified: false,
+        // phoneNumber: producer.phone.replace(/\s+/g, "").replace(/^0/, "+33"),
       })
 
       await firestore.collection("producers").doc(user.uid).set(producer)
