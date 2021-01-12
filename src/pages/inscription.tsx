@@ -5,6 +5,7 @@ import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
 import { auth } from "src/helpers/firebase"
+import { handleError } from "src/helpers/errors"
 
 const validateLength = (length: number, message: string) => (value: string) =>
   value.replace(/\s+/g, "").length === length || message
@@ -35,7 +36,7 @@ const RegisterPage = () => {
       if (response.ok) {
         const { user } = await auth.signInWithEmailAndPassword(data.email, data.password)
         await user.sendEmailVerification({
-          url: window.location.host + "/connexion",
+          url: `https://${window.location.host}/connexion`,
         })
         await auth.signOut()
         // TODO: send email with API
@@ -49,12 +50,7 @@ const RegisterPage = () => {
         })
       }
     } catch (error) {
-      console.error(error)
-      // TODO: report
-      alert(
-        "Une erreur est survenue. Vérifiez votre connexion ou réessayez plus tard.\n" +
-          "Si le problème persiste, contactez-nous à cette adresse : contact@leschouxdacote.fr"
-      )
+      handleError(error)
     }
   }
 

@@ -1,5 +1,6 @@
-import { COLORS } from "src/constants"
 import styled, { keyframes } from "styled-components"
+
+import { COLORS } from "src/constants"
 
 const spin = keyframes`
   to {
@@ -8,24 +9,13 @@ const spin = keyframes`
 `
 
 const Spinner = styled.div`
-  &:after {
-    content: "";
-    box-sizing: border-box;
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: calc(50% - 20px);
-    left: calc(50% - 20px);
-    border-radius: 50%;
-    border-top: 4px solid ${COLORS.green};
-    border-left: 4px solid ${COLORS.green};
-    border-right: 4px solid transparent;
-    animation: ${spin} 0.6s linear infinite;
-  }
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border-top: 3px solid ${COLORS.green};
+  border-left: 3px solid ${COLORS.green};
+  border-right: 3px solid transparent;
+  animation: ${spin} 0.6s linear infinite;
 `
 
-const Loader = () => {
-  return <Spinner />
-}
-
-export default Loader
+export default Spinner

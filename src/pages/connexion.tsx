@@ -7,67 +7,78 @@ import Link from "src/components/Link"
 import { COLORS } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import MainLayout from "src/layouts/MainLayout"
+import { handleError } from "src/helpers/errors"
 
-const LostPassword = styled(Link)`
+const Warning = styled.div`
+  color: ${COLORS.error};
+  text-align: center;
+  border-bottom: 1px solid ${COLORS.border};
+  margin-bottom: 40px;
+`
+const LostPassword = styled.div`
   font-size: 0.8em;
   color: ${COLORS.grey};
   text-align: right;
 `
-const Align = styled.div<{ $align: "center" | "right" }>`
-  text-align: ${({ $align }) => $align};
-`
-const HR = styled.hr`
-  border-top: ${COLORS.grey};
-  margin-bottom: 20px;
+const Register = styled.div`
+  text-align: center;
 `
 
 const SignInPage = () => {
   const { register, handleSubmit, setError, errors, formState } = useForm<Signin>()
   const { signin } = useUser()
   const router = useRouter()
+  const destination = router.query.next as string
 
   const onValid: SubmitHandler<Signin> = async (data) => {
     try {
       await signin(data.email, data.password)
-      router.push("/")
+      router.push(destination || "/")
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         setError("password", {
           message: "Le mot de passe est incorrect",
           shouldFocus: true,
         })
+      } else if (error.code === "auth/user-not-found") {
+        setError("email", {
+          message: "L'adresse e-mail est inconnue",
+          shouldFocus: true,
+        })
+      } else {
+        // TODO: handle other common auth errors
+        handleError(error)
       }
     }
   }
 
   return (
     <MainLayout title="Connexion">
-      {router.query.hasOwnProperty("redirect") && (
-        <Align $align="center">
-          <h1>Désolé, vous devez être connecté pour accéder à cette page</h1>
-          <HR />
-        </Align>
+      {destination && (
+        <Warning>
+          <p>Désolé, vous devez être connecté pour accéder à cette page</p>
+        </Warning>
       )}
       <Form method="POST" onSubmit={handleSubmit(onValid)}>
         <h1>Connexion au compte vendeur</h1>
-        <TextInput name="email" ref={register} error={errors.email} label="Adresse email" type="email" required />
+        <TextInput ref={register} error={errors.email} name="email" label="Adresse e-mail" type="email" required />
         <TextInput
           ref={register}
+          error={errors.password}
           name="password"
           label="Mot de passe"
-          error={errors.password}
           type="password"
           required
         />
-        <Align $align="right">
-          <LostPassword href="/mot-de-passe-oublie">Mot de passe oublié ?</LostPassword>
-        </Align>
+        <LostPassword>
+          <Link href="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
+        </LostPassword>
         <SubmitButton type="submit" $variant="green" disabled={formState.isSubmitting}>
           {formState.isSubmitting ? "Chargement…" : "Valider"}
         </SubmitButton>
-        <Align $align="center">
-          <Link href="inscription">Pas encore inscrit ? Créer un compte vendeur</Link>
-        </Align>
+        <Register>
+          <Link href="/inscription">Pas encore inscrit ? Créer un compte vendeur</Link>
+        </Register>
       </Form>
     </MainLayout>
   )
