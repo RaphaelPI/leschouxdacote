@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 import { createContext, FC, useContext, useEffect, useState } from "react"
-import Loader from "src/components/Loader"
+
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "src/constants"
 import { auth } from "src/helpers/firebase"
 
@@ -21,11 +21,10 @@ export const useUser = () => useContext(UserContext) as IAuthenticated
 export const UserProvider: FC = ({ children }) => {
   const [user, setUser] = useState<ID | null>(null)
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
+  const { pathname, replace } = useRouter()
 
   useEffect(() => {
-    return auth.onAuthStateChanged(async (firebaseUser) => {
-      setLoading(true)
+    return auth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser.uid)
       } else {
@@ -39,27 +38,28 @@ export const UserProvider: FC = ({ children }) => {
 
   const signout = () => {
     auth.signOut()
-    if (PRIVATE_ROUTES.includes(router.pathname)) {
-      router.replace("/")
+    if (PRIVATE_ROUTES.includes(pathname)) {
+      replace("/")
     }
   }
 
-  const getRedirectUrl = () => {
-    let redirect = ""
-    if (!loading && user && PUBLIC_ROUTES.includes(router.pathname)) {
-      redirect = "/"
-    } else if (!loading && !user && PRIVATE_ROUTES.includes(router.pathname)) {
-      redirect = "/connexion?redirect"
+  const redirectUrl = (() => {
+    if (!loading) {
+      if (user && PUBLIC_ROUTES.includes(pathname)) {
+        // TODO: redirect from login/register page to home if logged in, but only when auto login
+        return "/"
+      }
+      if (!user && PRIVATE_ROUTES.includes(pathname)) {
+        return "/connexion?next=" + pathname
+      }
     }
-    return redirect
-  }
+  })()
 
-  const redirect = getRedirectUrl()
-  if (redirect) {
-    router.replace(redirect)
-  }
+  useEffect(() => {
+    if (redirectUrl) {
+      replace(redirectUrl)
+    }
+  }, [redirectUrl, replace])
 
-  const globalLoading = loading || Boolean(redirect)
-  const values = { user, loading, signout, signin }
-  return <UserContext.Provider value={values}>{globalLoading ? <Loader /> : children}</UserContext.Provider>
+  return <UserContext.Provider value={{ user, loading, signout, signin }}>{children}</UserContext.Provider>
 }
