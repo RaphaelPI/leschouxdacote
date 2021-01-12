@@ -4,6 +4,8 @@ import fetch from "node-fetch"
 import ALLOWED_CODES from "src/helpers-api/activityCodes"
 import { auth, firestore } from "src/helpers-api/firebase"
 import { respond } from "src/helpers-api"
+import { sendEmail } from "src/helpers-api/mail"
+import { CONTACT_EMAIL } from "src/constants"
 
 const checkCompany = async (siret: string) => {
   const response = await fetch("https://api.insee.fr/entreprises/sirene/V3/siret/" + siret, {
@@ -18,20 +20,21 @@ const checkCompany = async (siret: string) => {
   if (response.status >= 400) {
     console.warn("INSEE API HTTP Error", response.status, response.statusText)
     // TODO: report
-    return (
-      "Une erreur est survenue lors de l'obtention des informations sur votre société. Veuillez réessayer plus tard.\n" +
-      "Si le problème persiste, contactez-nous à cette adresse : contact@leschouxdacote.fr"
-    )
+    return `Une erreur est survenue lors de l'obtention des informations sur votre société. Veuillez réessayer plus tard.
+Si le problème persiste, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
   }
 
   const data = await response.json()
   const activityCode = data.etablissement.uniteLegale.activitePrincipaleUniteLegale.replace(".", "")
 
   if (!ALLOWED_CODES.includes(activityCode)) {
-    return (
-      "Désolé, l'activité principale de votre société ne vous permet pas de publier des annonces sur notre plateforme.\n" +
-      "Si vous avez des questions, contactez-nous à cette adresse : contact@leschouxdacote.fr"
-    )
+    return `Désolé, l'activité principale de votre société ne vous permet pas de publier des annonces sur notre plateforme.
+    Si vous avez des questions, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
+  }
+
+  const snapshot = await firestore.collection("producers").where("siret", "==", siret).get()
+  if (snapshot.size > 0) {
+    return `Le compte de cet établissement est déjà créé`
   }
 }
 
@@ -57,10 +60,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       })
 
       await firestore.collection("producers").doc(user.uid).set(producer)
+
+      const link = await auth.generateEmailVerificationLink(user.email, {
+        url: req.headers.origin + "/connexion",
+      })
+
+      const message = `Cliquez sur ce lien pour valider votre compte :\n\n${link}`
+      await sendEmail(user.email, "Validation de votre compte", message)
     } catch (error) {
+      if (error.code === "auth/invalid-email") {
+        return respond(res, {
+          email: "Adresse e-mail invalide",
+        })
+      }
       if (error.code === "auth/email-already-exists") {
         return respond(res, {
           email: "Cette adresse e-mail est déjà utilisée",
+        })
+      }
+      if (error.code === "auth/phone-number-already-exists") {
+        return respond(res, {
+          phone: "Ce numéro de téléphone est déjà utilisé",
         })
       }
       // TODO: report
