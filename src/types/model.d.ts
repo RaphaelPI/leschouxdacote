@@ -10,7 +10,6 @@ interface Product {
 }
 
 interface Producer {
-  slug: string
   name: string
   address: string
   description: string
@@ -34,6 +33,10 @@ interface RegisteringProducer {
 interface Signin {
   email: string
   password: string
+}
+
+interface LostPassword {
+  email: string
 }
 
 interface MapMarker {

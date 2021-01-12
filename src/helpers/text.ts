@@ -38,3 +38,5 @@ export const formatPrice = ({ price, quantity }: Product) => formatAmount(price 
 
 export const getMapsLink = (producer: Producer) =>
   `https://www.google.com/maps/search/${encodeURIComponent(producer.address)}/`
+
+export const getAbsoluteUrl = (path: string) => `${location.protocol}//${location.host}/${path}`
