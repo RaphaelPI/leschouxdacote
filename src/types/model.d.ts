@@ -10,12 +10,13 @@ interface Product {
 }
 
 interface Producer {
+  slug: string
   name: string
   address: string
   description: string
   email: string
   phone: string
-  position: [number, number]
+  position: [number, number] // latitude, longitude
 }
 
 interface RegisteringProducer {

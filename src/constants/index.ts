@@ -1,3 +1,5 @@
+export const CONTACT_EMAIL = "contact@leschouxdacote.fr"
+
 export const COLORS = {
   white: "#ffffff",
   black: "#000000",
@@ -30,5 +32,5 @@ export const LAYOUT = {
 
 export const FONT = "'Roboto', sans-serif"
 
-export const PUBLIC_ROUTES = [/*"/connexion", "/inscription", */ "/mot-de-passe-oublie"]
+export const PUBLIC_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 export const PRIVATE_ROUTES = ["/publier-une-annonce"]

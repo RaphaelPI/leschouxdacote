@@ -4,7 +4,6 @@ import { useRouter } from "next/router"
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
-import { auth } from "src/helpers/firebase"
 import { handleError } from "src/helpers/errors"
 
 const validateLength = (length: number, message: string) => (value: string) =>
@@ -34,12 +33,6 @@ const RegisterPage = () => {
     try {
       const response = await api.post<ApiResponse<RegisteringProducer>>("user", data)
       if (response.ok) {
-        const { user } = await auth.signInWithEmailAndPassword(data.email, data.password)
-        await user.sendEmailVerification({
-          url: `https://${window.location.host}/connexion`,
-        })
-        await auth.signOut()
-        // TODO: send email with API
         push("/confirmation")
       } else {
         Object.keys(response.errors).forEach((key) => {

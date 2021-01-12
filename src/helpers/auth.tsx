@@ -21,7 +21,7 @@ export const useUser = () => useContext(UserContext) as IAuthenticated
 export const UserProvider: FC = ({ children }) => {
   const [user, setUser] = useState<ID | null>(null)
   const [loading, setLoading] = useState(true)
-  const { pathname, replace } = useRouter()
+  const { pathname, query, replace } = useRouter()
 
   useEffect(() => {
     return auth.onAuthStateChanged((firebaseUser) => {
@@ -45,9 +45,9 @@ export const UserProvider: FC = ({ children }) => {
 
   const redirectUrl = (() => {
     if (!loading) {
+      const destination = query.next as string
       if (user && PUBLIC_ROUTES.includes(pathname)) {
-        // TODO: redirect from login/register page to home if logged in, but only when auto login
-        return "/"
+        return destination || "/"
       }
       if (!user && PRIVATE_ROUTES.includes(pathname)) {
         return "/connexion?next=" + pathname
@@ -59,7 +59,7 @@ export const UserProvider: FC = ({ children }) => {
     if (redirectUrl) {
       replace(redirectUrl)
     }
-  }, [redirectUrl, replace])
+  }, [redirectUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <UserContext.Provider value={{ user, loading, signout, signin }}>{children}</UserContext.Provider>
 }

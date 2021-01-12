@@ -27,13 +27,11 @@ const Register = styled.div`
 const SignInPage = () => {
   const { register, handleSubmit, setError, errors, formState } = useForm<Signin>()
   const { signin } = useUser()
-  const router = useRouter()
-  const destination = router.query.next as string
+  const { query } = useRouter()
 
   const onValid: SubmitHandler<Signin> = async (data) => {
     try {
       await signin(data.email, data.password)
-      router.push(destination || "/")
     } catch (error) {
       if (error.code === "auth/wrong-password") {
         setError("password", {
@@ -54,7 +52,7 @@ const SignInPage = () => {
 
   return (
     <MainLayout title="Connexion">
-      {destination && (
+      {query.next && (
         <Warning>
           <p>Désolé, vous devez être connecté pour accéder à cette page</p>
         </Warning>
