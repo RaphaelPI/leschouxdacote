@@ -20,7 +20,7 @@ const LostPassword = styled.div`
   color: ${COLORS.grey};
   text-align: right;
 `
-const Register = styled.div`
+export const Register = styled.div`
   text-align: center;
 `
 
@@ -33,9 +33,9 @@ const SignInPage = () => {
     try {
       await signin(data.email, data.password)
     } catch (error) {
-      if (error.code === "auth/wrong-password") {
-        setError("password", {
-          message: "Le mot de passe est incorrect",
+      if (error.code === "auth/invalid-email") {
+        setError("email", {
+          message: "Adresse e-mail invalide",
           shouldFocus: true,
         })
       } else if (error.code === "auth/user-not-found") {
@@ -43,8 +43,17 @@ const SignInPage = () => {
           message: "L'adresse e-mail est inconnue",
           shouldFocus: true,
         })
+      } else if (error.code === "auth/user-disabled") {
+        setError("email", {
+          message: "Ce compte est désactivé",
+          shouldFocus: true,
+        })
+      } else if (error.code === "auth/wrong-password") {
+        setError("password", {
+          message: "Le mot de passe est incorrect",
+          shouldFocus: true,
+        })
       } else {
-        // TODO: handle other common auth errors
         handleError(error)
       }
     }
