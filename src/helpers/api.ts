@@ -36,17 +36,11 @@ const request = async <T>(method: string, path: string, params?: Payload | Query
 
   const statusText: string = response.statusText || ERROR_CODES[response.status]
 
-  if (response.status >= 500) {
+  if (response.status >= 400) {
     throw new HttpError(response.status, statusText)
   }
 
-  const data = await response.json()
-
-  if (response.status >= 400) {
-    throw new HttpError(response.status, data.message || statusText)
-  }
-
-  return data
+  return response.json()
 }
 
 export default {

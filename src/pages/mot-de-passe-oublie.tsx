@@ -9,7 +9,7 @@ import { getAbsoluteUrl } from "src/helpers/text"
 import { handleError } from "src/helpers/errors"
 import { Register } from "src/pages/connexion"
 
-const LostPassword = () => {
+const LostPasswordPage = () => {
   const { register, handleSubmit, setError, errors, formState } = useForm<Signin>()
   const [sent, setSent] = useState(false)
 
@@ -58,4 +58,4 @@ const LostPassword = () => {
   )
 }
 
-export default LostPassword
+export default LostPasswordPage

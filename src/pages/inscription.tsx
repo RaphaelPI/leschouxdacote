@@ -52,11 +52,11 @@ const RegisterPage = () => {
       <Form method="POST" onSubmit={handleSubmit(onValid)}>
         <h1>Création du profil vendeur</h1>
         <TextInput
-          name="siret"
           ref={register({
             validate: validateLength(14, "Désolé, le SIRET doit comporter 14 chiffres"),
           })}
           error={errors.siret}
+          name="siret"
           label="SIRET"
           required
         />
@@ -75,22 +75,22 @@ const RegisterPage = () => {
           maxLength={4000}
         />
         <TextInput
-          name="phone"
           ref={register({
             validate: validateLength(10, "Désolé, le numéro de téléphone doit comporter 10 chiffres"),
           })}
           error={errors.phone}
+          name="phone"
           label="Téléphone"
           type="tel"
           required
         />
         <TextInput ref={register} error={errors.email} name="email" label="E-mail" type="email" required />
         <TextInput
-          name="password"
           ref={register({
             validate: validatePassword,
           })}
           error={errors.password}
+          name="password"
           label="Mot de passe"
           type="password"
           required

@@ -24,7 +24,7 @@ export const Register = styled.div`
   text-align: center;
 `
 
-const SignInPage = () => {
+const LoginPage = () => {
   const { register, handleSubmit, setError, errors, formState } = useForm<Signin>()
   const { signin } = useUser()
   const { query } = useRouter()
@@ -91,4 +91,4 @@ const SignInPage = () => {
   )
 }
 
-export default SignInPage
+export default LoginPage

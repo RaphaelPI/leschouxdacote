@@ -1,12 +1,22 @@
 interface Product {
   id: string
-  name: string
+  title: string
   producer: string
   location: string
   quantity: number
-  price: number
+  price: number // cents
   image: string
   unit?: string // default "u"
+}
+
+interface RegisteringProduct {
+  title: string
+  price: number // cents
+  quantity?: number
+  unit?: "kg" | "l" | "u"
+  description: string
+  photo: string
+  days: number
 }
 
 interface Producer {

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, TextareaHTMLAttributes, forwardRef, ForwardedRef } from "react"
+import { InputHTMLAttributes, TextareaHTMLAttributes, forwardRef, ForwardedRef, SelectHTMLAttributes } from "react"
 import styled from "styled-components"
 import { FieldError } from "react-hook-form"
 
@@ -16,14 +16,21 @@ export const Label = styled.label<{ $error: boolean }>`
   margin: 10px 0;
   color: ${({ $error }) => ($error ? COLORS.error : COLORS.black)};
   input,
-  textarea {
-    border-radius: 4px;
-    padding: 8px;
-    margin: 4px 0;
-    border: 1px solid ${COLORS.border};
+  textarea,
+  select {
     display: block;
     width: 100%;
+    margin: 4px 0;
+    border-radius: 4px;
+    border: 1px solid ${COLORS.border};
+    padding: 8px;
     font-size: 1em;
+  }
+  input,
+  textarea {
+  }
+  select {
+    padding: 7px 4px;
   }
 `
 export const ErrorMessage = styled.span`
@@ -46,7 +53,7 @@ export const TextInput = forwardRef(
 
     return (
       <Label $error={Boolean(error)}>
-        {label}
+        {label} {props.required && "*"}
         <Tag ref={ref} {...props} />
         {error && <ErrorMessage>{error.message}</ErrorMessage>}
       </Label>
@@ -54,6 +61,22 @@ export const TextInput = forwardRef(
   }
 )
 TextInput.displayName = "ForwardedTextInput"
+
+export const SelectInput = forwardRef(
+  (
+    { label, error, ...props }: InputProps & SelectHTMLAttributes<HTMLSelectElement>,
+    ref: ForwardedRef<HTMLSelectElement>
+  ) => {
+    return (
+      <Label $error={Boolean(error)}>
+        {label} {props.required && "*"}
+        <select ref={ref} {...props} />
+        {error && <ErrorMessage>{error.message}</ErrorMessage>}
+      </Label>
+    )
+  }
+)
+SelectInput.displayName = "ForwardedSelectInput"
 
 export const SubmitButton = styled(Button)`
   display: block;

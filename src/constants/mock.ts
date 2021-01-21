@@ -53,7 +53,7 @@ export const MOCK_PRODUCERS: Record<string, Producer> = {
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: "ca1",
-    name: "Carottes",
+    title: "Carottes",
     producer: "o-potager",
     location: "Toulouse",
     quantity: 1,
@@ -63,7 +63,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "chv",
-    name: "Chou vert, lot de 10",
+    title: "Chou vert, lot de 10",
     producer: "o-potager",
     location: "Toulouse",
     quantity: 10,
@@ -72,7 +72,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "to1",
-    name: "Tomates",
+    title: "Tomates",
     producer: "gallines",
     location: "Toulouse",
     quantity: 1,
@@ -82,7 +82,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "ch1",
-    name: "Chou",
+    title: "Chou",
     producer: "gallines",
     location: "Toulouse",
     quantity: 1,
@@ -91,7 +91,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "po1",
-    name: "Pommes",
+    title: "Pommes",
     producer: "maraicher-du-midi",
     location: "Toulouse",
     quantity: 1,
@@ -101,7 +101,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "chc",
-    name: "Chou chinois, en lot ou à l'unité",
+    title: "Chou chinois, en lot ou à l'unité",
     producer: "maraicher-du-midi",
     location: "Toulouse",
     quantity: 100,
@@ -110,7 +110,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "pa1",
-    name: "Patates",
+    title: "Patates",
     producer: "fourche",
     location: "Toulouse",
     quantity: 1,
@@ -120,7 +120,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "chb",
-    name: "Choux de Bruxelles",
+    title: "Choux de Bruxelles",
     producer: "fourche",
     location: "Toulouse",
     quantity: 1,
@@ -130,7 +130,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "ca2",
-    name: "Carottes",
+    title: "Carottes",
     producer: "cathy",
     location: "Toulouse",
     quantity: 1,
@@ -140,7 +140,7 @@ export const MOCK_PRODUCTS: Product[] = [
   },
   {
     id: "chf",
-    name: "Chou frisé",
+    title: "Chou frisé",
     producer: "cathy",
     location: "Toulouse",
     quantity: 1,
