@@ -18,7 +18,7 @@ const RightCol = styled.div`
 `
 
 const SearchPage = () => {
-  const products = MOCK_PRODUCTS.filter(({ name }) => name.toLowerCase().includes("chou"))
+  const products = MOCK_PRODUCTS.filter(({ title }) => title.toLowerCase().includes("chou"))
 
   return (
     <MainLayout title="Recherche" full>

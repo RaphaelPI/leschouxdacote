@@ -57,10 +57,10 @@ const ProductCard = ({ product, producer }: Props) => {
     <Container>
       <Link href={`/annonce/${product.id}`}>
         <ImageContainer>
-          <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" />
+          <Image src={product.image} alt={product.title} layout="fill" objectFit="cover" />
         </ImageContainer>
         <Content>
-          <Title>{product.name}</Title>
+          <Title>{product.title}</Title>
           <Producer>{producer.name}</Producer>
           <Location>{product.location}</Location>
           <Price>{formatPrice(product)}</Price>

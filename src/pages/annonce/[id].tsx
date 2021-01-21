@@ -75,14 +75,14 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const priceParts = formatPrice(product).split(",")
 
   return (
-    <MainLayout title={product.name} description={description}>
+    <MainLayout title={product.title} description={description}>
       <section>
         <Top>
           <ImageContainer>
-            <Image src={product.image} alt={product.name} layout="fill" objectFit="cover" />
+            <Image src={product.image} alt={product.title} layout="fill" objectFit="cover" />
           </ImageContainer>
           <Data>
-            <Title>{product.name}</Title>
+            <Title>{product.title}</Title>
             <Text $size={SIZES.small}>{formatQuantity(product)}</Text>
             <PriceContainer>
               <Text $weight={100} $size={SIZES.subtitle}>
