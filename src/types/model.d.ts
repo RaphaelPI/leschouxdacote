@@ -44,6 +44,7 @@ interface RegisteringProducer {
   firstname: string
   lastname: string
   description: string
+  photo: string
   email: string
   phone: string
   password: string
