@@ -8,6 +8,7 @@ const app = admin.apps.length
         clientEmail: process.env.FIREBASE_EMAIL,
         privateKey: `-----BEGIN PRIVATE KEY-----\n${process.env.FIREBASE_PRIVATE_KEY}\n-----END PRIVATE KEY-----\n`,
       }),
+      storageBucket: `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT}.appspot.com`,
     })
 
 export const auth = app.auth()

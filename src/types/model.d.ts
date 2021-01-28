@@ -1,3 +1,9 @@
+interface User {
+  uid: string
+  email: string
+  name: string
+}
+
 interface Product {
   id: string
   title: string
@@ -10,12 +16,15 @@ interface Product {
 }
 
 interface RegisteringProduct {
+  uid: string // user ID
   title: string
-  price: number // cents
   quantity?: number
   unit?: "kg" | "l" | "u"
+  price: number // cents
   description: string
   photo: string
+  email: string
+  phone: string
   days: number
 }
 

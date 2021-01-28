@@ -6,27 +6,27 @@ import { auth } from "src/helpers/firebase"
 
 export interface IUserContext {
   loading: boolean
-  user: ID | null
+  user: User | null
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
 }
 
-interface IAuthenticated extends IUserContext {
-  user: ID
-}
-
 const UserContext = createContext<IUserContext>({} as IUserContext)
-export const useUser = () => useContext(UserContext) as IAuthenticated
+export const useUser = () => useContext(UserContext) as IUserContext
 
 export const UserProvider: FC = ({ children }) => {
-  const [user, setUser] = useState<ID | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const { pathname, query, replace } = useRouter()
 
   useEffect(() => {
     return auth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser.uid)
+        setUser({
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          name: firebaseUser.displayName,
+        })
       } else {
         setUser(null)
       }
