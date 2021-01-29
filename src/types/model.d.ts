@@ -7,12 +7,12 @@ interface User {
 interface Product {
   id: string
   title: string
+  quantity: number
+  unit?: "kg" | "l" | "u"
+  price: number // total, in cents
   producer: string
   location: string
-  quantity: number
-  price: number // cents
   image: string
-  unit?: string // default "u"
 }
 
 interface RegisteringProduct {
@@ -20,11 +20,13 @@ interface RegisteringProduct {
   title: string
   quantity?: number
   unit?: "kg" | "l" | "u"
-  price: number // cents
+  price: number // total, in cents
+  address: string
+  location: import("firebase-admin").firestore.GeoPoint
   description: string
   photo: string
-  email: string
-  phone: string
+  email?: string
+  phone?: string
   days: number
 }
 
