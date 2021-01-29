@@ -33,8 +33,8 @@ const NewProductPage = () => {
 
     const { lat, lng } = place.geometry.location
 
-    data.append("lat", String(lat))
-    data.append("lng", String(lng))
+    data.append("lat", String(lat()))
+    data.append("lng", String(lng()))
     data.append("uid", user.uid)
 
     const response = await api.post<ApiResponse<RegisteringProduct>>("product", data)
@@ -78,6 +78,7 @@ const NewProductPage = () => {
         />
         <Infos />
         <SubmitButton />
+        <p>* requis</p>
       </Form>
     </MainLayout>
   )

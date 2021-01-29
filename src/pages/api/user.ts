@@ -41,7 +41,7 @@ Si le problème persiste, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProducer>>) => {
   if (req.method === "POST") {
     // user registration
-    const producer = req.body as RegisteringProducer
+    const producer = req.body as RegisteringProducer // TODO: validate fields
     producer.siret = producer.siret.replace(/\s+/g, "") // remove spaces
     const checkError = await checkCompany(producer.siret)
     if (checkError) {

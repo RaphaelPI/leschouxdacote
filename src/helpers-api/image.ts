@@ -3,8 +3,8 @@ import { stat } from "fs"
 
 import { storage } from "src/helpers-api/firebase"
 
-const SIZE = 800 // ko
-const WIDTH = 200 // pixels
+const MIN_SIZE = 800 // ko
+const WIDTH = 900 // pixels
 const QUALITY = 75 // %
 
 export const getSize = (path: string) =>
@@ -20,10 +20,15 @@ export const getSize = (path: string) =>
 export const resize = async (source: string) => {
   const destination = source + "-resized.jpg"
   const size = await getSize(source)
-  if (size < SIZE * 1024) {
-    throw new Error(`Photo trop petite : minimum ${SIZE} ko`)
+  if (size < MIN_SIZE * 1024) {
+    throw new Error(`Photo trop petite : minimum ${MIN_SIZE} ko`)
   }
-  await sharp(source).resize(WIDTH).toFormat("jpeg", { quality: QUALITY }).toFile(destination)
+
+  await sharp(source)
+    .resize({ width: WIDTH, withoutEnlargement: true })
+    .toFormat("jpeg", { quality: QUALITY })
+    .toFile(destination)
+
   return destination
 }
 
@@ -32,5 +37,6 @@ export const upload = async (path: string, name: string) => {
     public: true,
     destination: name + ".jpg",
   })
-  return metadata.mediaLink
+
+  return metadata.mediaLink as string
 }
