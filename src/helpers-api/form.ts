@@ -6,10 +6,10 @@ type SingleFiles = Record<string, File>
 export const getFormData = (req: NextApiRequest): Promise<[any, SingleFiles]> =>
   new Promise((resolve, reject) => {
     const form = new IncomingForm()
-    form.parse(req, (err, fields, files: SingleFiles) => {
+    form.parse(req, (err, fields, files) => {
       if (err) {
         return reject(err)
       }
-      resolve([fields, files])
+      resolve([fields, files as SingleFiles])
     })
   })

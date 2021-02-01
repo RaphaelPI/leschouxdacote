@@ -4,15 +4,14 @@ import { createContext, FC, useContext, useEffect, useState } from "react"
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "src/constants"
 import { auth } from "src/helpers/firebase"
 
-export interface IUserContext {
+export interface IUserContext<IsAuthenticated extends boolean = false> {
   loading: boolean
-  user: User | null
+  user: IsAuthenticated extends true ? User : User | null
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
-export const useUser = () => useContext(UserContext) as IUserContext
 
 export const UserProvider: FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
@@ -24,8 +23,8 @@ export const UserProvider: FC = ({ children }) => {
       if (firebaseUser) {
         setUser({
           uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          name: firebaseUser.displayName,
+          email: firebaseUser.email as string,
+          name: firebaseUser.displayName as string,
         })
       } else {
         setUser(null)
@@ -62,4 +61,8 @@ export const UserProvider: FC = ({ children }) => {
   }, [redirectUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <UserContext.Provider value={{ user, loading, signout, signin }}>{children}</UserContext.Provider>
+}
+
+export function useUser<IsAuthenticated extends boolean = false>() {
+  return useContext(UserContext) as IUserContext<IsAuthenticated>
 }

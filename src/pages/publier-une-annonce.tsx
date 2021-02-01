@@ -15,7 +15,7 @@ const formatEnd = (days: number) => addDays(new Date(), days).toLocaleDateString
 const PriceInfos = () => {
   const { watch } = useFormContext()
   const quantity = Number(watch("quantity"))
-  const unit = watch("unit") as Product["unit"]
+  const unit = watch("unit") as Unit
   const price = Number(watch("price")) * 100
   if (!quantity || !price) {
     return null
@@ -31,7 +31,7 @@ const EndInfos = () => {
 }
 
 const NewProductPage = () => {
-  const { user } = useUser()
+  const { user } = useUser<true>()
   const place = usePlace("place")
 
   const handleSubmit: SubmitHandler<RegisteringProduct> = async (_, { target }) => {

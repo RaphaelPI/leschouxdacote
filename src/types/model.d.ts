@@ -4,21 +4,23 @@ interface User {
   name: string
 }
 
+type Unit = "g" | "kg" | "l" | "u"
+
 interface Product {
   id: string
   created: number // timestamp
   uid: string // user ID (producer)
   title: string
-  quantity?: number
-  unit?: "g" | "kg" | "l" | "u"
+  quantity: number | null
+  unit: Unit | null
   price: number // total, in cents
   address: string
   location: [number, number] // latitude, longitude
   city: string
   description: string
   photo: string
-  email?: string
-  phone?: string
+  email: string | null
+  phone: string | null
   days: number
   // data fan-out:
   producer: string // producer.name

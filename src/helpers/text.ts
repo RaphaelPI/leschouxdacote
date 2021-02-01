@@ -3,7 +3,7 @@ interface FormattedUnit {
   plural: string
 }
 
-const UNITS: Partial<Record<Product["unit"], FormattedUnit>> = {
+const UNITS: Partial<Record<Unit, FormattedUnit>> = {
   u: {
     singular: "pièce",
     plural: "pièces",
@@ -14,7 +14,7 @@ const UNITS: Partial<Record<Product["unit"], FormattedUnit>> = {
   },
 }
 
-const getUnit = (unit: Product["unit"], quantity = 1) => {
+const getUnit = (unit: Unit, quantity = 1) => {
   const fUnit = UNITS[unit]
   if (fUnit) {
     return quantity > 1 ? fUnit.plural : fUnit.singular

@@ -95,6 +95,7 @@ const Suffix = styled.div`
 `
 
 interface InputProps {
+  name: string
   label?: string
   suffix?: string
   validate?: (value: string) => true | string

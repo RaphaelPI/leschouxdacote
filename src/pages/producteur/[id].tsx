@@ -68,9 +68,10 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 }
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+  const { id } = params as Params
   // https://github.com/vercel/next.js/issues/10933#issuecomment-598297975
-  const producer = getObject(await firestore.collection("producers").doc(params.id).get()) as Producer
-  const { docs } = await firestore.collection("products").where("uid", "==", params.id).get()
+  const producer = getObject(await firestore.collection("producers").doc(id).get()) as Producer
+  const { docs } = await firestore.collection("products").where("uid", "==", id).get()
   const products = docs.map(getObject) as Product[]
 
   return {
