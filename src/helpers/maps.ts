@@ -5,7 +5,7 @@ import { loadScript } from "src/helpers/scripts"
 const API_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_FIREBASE_KEY}&libraries=places`
 
 export const usePlace = (id = "place") => {
-  const [place, setPlace] = useState<Place>()
+  const [place, setPlace] = useState<Place | null>()
 
   useEffect(() => {
     loadScript("gmaps", API_URL).then(() => {
@@ -16,7 +16,7 @@ export const usePlace = (id = "place") => {
       })
       autocomplete.addListener("place_changed", () => {
         const data = autocomplete.getPlace()
-        if (!data || !data.geometry) {
+        if (!data || !data.geometry || !data.address_components) {
           setPlace(null)
           return
         }

@@ -60,12 +60,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
 
       await firestore.collection("producers").doc(user.uid).set(producer)
 
-      const link = await auth.generateEmailVerificationLink(user.email, {
+      const link = await auth.generateEmailVerificationLink(producer.email, {
         url: req.headers.origin + "/connexion",
       })
 
       const message = `Cliquez sur ce lien pour valider votre compte :\n\n${link}`
-      await sendEmail(user.email, "Validation de votre compte", message)
+      await sendEmail(producer.email, "Validation de votre compte", message)
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         return respond(res, {

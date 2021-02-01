@@ -158,11 +158,12 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
 }
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-  const product = getObject(await firestore.collection("products").doc(params.id).get()) as Product
+  const { id } = params as Params
+  const product = getObject(await firestore.collection("products").doc(id).get()) as Product
   const producer = getObject(await firestore.collection("producers").doc(product.uid).get()) as Producer
 
   const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
-  const otherProducts = (docs.map(getObject) as Product[]).filter(({ id }) => id !== product.id)
+  const otherProducts = (docs.map(getObject) as Product[]).filter((p) => p.id !== product.id)
 
   return {
     props: {
