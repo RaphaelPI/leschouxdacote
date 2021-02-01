@@ -3,14 +3,18 @@ interface FormattedUnit {
   plural: string
 }
 
-const UNITS: Record<string, FormattedUnit> = {
+const UNITS: Partial<Record<Product["unit"], FormattedUnit>> = {
   u: {
-    singular: "unité",
-    plural: "unités",
+    singular: "pièce",
+    plural: "pièces",
+  },
+  l: {
+    singular: "litre",
+    plural: "litres",
   },
 }
 
-const getUnit = (unit = "u", quantity = 1) => {
+const getUnit = (unit: Product["unit"], quantity = 1) => {
   const fUnit = UNITS[unit]
   if (fUnit) {
     return quantity > 1 ? fUnit.plural : fUnit.singular
@@ -25,18 +29,23 @@ export const formatAmount = (cents?: number) => {
   return (cents / 100).toFixed(2).replace(/(\d{1,3})\.(\d+)/g, "$1,$2 €")
 }
 
-export const formatPricePerUnit = ({ price, unit }: Product) => {
-  if (price == null) {
+export const formatPricePerUnit = ({ price, quantity, unit }: Pick<Product, "price" | "quantity" | "unit">) => {
+  if (price == null || !quantity) {
     return ""
   }
-  return `${formatAmount(price)} / ${getUnit(unit)}`
+  return `${formatAmount(price / quantity)} / ${getUnit(unit || "u")}`
 }
 
-export const formatQuantity = ({ unit, quantity }: Product) => `${quantity} ${getUnit(unit, quantity)}`
+export const formatQuantity = ({ unit, quantity }: Product) => {
+  if (!quantity) {
+    return ""
+  }
+  return `${String(quantity).replace(".", ",")} ${getUnit(unit || "u", quantity)}`
+}
 
-export const formatPrice = ({ price, quantity }: Product) => formatAmount(price * quantity)
+export const formatPrice = ({ price }: Product) => formatAmount(price)
 
-export const getMapsLink = (producer: Producer) =>
-  `https://www.google.com/maps/search/${encodeURIComponent(producer.address)}/`
+export const getMapsLink = ({ address }: Producer | Product) =>
+  `https://www.google.com/maps/search/${encodeURIComponent(address)}`
 
 export const getAbsoluteUrl = (path: string) => `${location.protocol}//${location.host}/${path}`

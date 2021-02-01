@@ -7,11 +7,10 @@ import MainLayout from "src/layouts/MainLayout"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
 import { getMapsLink } from "src/helpers/text"
+import { firestore, getObject } from "src/helpers-api/firebase"
 import { COLORS, SIZES } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
-
-import { MOCK_PRODUCTS, MOCK_PRODUCERS } from "src/constants/mock"
 
 const Address = styled.a`
   font-size: ${SIZES.card}px;
@@ -23,7 +22,7 @@ const Address = styled.a`
 `
 
 interface Params extends ParsedUrlQuery {
-  slug: string
+  id: string
 }
 
 interface Props {
@@ -53,7 +52,7 @@ const ProducerPage = ({ producer, products }: Props) => {
       <h2>{products.length} annonces en ligne</h2>
       <Products $col={3}>
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} producer={producer} />
+          <ProductCard key={product.id} product={product} />
         ))}
       </Products>
     </MainLayout>
@@ -61,17 +60,23 @@ const ProducerPage = ({ producer, products }: Props) => {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
+  const { docs } = await firestore.collection("producers").get()
   return {
-    paths: Object.keys(MOCK_PRODUCERS).map((id) => ({ params: { slug: id } })),
+    paths: docs.map((doc) => ({ params: { id: doc.id } })),
     fallback: false,
   }
 }
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+  // https://github.com/vercel/next.js/issues/10933#issuecomment-598297975
+  const producer = getObject(await firestore.collection("producers").doc(params.id).get()) as Producer
+  const { docs } = await firestore.collection("products").where("uid", "==", params.id).get()
+  const products = docs.map(getObject) as Product[]
+
   return {
     props: {
-      producer: MOCK_PRODUCERS[params.slug],
-      products: MOCK_PRODUCTS.filter(({ producer }) => producer === params.slug),
+      producer,
+      products,
     },
   }
 }

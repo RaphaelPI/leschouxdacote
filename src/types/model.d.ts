@@ -6,62 +6,53 @@ interface User {
 
 interface Product {
   id: string
-  title: string
-  quantity: number
-  unit?: "kg" | "l" | "u"
-  price: number // total, in cents
-  producer: string
-  location: string
-  image: string
-}
-
-interface RegisteringProduct {
-  uid: string // user ID
+  created: number // timestamp
+  uid: string // user ID (producer)
   title: string
   quantity?: number
-  unit?: "kg" | "l" | "u"
+  unit?: "g" | "kg" | "l" | "u"
   price: number // total, in cents
   address: string
-  location: import("firebase-admin").firestore.GeoPoint
+  location: [number, number] // latitude, longitude
+  city: string
   description: string
   photo: string
   email?: string
   phone?: string
   days: number
+  // data fan-out:
+  producer: string // producer.name
+}
+
+interface FirebaseProduct extends Product {
+  created: import("firebase-admin").firestore.Timestamp
+  location: import("firebase-admin").firestore.GeoPoint
+}
+
+interface RegisteringProduct extends Omit<FirebaseProduct, "id"> {
+  created: Date
 }
 
 interface Producer {
-  name: string
-  address: string
-  description: string
-  email: string
-  phone: string
-  position: [number, number] // latitude, longitude
-}
-
-interface RegisteringProducer {
+  id: string
+  created: number // timestamp
+  slug: string
   siret: string
-  name: string
-  address: string
+  name: string // company name
   firstname: string
   lastname: string
+  address: string
+  // location: [number, number] // latitude, longitude
   description: string
-  photo: string
   email: string
   phone: string
+}
+
+interface FirebaseProducer extends Producer {
+  created: import("firebase-admin").firestore.Timestamp
+}
+
+interface RegisteringProducer extends Omit<Producer, "id"> {
+  created: Date
   password: string
-}
-
-interface Signin {
-  email: string
-  password: string
-}
-
-interface LostPassword {
-  email: string
-}
-
-interface MapMarker {
-  position: import("leaflet").LatLngExpression
-  content: import("react").ReactNode
 }
