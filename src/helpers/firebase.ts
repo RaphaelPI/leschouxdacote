@@ -16,3 +16,21 @@ const app = firebase.apps.length
 
 export const auth = app.auth()
 export const firestore = app.firestore()
+
+export const getObject = (doc: firebase.firestore.DocumentData) => {
+  const data = doc.data()
+  const obj: DataObject = {
+    id: doc.id,
+  }
+  for (const key in data) {
+    const value = data[key]
+    if (value instanceof firebase.firestore.GeoPoint) {
+      obj[key] = [value.latitude, value.longitude]
+    } else if (value instanceof firebase.firestore.Timestamp) {
+      obj[key] = value.toMillis()
+    } else {
+      obj[key] = value
+    }
+  }
+  return obj
+}

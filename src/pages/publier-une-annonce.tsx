@@ -6,10 +6,24 @@ import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from
 import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
 import { usePlace } from "src/helpers/maps"
+import { formatPricePerUnit } from "src/helpers/text"
+
+const ACCEPTED_MIMETYPES = "image/jpeg,image/png,image/webp,image/tiff" // https://sharp.pixelplumbing.com/#formats
 
 const formatEnd = (days: number) => addDays(new Date(), days).toLocaleDateString()
 
-const Infos = () => {
+const PriceInfos = () => {
+  const { watch } = useFormContext()
+  const quantity = Number(watch("quantity"))
+  const unit = watch("unit") as Product["unit"]
+  const price = Number(watch("price")) * 100
+  if (!quantity || !price) {
+    return null
+  }
+  return <p>Soit {formatPricePerUnit({ price, quantity, unit })}</p>
+}
+
+const EndInfos = () => {
   const { watch } = useFormContext()
   const days = watch("days") as string
 
@@ -27,14 +41,13 @@ const NewProductPage = () => {
       throw new ValidationError("email", "Vous devez au moins spécifier une adresse e-mail ou un numéro de téléphone")
     }
 
-    if (!place || !place.geometry) {
-      throw new ValidationError("address", "L'adresse saisie est introuvable sur la carte")
+    if (!place) {
+      throw new ValidationError("address", "Veuillez sélectionner l'adresse dans la liste déroulante")
     }
 
-    const { lat, lng } = place.geometry.location
-
-    data.append("lat", String(lat()))
-    data.append("lng", String(lng()))
+    data.append("city", place.city)
+    data.append("lat", String(place.lat))
+    data.append("lng", String(place.lng))
     data.append("uid", user.uid)
 
     const response = await api.post<ApiResponse<RegisteringProduct>>("product", data)
@@ -56,15 +69,17 @@ const NewProductPage = () => {
           <TextInput name="quantity" label="Quantité" type="number" min={0} step={0.01} />
           <SelectInput name="unit" label="Unité">
             <option></option>
+            <option value="g">g</option>
             <option value="kg">kg</option>
             <option value="l">litre(s)</option>
             <option value="u">pièce(s)</option>
           </SelectInput>
         </Row>
         <TextInput name="price" label="Prix total" required type="number" min={0} step={0.01} suffix="euros" />
+        <PriceInfos />
         <TextInput name="address" label="Adresse" required placeholder="" id="place" />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
-        <TextInput name="photo" label="Photo" type="file" required />
+        <TextInput name="photo" label="Photo" type="file" required accept={ACCEPTED_MIMETYPES} />
         <TextInput type="email" name="email" label="Adresse e-mail" defaultValue={user?.email} />
         <TextInput type="tel" name="phone" label="Téléphone" /* TODO: defaultValue */ />
         <TextInput
@@ -76,7 +91,7 @@ const NewProductPage = () => {
           defaultValue={0}
           suffix="jour(s)"
         />
-        <Infos />
+        <EndInfos />
         <SubmitButton />
         <p>* requis</p>
       </Form>

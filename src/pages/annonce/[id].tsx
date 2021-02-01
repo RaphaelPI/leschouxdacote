@@ -2,7 +2,6 @@ import type { GetStaticPaths, GetStaticProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 
 import styled from "styled-components"
-import Image from "next/image"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
@@ -13,8 +12,7 @@ import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
 
 import PinIcon from "src/assets/pin.svg"
-
-import { MOCK_PRODUCTS, MOCK_PRODUCERS } from "src/constants/mock"
+import { firestore, getObject } from "src/helpers-api/firebase"
 
 const Top = styled.div`
   display: flex;
@@ -48,6 +46,9 @@ const ImageContainer = styled.div`
   margin: 0 64px 32px 0;
 
   img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
   }
 `
@@ -70,24 +71,28 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
+  const price = formatPrice(product)
   const pricePerUnit = formatPricePerUnit(product)
-  const description = `${pricePerUnit} chez ${producer.name} à ${product.location}`
-  const priceParts = formatPrice(product).split(",")
+  const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
+
+  const priceParts = price.split(",")
 
   return (
     <MainLayout title={product.title} description={description}>
       <section>
         <Top>
           <ImageContainer>
-            <Image src={product.image} alt={product.title} layout="fill" objectFit="cover" />
+            <img src={product.photo} alt={product.title} />
           </ImageContainer>
           <Data>
             <Title>{product.title}</Title>
-            <Text $size={SIZES.small}>{formatQuantity(product)}</Text>
+            {product.quantity && product.unit && <Text $size={SIZES.small}>{formatQuantity(product)}</Text>}
             <PriceContainer>
-              <Text $weight={100} $size={SIZES.subtitle}>
-                {pricePerUnit}
-              </Text>
+              {pricePerUnit && (
+                <Text $weight={100} $size={SIZES.subtitle}>
+                  {pricePerUnit}
+                </Text>
+              )}
               <Price>
                 <Text $weight={600} $size={SIZES.price}>
                   {priceParts[0]}
@@ -97,52 +102,67 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
                 </Text>
               </Price>
             </PriceContainer>
-            <Link href={`/producteur/${product.producer}`}>{producer.name}</Link>
+            <Link href={`/producteur/${producer.id}`}>{producer.name}</Link>
             <br />
-            <Address href={getMapsLink(producer)} target="_blank">
+            <Address href={getMapsLink(product)} target="_blank">
               <PinIcon />
               <Text as="span" $color={COLORS.input}>
-                {producer.address}
+                {product.address}
               </Text>
             </Address>
           </Data>
         </Top>
       </section>
+
       <section>
         <h2>Description</h2>
-        <p>{producer.description}</p>
-        <h2>E-mail</h2>
-        <p>
-          <a href={`mailto:${producer.email}`}>{producer.email}</a>
-        </p>
-        <h2>Téléphone</h2>
-        <p>
-          <a href={`tel:${producer.phone}`}>{producer.phone}</a>
-        </p>
+        <p>{product.description}</p>
+        {product.email && (
+          <>
+            <h2>E-mail</h2>
+            <p>
+              <a href={`mailto:${product.email}`}>{product.email}</a>
+            </p>
+          </>
+        )}
+        {product.phone && (
+          <>
+            <h2>Téléphone</h2>
+            <p>
+              <a href={`tel:${product.phone}`}>{product.phone}</a>
+            </p>
+          </>
+        )}
       </section>
-      <section>
-        <h2>Ce producteur vend aussi</h2>
-        <Products $col={3}>
-          {otherProducts.map((prod) => (
-            <ProductCard key={prod.id} product={prod} producer={producer} />
-          ))}
-        </Products>
-      </section>
+
+      {otherProducts.length > 0 && (
+        <section>
+          <h2>Ce producteur vend aussi</h2>
+          <Products $col={3}>
+            {otherProducts.map((prod) => (
+              <ProductCard key={prod.id} product={prod} />
+            ))}
+          </Products>
+        </section>
+      )}
     </MainLayout>
   )
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
+  const { docs } = await firestore.collection("products").get()
   return {
-    paths: MOCK_PRODUCTS.map(({ id }) => ({ params: { id } })),
+    paths: docs.map((doc) => ({ params: { id: doc.id } })),
     fallback: false,
   }
 }
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-  const product = MOCK_PRODUCTS.find(({ id }) => id === params.id)
-  const producer = MOCK_PRODUCERS[product.producer]
-  const otherProducts = MOCK_PRODUCTS.filter((prod) => product.producer === prod.producer && prod.id !== product.id)
+  const product = getObject(await firestore.collection("products").doc(params.id).get()) as Product
+  const producer = getObject(await firestore.collection("producers").doc(product.uid).get()) as Producer
+
+  const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
+  const otherProducts = (docs.map(getObject) as Product[]).filter(({ id }) => id !== product.id)
 
   return {
     props: {

@@ -2,7 +2,6 @@ import dynamic from "next/dynamic"
 import styled from "styled-components"
 
 import { COLORS, LAYOUT } from "src/constants"
-import { MOCK_PRODUCERS } from "src/constants/mock"
 
 const Container = styled.div`
   background-color: ${COLORS.border};
@@ -36,15 +35,14 @@ interface Props {
   products: Product[]
 }
 
-const MapResults = ({ products }: Props) => {
-  const markers: MapMarker[] = products.map((product) => {
-    const producer = MOCK_PRODUCERS[product.producer]
+const ResultsMap = ({ products }: Props) => {
+  const markers: MapMarker[] = products.map(({ location, title, producer }) => {
     return {
-      position: producer.position,
+      position: location,
       content: (
         <PopupContent>
-          <h2>{producer.name}</h2>
-          <h1>{product.title}</h1>
+          <h2>{producer}</h2>
+          <h1>{title}</h1>
         </PopupContent>
       ),
     }
@@ -57,4 +55,4 @@ const MapResults = ({ products }: Props) => {
   )
 }
 
-export default MapResults
+export default ResultsMap

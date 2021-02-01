@@ -5,16 +5,32 @@ import { loadScript } from "src/helpers/scripts"
 const API_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_FIREBASE_KEY}&libraries=places`
 
 export const usePlace = (id = "place") => {
-  const [place, setPlace] = useState<google.maps.places.PlaceResult>()
+  const [place, setPlace] = useState<Place>()
 
   useEffect(() => {
     loadScript("gmaps", API_URL).then(() => {
-      const autocomplete = new google.maps.places.Autocomplete(document.getElementById(id) as HTMLInputElement, {
+      const target = document.getElementById(id) as HTMLInputElement
+      const autocomplete = new google.maps.places.Autocomplete(target, {
         componentRestrictions: { country: "fr" },
-        fields: ["geometry"], // TODO: get more infos?
+        fields: ["geometry", "address_components"], // TODO: get more infos?
       })
       autocomplete.addListener("place_changed", () => {
-        setPlace(autocomplete.getPlace())
+        const data = autocomplete.getPlace()
+        if (!data || !data.geometry) {
+          setPlace(null)
+          return
+        }
+        const city = data.address_components.find((c) => c.types.includes("locality"))
+        if (!city) {
+          setPlace(null)
+          return
+        }
+        const { location } = data.geometry
+        setPlace({
+          lat: location.lat(),
+          lng: location.lng(),
+          city: city.short_name,
+        })
       })
     })
   }, [id])

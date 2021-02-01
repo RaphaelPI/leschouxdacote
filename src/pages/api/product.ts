@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 
-import { firestore, GeoPoint } from "src/helpers-api/firebase"
+import { firestore, GeoPoint, getObject } from "src/helpers-api/firebase"
 import { respond } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
@@ -39,11 +39,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       })
     }
 
-    const doc = firestore.collection("products").doc()
+    const producerDoc = await firestore.collection("producers").doc(fields.uid).get()
+    if (!producerDoc.exists) {
+      throw new Error("Producer not found: " + fields.uid)
+    }
+    const producer = getObject(producerDoc) as Producer
+
+    const productDoc = firestore.collection("products").doc()
     let photo: string
     try {
       const resized = await resize(files.photo.path)
-      photo = await upload(resized, doc.id)
+      photo = await upload(resized, productDoc.id)
     } catch (error) {
       return respond(res, {
         photo: error.message,
@@ -51,6 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     }
 
     const product: RegisteringProduct = {
+      created: new Date(),
       uid: fields.uid,
       title: fields.title,
       quantity: Number(fields.quantity) || null,
@@ -58,14 +65,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       price,
       address: fields.address,
       location: new GeoPoint(Number(fields.lat), Number(fields.lng)),
+      city: fields.city,
       description: fields.description,
       photo,
       email: fields.email || null,
       phone: fields.phone || null,
       days: Number(fields.days),
+      // data fan-out:
+      producer: producer.name,
     }
 
-    doc.set(product)
+    productDoc.set(product)
 
     return respond(res)
   }

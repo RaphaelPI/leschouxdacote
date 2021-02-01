@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
 import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
-
-import { MOCK_PRODUCTS } from "src/constants/mock"
+import { firestore, getObject } from "src/helpers/firebase"
 
 const Row = styled.div`
   display: flex;
@@ -18,16 +18,25 @@ const RightCol = styled.div`
 `
 
 const SearchPage = () => {
-  const products = MOCK_PRODUCTS.filter(({ title }) => title.toLowerCase().includes("chou"))
+  const [results, setResults] = useState<Product[]>([])
+  // TODO: replace with Algolia geo query
+  useEffect(() => {
+    firestore
+      .collection("products")
+      .get()
+      .then((snapshot) => {
+        setResults(snapshot.docs.map(getObject) as Product[])
+      })
+  }, [])
 
   return (
     <MainLayout title="Recherche" full>
       <Row>
         <LeftCol>
-          <ResultsList products={products} />
+          <ResultsList products={results} />
         </LeftCol>
         <RightCol>
-          <ResultsMap products={products} />
+          <ResultsMap products={results} />
         </RightCol>
       </Row>
     </MainLayout>
