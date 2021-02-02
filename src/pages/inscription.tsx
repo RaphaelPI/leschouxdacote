@@ -1,4 +1,3 @@
-import { SubmitHandler } from "react-hook-form"
 import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
@@ -9,7 +8,7 @@ import { validateLength, validatePassword } from "src/helpers/validators"
 const RegisterPage = () => {
   const { push } = useRouter()
 
-  const handleSubmit: SubmitHandler<RegisteringProducer> = async (data) => {
+  const handleSubmit: Submit<RegisteringProducer> = async (data) => {
     await api.post("user", data)
     push("/confirmation")
   }

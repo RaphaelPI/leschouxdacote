@@ -1,4 +1,3 @@
-import { SubmitHandler } from "react-hook-form"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 
@@ -27,7 +26,7 @@ const LoginPage = () => {
   const { signin } = useUser()
   const { query } = useRouter()
 
-  const handleSubmit: SubmitHandler<Signin> = async (data) => {
+  const handleSubmit: Submit<Signin> = async (data) => {
     try {
       await signin(data.email, data.password)
     } catch (error) {
