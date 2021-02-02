@@ -4,11 +4,16 @@ interface User {
   name: string
 }
 
+interface Identified {
+  id: string
+}
+
+type Registering<T> = Omit<T, "id">
+
 type Unit = "g" | "kg" | "l" | "u"
 
-interface Product {
-  id: string
-  created: number // timestamp
+interface Product extends Identified {
+  created: number // timestamp in ms
   uid: string // user ID (producer)
   title: string
   quantity: number | null
@@ -21,23 +26,24 @@ interface Product {
   photo: string
   email: string | null
   phone: string | null
-  days: number
+  expires: number // timestamp in ms
   // data fan-out:
   producer: string // producer.name
 }
 
 interface FirebaseProduct extends Product {
-  created: import("firebase-admin").firestore.Timestamp
-  location: import("firebase-admin").firestore.GeoPoint
+  created: Timestamp
+  expires: Timestamp
+  location: GeoPoint
 }
 
-interface RegisteringProduct extends Omit<FirebaseProduct, "id"> {
+interface RegisteringProduct extends Registering<FirebaseProduct> {
   created: Date
+  expires: Date
 }
 
-interface Producer {
-  id: string
-  created: number // timestamp
+interface Producer extends Identified {
+  created: number // timestamp in ms
   slug: string
   siret: string
   name: string // company name
@@ -51,10 +57,10 @@ interface Producer {
 }
 
 interface FirebaseProducer extends Producer {
-  created: import("firebase-admin").firestore.Timestamp
+  created: Timestamp
 }
 
-interface RegisteringProducer extends Omit<Producer, "id"> {
+interface RegisteringProducer extends Registering<Producer> {
   created: Date
   password: string
 }

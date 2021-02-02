@@ -42,6 +42,11 @@ const GlobalStyle = createGlobalStyle`
     font-size: 1.2em;
     font-weight: 400;
   }
+
+  button {
+    cursor: pointer;
+    font-size: inherit;
+  }
 `
 
 const ErrorContainer = styled.div`

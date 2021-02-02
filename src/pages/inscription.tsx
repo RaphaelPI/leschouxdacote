@@ -2,7 +2,7 @@ import { SubmitHandler } from "react-hook-form"
 import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
-import { Form, TextInput, SubmitButton, ValidationError } from "src/components/Form"
+import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
 import { validateLength, validatePassword } from "src/helpers/validators"
 
@@ -10,14 +10,8 @@ const RegisterPage = () => {
   const { push } = useRouter()
 
   const handleSubmit: SubmitHandler<RegisteringProducer> = async (data) => {
-    const response = await api.post<ApiResponse<RegisteringProducer>>("user", data)
-    if (response.ok) {
-      push("/confirmation")
-    } else {
-      Object.keys(response.errors).forEach((key) => {
-        throw new ValidationError(key, response.errors[key])
-      })
-    }
+    await api.post("user", data)
+    push("/confirmation")
   }
 
   return (

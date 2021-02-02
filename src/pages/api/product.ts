@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import { addDays } from "date-fns"
 
 import { firestore, GeoPoint, getObject } from "src/helpers-api/firebase"
 import { respond } from "src/helpers-api"
@@ -56,8 +57,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       })
     }
 
+    const created = new Date()
+
     const product: RegisteringProduct = {
-      created: new Date(),
+      created,
       uid: fields.uid,
       title: fields.title,
       quantity: Number(fields.quantity) || null,
@@ -70,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       photo,
       email: fields.email || null,
       phone: fields.phone || null,
-      days: Number(fields.days),
+      expires: addDays(created, Number(fields.days)),
       // data fan-out:
       producer: producer.name,
     }

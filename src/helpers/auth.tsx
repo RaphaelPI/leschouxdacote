@@ -2,11 +2,12 @@ import { useRouter } from "next/router"
 import { createContext, FC, useContext, useEffect, useState } from "react"
 
 import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "src/constants"
-import { auth } from "src/helpers/firebase"
+import { auth, firestore, getObject } from "src/helpers/firebase"
 
-export interface IUserContext<IsAuthenticated extends boolean = false> {
+export interface IUserContext {
   loading: boolean
-  user: IsAuthenticated extends true ? User : User | null
+  user: User | null
+  producer: Producer | null
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
 }
@@ -15,6 +16,7 @@ const UserContext = createContext<IUserContext>({} as IUserContext)
 
 export const UserProvider: FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
+  const [producer, setProducer] = useState<Producer | null>(null)
   const [loading, setLoading] = useState(true)
   const { pathname, query, replace } = useRouter()
 
@@ -33,6 +35,20 @@ export const UserProvider: FC = ({ children }) => {
     })
   }, [])
 
+  useEffect(() => {
+    if (user) {
+      firestore
+        .collection("producers")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          setProducer(getObject(doc) as Producer)
+        })
+    } else {
+      setProducer(null)
+    }
+  }, [user])
+
   const signin = (email: string, password: string) => auth.signInWithEmailAndPassword(email, password)
 
   const signout = () => {
@@ -43,14 +59,15 @@ export const UserProvider: FC = ({ children }) => {
   }
 
   const redirectUrl = (() => {
-    if (!loading) {
-      const destination = query.next as string
-      if (user && PUBLIC_ROUTES.includes(pathname)) {
-        return destination || "/"
-      }
-      if (!user && PRIVATE_ROUTES.includes(pathname)) {
-        return "/connexion?next=" + pathname
-      }
+    if (loading) {
+      return null
+    }
+    const destination = query.next as string
+    if (user && PUBLIC_ROUTES.includes(pathname)) {
+      return destination || "/"
+    }
+    if (!user && PRIVATE_ROUTES.includes(pathname)) {
+      return "/connexion?next=" + pathname
     }
   })()
 
@@ -60,9 +77,7 @@ export const UserProvider: FC = ({ children }) => {
     }
   }, [redirectUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return <UserContext.Provider value={{ user, loading, signout, signin }}>{children}</UserContext.Provider>
+  return <UserContext.Provider value={{ user, producer, loading, signout, signin }}>{children}</UserContext.Provider>
 }
 
-export function useUser<IsAuthenticated extends boolean = false>() {
-  return useContext(UserContext) as IUserContext<IsAuthenticated>
-}
+export const useUser = () => useContext(UserContext) as IUserContext
