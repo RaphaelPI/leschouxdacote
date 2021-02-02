@@ -7,6 +7,7 @@ import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
 import { usePlace } from "src/helpers/maps"
 import { formatPricePerUnit } from "src/helpers/text"
+import { validateLength } from "src/helpers/validators"
 
 const ACCEPTED_MIMETYPES = "image/jpeg,image/png,image/webp,image/tiff" // https://sharp.pixelplumbing.com/#formats
 
@@ -81,7 +82,13 @@ const NewProductPage = () => {
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
         <TextInput name="photo" label="Photo" type="file" required accept={ACCEPTED_MIMETYPES} />
         <TextInput type="email" name="email" label="Adresse e-mail" defaultValue={user?.email} />
-        <TextInput type="tel" name="phone" label="Téléphone" /* TODO: defaultValue */ />
+        <TextInput
+          type="tel"
+          name="phone"
+          label="Téléphone"
+          validate={validateLength(10, "Désolé, le numéro de téléphone doit comporter 10 chiffres")}
+          // TODO: defaultValue
+        />
         <TextInput
           name="days"
           label="Publier maintenant pour une durée de :"
