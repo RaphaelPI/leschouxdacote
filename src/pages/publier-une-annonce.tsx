@@ -1,5 +1,6 @@
 import { useFormContext, SubmitHandler } from "react-hook-form"
 import { addDays } from "date-fns"
+import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from "src/components/Form"
@@ -32,7 +33,8 @@ const EndInfos = () => {
 }
 
 const NewProductPage = () => {
-  const { user } = useUser<true>()
+  const { user } = useUser()
+  const { push } = useRouter()
   const place = usePlace("place")
 
   const handleSubmit: SubmitHandler<RegisteringProduct> = async (_, { target }) => {
@@ -49,16 +51,10 @@ const NewProductPage = () => {
     data.append("city", place.city)
     data.append("lat", String(place.lat))
     data.append("lng", String(place.lng))
-    data.append("uid", user.uid)
+    data.append("uid", (user as User).uid)
 
-    const response = await api.post<ApiResponse<RegisteringProduct>>("product", data)
-    if (response.ok) {
-      alert("OK") // TODO
-    } else {
-      Object.keys(response.errors).forEach((key) => {
-        throw new ValidationError(key, response.errors[key])
-      })
-    }
+    await api.post("product", data)
+    push("/mes-annonces") // TODO: confirmation message
   }
 
   return (

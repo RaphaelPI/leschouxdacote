@@ -68,7 +68,7 @@ export const Row = styled.div`
 export const Label = styled.label<{ $error: boolean }>`
   display: block;
   margin: 20px 0;
-  color: ${({ $error }) => ($error ? COLORS.error : COLORS.black)};
+  color: ${({ $error }) => ($error ? COLORS.error : COLORS.dark)};
   input,
   textarea,
   select {

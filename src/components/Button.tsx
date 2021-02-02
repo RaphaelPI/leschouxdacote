@@ -17,7 +17,6 @@ const BASE_BUTTON = css<ButtonProps>`
   background-color: ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][0]};
   color: ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][1]};
   padding: 8px 16px;
-  cursor: pointer;
   transition: background-color 150ms;
   border: 1px solid ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][2]};
   border-radius: 8px;

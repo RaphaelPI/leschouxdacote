@@ -1,6 +1,8 @@
 import HttpError from "standard-http-error"
 import ERROR_CODES from "standard-http-error/codes"
 
+import { ValidationError } from "src/components/Form"
+
 export type Payload = Record<string, any>
 export type Query = Record<string, string>
 
@@ -40,13 +42,22 @@ const request = async <T>(method: string, path: string, params?: Payload | Query
     throw new HttpError(response.status, statusText)
   }
 
-  return response.json()
+  const data = await response.json()
+
+  if (method !== "GET" && data.errors) {
+    const errors = data.errors as Record<string, string>
+    Object.keys(errors).forEach((key) => {
+      throw new ValidationError(key, errors[key])
+    })
+  }
+
+  return data
 }
 
 export default {
   request,
   get: <T = unknown>(path: string, params?: Query) => request<T>("GET", path, params),
-  post: <T = unknown>(path: string, params: Payload) => request<T>("POST", path, params),
-  put: <T = unknown>(path: string, params: Payload) => request<T>("PUT", path, params),
-  delete: <T = unknown>(path: string, params: Payload) => request<T>("DELETE", path, params),
+  post: <T = unknown>(path: string, params: Payload) => request<ApiResponse<T>>("POST", path, params),
+  put: <T = unknown>(path: string, params: Payload) => request<ApiResponse<T>>("PUT", path, params),
+  delete: <T = unknown>(path: string, params: Payload) => request<ApiResponse<T>>("DELETE", path, params),
 }
