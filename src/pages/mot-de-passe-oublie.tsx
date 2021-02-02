@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { SubmitHandler } from "react-hook-form"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton, ValidationError } from "src/components/Form"
@@ -11,7 +10,7 @@ import { Register } from "src/pages/connexion"
 const LostPasswordPage = () => {
   const [sent, setSent] = useState(false)
 
-  const handleSubmit: SubmitHandler<LostPassword> = async (data) => {
+  const handleSubmit: Submit<LostPassword> = async (data) => {
     try {
       await auth.sendPasswordResetEmail(data.email, {
         url: getAbsoluteUrl("connexion"),

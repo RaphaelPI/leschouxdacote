@@ -1,6 +1,6 @@
-import { InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, PropsWithChildren, FormEvent } from "react"
+import { PropsWithChildren, FormEvent, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from "react"
 import styled from "styled-components"
-import { useForm, SubmitHandler, FormProvider, useFormContext, FieldName } from "react-hook-form"
+import { useForm, FormProvider, useFormContext, FieldName } from "react-hook-form"
 
 import { COLORS, LAYOUT } from "src/constants"
 import { Button } from "src/components/Button"
@@ -23,7 +23,7 @@ export const StyledForm = styled.form`
 `
 
 interface FormProps<T> {
-  onSubmit: SubmitHandler<T>
+  onSubmit: Submit<T>
 }
 
 export function Form<T>({ children, onSubmit }: PropsWithChildren<FormProps<T>>) {
@@ -31,7 +31,7 @@ export function Form<T>({ children, onSubmit }: PropsWithChildren<FormProps<T>>)
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     try {
-      await form.handleSubmit(onSubmit)(event)
+      await form.handleSubmit((data) => onSubmit(data, event.target as HTMLFormElement))(event)
     } catch (error) {
       if (error instanceof ValidationError) {
         form.setError(error.field as FieldName<T>, {

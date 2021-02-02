@@ -1,4 +1,4 @@
-import { useFormContext, SubmitHandler } from "react-hook-form"
+import { useFormContext } from "react-hook-form"
 import { addDays } from "date-fns"
 import { useRouter } from "next/router"
 
@@ -37,7 +37,7 @@ const NewProductPage = () => {
   const { push } = useRouter()
   const place = usePlace("place")
 
-  const handleSubmit: SubmitHandler<RegisteringProduct> = async (_, { target }) => {
+  const handleSubmit: Submit<RegisteringProduct> = async (_, target) => {
     const data = new FormData(target)
 
     if (!data.get("email") && !data.get("phone")) {
