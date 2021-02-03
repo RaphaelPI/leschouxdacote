@@ -33,7 +33,7 @@ const EndInfos = () => {
 }
 
 const NewProductPage = () => {
-  const { user } = useUser()
+  const { user, producer } = useUser()
   const { push } = useRouter()
   const place = usePlace("place")
 
@@ -83,7 +83,7 @@ const NewProductPage = () => {
           name="phone"
           label="Téléphone"
           validate={validateLength(10, "Désolé, le numéro de téléphone doit comporter 10 chiffres")}
-          // TODO: defaultValue
+          defaultValue={producer?.phone}
         />
         <TextInput
           name="days"

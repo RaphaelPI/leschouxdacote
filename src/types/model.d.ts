@@ -6,14 +6,15 @@ interface User {
 
 interface Identified {
   id: string
+  created: number // timestamp in ms
+  updated?: number // timestamp in ms
 }
 
-type Registering<T> = Omit<T, "id">
+type Registering<T> = Omit<T, "id" | "updated">
 
 type Unit = "g" | "kg" | "l" | "u"
 
 interface Product extends Identified {
-  created: number // timestamp in ms
   uid: string // user ID (producer)
   title: string
   quantity: number | null
@@ -26,14 +27,15 @@ interface Product extends Identified {
   photo: string
   email: string | null
   phone: string | null
-  expires: number // timestamp in ms
+  expires: number | null // timestamp in ms (null = disabled)
   // data fan-out:
   producer: string // producer.name
 }
 
 interface FirebaseProduct extends Product {
   created: Timestamp
-  expires: Timestamp
+  updated?: Timestamp
+  expires: Timestamp | null
   location: GeoPoint
 }
 
@@ -43,7 +45,6 @@ interface RegisteringProduct extends Registering<FirebaseProduct> {
 }
 
 interface Producer extends Identified {
-  created: number // timestamp in ms
   slug: string
   siret: string
   name: string // company name
