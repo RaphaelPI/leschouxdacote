@@ -3,7 +3,7 @@ import fetch from "node-fetch"
 
 import ALLOWED_CODES from "src/helpers-api/activityCodes"
 import { auth, firestore } from "src/helpers-api/firebase"
-import { respond } from "src/helpers-api"
+import { respond, badRequest } from "src/helpers-api"
 import { sendEmail } from "src/helpers-api/mail"
 import { CONTACT_EMAIL } from "src/constants"
 
@@ -89,7 +89,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     return respond(res)
   }
 
-  res.status(404)
+  badRequest(res)
 }
 
 export default handler

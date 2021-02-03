@@ -1,8 +1,14 @@
+import { useState } from "react"
 import styled from "styled-components"
 
 import { Button } from "src/components/Button"
+import Link from "src/components/Link"
+import Modal from "src/components/Modal"
+import { Form, BasicInput, SubmitButton } from "src/components/Form"
+import ProductEndDate from "src/components/ProductEndDate"
 import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, daysFromNow } from "src/helpers/date"
+import api from "src/helpers/api"
 import { COLORS, SIZES } from "src/constants"
 
 import EditIcon from "src/assets/edit.svg"
@@ -46,6 +52,10 @@ const Actions = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+  a {
+    display: inline-block;
+    padding: 1px 6px;
+  }
   button {
     border: none;
     background-color: transparent;
@@ -81,6 +91,10 @@ const Status = styled.div<{ $active: boolean }>`
     margin-right: 12px;
   }
 `
+const Input = styled(BasicInput)`
+  width: 65px;
+  padding: 10px;
+`
 
 interface Props {
   product: Product
@@ -88,9 +102,26 @@ interface Props {
 }
 
 const AccountProduct = ({ product, odd }: Props) => {
+  const [modal, setModal] = useState<null | "publish" | "disable" | "delete">(null)
   const infos = [formatAmount(product.price), formatQuantity(product), product.city]
-  const now = Date.now()
-  const active = product.expires ? product.expires > now : false
+  const active = product.expires ? product.expires > Date.now() : false
+
+  const handlePublish: Submit<{ days: string }> = async (data) => {
+    await api.put("product", { id: product.id, days: Number(data.days) })
+    setModal(null)
+  }
+
+  const handleDisable: Submit<never> = async () => {
+    await api.put("product", { id: product.id })
+    setModal(null)
+  }
+
+  const handleDelete: Submit<never> = async () => {
+    await api.delete("product", { id: product.id })
+    setModal(null)
+  }
+
+  const handleClose = () => setModal(null)
 
   return (
     <Container $odd={odd}>
@@ -107,10 +138,10 @@ const AccountProduct = ({ product, odd }: Props) => {
           </Days>
         </Infos>
         <Actions>
-          <button>
+          <Link href={`/modifier/${product.id}`}>
             <EditIcon />
-          </button>
-          <button>
+          </Link>
+          <button onClick={() => setModal("delete")}>
             <DeleteIcon />
           </button>
         </Actions>
@@ -120,17 +151,47 @@ const AccountProduct = ({ product, odd }: Props) => {
           <End>
             La publication se termine le {formatDate(product.expires)} ({daysFromNow(product.expires)})
           </End>
-          <Button $variant="green">Ajouter des jours</Button>
-          <Button>Désactiver l’annonce</Button>
+          <Button $variant="green" onClick={() => setModal("publish")}>
+            Ajouter des jours
+          </Button>
+          <Button onClick={() => setModal("disable")}>Désactiver l’annonce</Button>
           <em>Vous pourrez la réactiver à tout moment</em>
           <Status $active={true}>Annonce en ligne</Status>
         </Bottom>
       ) : (
         <Bottom>
           <End>La publication est désactivée</End>
-          <Button $variant="green">Publier l’annonce</Button>
+          <Button $variant="green" onClick={() => setModal("publish")}>
+            Publier l’annonce
+          </Button>
           <Status $active={false}>Annonce désactivée</Status>
         </Bottom>
+      )}
+      {modal && (
+        <Modal onClose={handleClose}>
+          {modal === "publish" && (
+            <Form onSubmit={handlePublish}>
+              <p>
+                Publier l’annonce pour une durée de{" "}
+                <Input type="number" name="days" min={0} step={1} defaultValue={0} /> jour(s) supplémentaires
+              </p>
+              <ProductEndDate start={product.expires} />
+              <SubmitButton />
+            </Form>
+          )}
+          {modal === "disable" && (
+            <Form onSubmit={handleDisable}>
+              <p>Désactiver l’anonce ?</p>
+              <SubmitButton />
+            </Form>
+          )}
+          {modal === "delete" && (
+            <Form onSubmit={handleDelete}>
+              <p>Supprimer l’anonce ?</p>
+              <SubmitButton />
+            </Form>
+          )}
+        </Modal>
       )}
     </Container>
   )

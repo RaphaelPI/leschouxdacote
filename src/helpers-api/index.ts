@@ -7,3 +7,7 @@ export const respond = <T>(
 ) => {
   res.status(code).json(errors ? { errors } : { ok: true })
 }
+
+export const badRequest = (res: NextApiResponse<ApiResponse<any>>, code = 400) => {
+  res.status(code).json({ ok: false })
+}
