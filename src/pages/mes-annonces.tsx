@@ -3,9 +3,17 @@ import styled from "styled-components"
 
 import MainLayout from "src/layouts/MainLayout"
 import { useUser } from "src/helpers/auth"
-import { COLORS } from "src/constants"
+import { COLORS, SIZES } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
 import AccountProduct from "src/components/AccountProduct"
+
+const Titles = styled.div`
+  text-align: center;
+  h1,
+  h2 {
+    margin: 0 0 10px;
+  }
+`
 
 type Tab = "all" | "online" | "disabled"
 
@@ -15,6 +23,7 @@ const Tab = styled.button<{ $active: boolean }>`
   outline: none;
   color: ${({ $active }) => ($active ? COLORS.green : COLORS.dark)};
   padding: 0;
+  font-size: ${SIZES.large}px;
   &:not(:last-of-type) {
     margin-right: 10px;
     padding-right: 10px;
@@ -37,14 +46,16 @@ const MyAdsPage = () => {
   const now = Date.now()
   const tabsData: Record<Tab, Product[]> = {
     all: data,
-    online: data.filter(({ expires }) => expires > now),
-    disabled: data.filter(({ expires }) => expires <= now),
+    online: data.filter(({ expires }) => expires && expires > now),
+    disabled: data.filter(({ expires }) => !expires || expires <= now),
   }
 
   return (
     <MainLayout title="Mes annonces" noindex>
-      <h1>Mon compte</h1>
-      <h2>{producer?.name}</h2>
+      <Titles>
+        <h1>Mon compte</h1>
+        <h2>{producer?.name}</h2>
+      </Titles>
       <h3>Mes annonces</h3>
       <div>
         {TABS.map(({ id, title }) => (
@@ -53,8 +64,8 @@ const MyAdsPage = () => {
           </Tab>
         ))}
       </div>
-      {tabsData[tab].map((product) => (
-        <AccountProduct key={product.id} product={product} />
+      {tabsData[tab].map((product, index) => (
+        <AccountProduct key={product.id} product={product} odd={index % 2 === 0} />
       ))}
     </MainLayout>
   )

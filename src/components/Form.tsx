@@ -1,6 +1,6 @@
-import { PropsWithChildren, FormEvent, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes } from "react"
+import { FormEvent, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, FormHTMLAttributes } from "react"
 import styled from "styled-components"
-import { useForm, FormProvider, useFormContext, FieldName } from "react-hook-form"
+import { useForm, useFormContext, FieldValues, FormProvider, FieldName } from "react-hook-form"
 
 import { COLORS, LAYOUT } from "src/constants"
 import { Button } from "src/components/Button"
@@ -22,11 +22,11 @@ export const StyledForm = styled.form`
   margin: 0 auto;
 `
 
-interface FormProps<T> {
+interface FormProps<T extends FieldValues> extends Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
   onSubmit: Submit<T>
 }
 
-export function Form<T>({ children, onSubmit }: PropsWithChildren<FormProps<T>>) {
+export function Form<T extends FieldValues>({ onSubmit, ...delegated }: FormProps<T>) {
   const form = useForm<T>()
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -46,9 +46,7 @@ export function Form<T>({ children, onSubmit }: PropsWithChildren<FormProps<T>>)
 
   return (
     <FormProvider {...form}>
-      <StyledForm method="POST" onSubmit={handleSubmit}>
-        {children}
-      </StyledForm>
+      <StyledForm method="POST" onSubmit={handleSubmit} {...delegated} />
     </FormProvider>
   )
 }
@@ -68,7 +66,7 @@ export const Row = styled.div`
 export const Label = styled.label<{ $error: boolean }>`
   display: block;
   margin: 20px 0;
-  color: ${({ $error }) => ($error ? COLORS.error : COLORS.dark)};
+  color: ${({ $error }) => ($error ? COLORS.red : COLORS.dark)};
   input,
   textarea,
   select {
@@ -88,7 +86,7 @@ export const Label = styled.label<{ $error: boolean }>`
   }
 `
 export const ErrorMessage = styled.span`
-  color: ${COLORS.error};
+  color: ${COLORS.red};
 `
 const Suffix = styled.div`
   margin-left: 10px;

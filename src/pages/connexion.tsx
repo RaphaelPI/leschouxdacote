@@ -8,7 +8,7 @@ import { useUser } from "src/helpers/auth"
 import MainLayout from "src/layouts/MainLayout"
 
 const Warning = styled.div`
-  color: ${COLORS.error};
+  color: ${COLORS.red};
   text-align: center;
   border-bottom: 1px solid ${COLORS.border};
   margin-bottom: 40px;
