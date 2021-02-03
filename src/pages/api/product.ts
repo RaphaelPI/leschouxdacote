@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { addDays } from "date-fns"
 
 import { firestore, GeoPoint, getObject } from "src/helpers-api/firebase"
-import { respond } from "src/helpers-api"
+import { respond, badRequest } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
 
@@ -83,7 +83,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     return respond(res)
   }
 
-  res.status(404)
+  if (req.method === "PUT") {
+    // TODO
+    return badRequest(res, 501)
+  }
+
+  if (req.method === "DELETE") {
+    // TODO
+    return badRequest(res, 501)
+  }
+
+  badRequest(res)
 }
 
 export default handler

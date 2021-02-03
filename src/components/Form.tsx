@@ -1,4 +1,11 @@
-import { FormEvent, InputHTMLAttributes, TextareaHTMLAttributes, SelectHTMLAttributes, FormHTMLAttributes } from "react"
+import {
+  FormEvent,
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+  SelectHTMLAttributes,
+  FormHTMLAttributes,
+  FC,
+} from "react"
 import styled from "styled-components"
 import { useForm, useFormContext, FieldValues, FormProvider, FieldName } from "react-hook-form"
 
@@ -133,16 +140,17 @@ export const StyledButton = styled(Button)`
   min-width: 150px;
 `
 
-interface SubmitProps {
-  label?: string
-}
-
-export const SubmitButton = ({ label = "Valider" }: SubmitProps) => {
+export const SubmitButton: FC = ({ children = "Valider" }) => {
   const { formState } = useFormContext()
 
   return (
     <StyledButton type="submit" $variant="green" disabled={formState.isSubmitting}>
-      {formState.isSubmitting ? "Chargement…" : label}
+      {formState.isSubmitting ? "Chargement…" : children}
     </StyledButton>
   )
+}
+
+export const BasicInput = (props: InputHTMLAttributes<HTMLInputElement>) => {
+  const { register } = useFormContext()
+  return <input ref={register} {...props} />
 }

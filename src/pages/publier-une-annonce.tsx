@@ -1,9 +1,9 @@
 import { useFormContext } from "react-hook-form"
-import { addDays } from "date-fns"
 import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from "src/components/Form"
+import ProductEndDate from "src/components/ProductEndDate"
 import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
 import { usePlace } from "src/helpers/maps"
@@ -11,8 +11,6 @@ import { formatPricePerUnit } from "src/helpers/text"
 import { validateLength } from "src/helpers/validators"
 
 const ACCEPTED_MIMETYPES = "image/jpeg,image/png,image/webp,image/tiff" // https://sharp.pixelplumbing.com/#formats
-
-const formatEnd = (days: number) => addDays(new Date(), days).toLocaleDateString()
 
 const PriceInfos = () => {
   const { watch } = useFormContext()
@@ -23,13 +21,6 @@ const PriceInfos = () => {
     return null
   }
   return <p>Soit {formatPricePerUnit({ price, quantity, unit })}</p>
-}
-
-const EndInfos = () => {
-  const { watch } = useFormContext()
-  const days = watch("days") as string
-
-  return days ? <p>Fin de publication le {formatEnd(Number(days))}</p> : null
 }
 
 const NewProductPage = () => {
@@ -94,7 +85,7 @@ const NewProductPage = () => {
           defaultValue={0}
           suffix="jour(s)"
         />
-        <EndInfos />
+        <ProductEndDate />
         <SubmitButton />
         <p>* requis</p>
       </Form>
