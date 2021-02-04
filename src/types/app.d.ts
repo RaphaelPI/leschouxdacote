@@ -17,3 +17,8 @@ interface Place {
   lng: number
   city: string
 }
+
+interface Publish {
+  id: Product["id"]
+  days?: number
+}

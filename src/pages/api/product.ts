@@ -83,16 +83,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     return respond(res)
   }
 
-  if (req.method === "PUT") {
-    // TODO
-    return badRequest(res, 501)
-  }
-
-  if (req.method === "DELETE") {
-    // TODO
-    return badRequest(res, 501)
-  }
-
   badRequest(res)
 }
 
