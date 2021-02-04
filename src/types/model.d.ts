@@ -32,16 +32,10 @@ interface Product extends Identified {
   producer: string // producer.name
 }
 
-interface FirebaseProduct extends Product {
-  created: Timestamp
-  updated?: Timestamp
-  expires: Timestamp | null
-  location: GeoPoint
-}
-
-interface RegisteringProduct extends Registering<FirebaseProduct> {
+interface RegisteringProduct extends Registering<Product> {
   created: Date
   expires: Date
+  location: GeoPoint
 }
 
 interface Producer extends Identified {
@@ -55,10 +49,6 @@ interface Producer extends Identified {
   description: string
   email: string
   phone: string
-}
-
-interface FirebaseProducer extends Producer {
-  created: Timestamp
 }
 
 interface RegisteringProducer extends Registering<Producer> {

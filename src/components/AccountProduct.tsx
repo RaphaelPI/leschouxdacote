@@ -107,17 +107,20 @@ const AccountProduct = ({ product, odd }: Props) => {
   const active = product.expires ? product.expires > Date.now() : false
 
   const handlePublish: Submit<{ days: string }> = async (data) => {
-    await api.put("product", { id: product.id, days: Number(data.days) })
+    const payload: Publish = { id: product.id, days: Number(data.days) }
+    await api.post("publish", payload)
     setModal(null)
   }
 
   const handleDisable: Submit<never> = async () => {
-    await api.put("product", { id: product.id })
+    const payload: Publish = { id: product.id }
+    await api.put("publish", payload)
     setModal(null)
   }
 
   const handleDelete: Submit<never> = async () => {
-    await api.delete("product", { id: product.id })
+    const payload: Publish = { id: product.id }
+    await api.delete("publish", payload)
     setModal(null)
   }
 
