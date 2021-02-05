@@ -49,3 +49,13 @@ export const getMapsLink = ({ address }: Producer | Product) =>
   `https://www.google.com/maps/search/${encodeURIComponent(address)}`
 
 export const getAbsoluteUrl = (path: string) => `${location.protocol}//${location.host}/${path}`
+
+export const ellipsis = (text?: string, max = 20) => {
+  if (!text) {
+    return ""
+  }
+  if (text.length > max) {
+    return text.substr(0, max - 3) + "…"
+  }
+  return text
+}
