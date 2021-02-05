@@ -3,7 +3,7 @@ import { stat } from "fs"
 
 import { storage } from "src/helpers-api/firebase"
 
-const MIN_SIZE = 200 // ko
+const MIN_SIZE = 100 // ko
 const WIDTH = 900 // pixels
 const QUALITY = 75 // %
 
