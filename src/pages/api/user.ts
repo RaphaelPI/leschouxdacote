@@ -5,6 +5,7 @@ import ALLOWED_CODES from "src/helpers-api/activityCodes"
 import { auth, firestore } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import { sendEmail } from "src/helpers-api/mail"
+import { normalizeNumber } from "src/helpers/validators"
 import { CONTACT_EMAIL } from "src/constants"
 
 const checkCompany = async (siret: string) => {
@@ -43,6 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     // user registration
     const producer = req.body as RegisteringProducer // TODO: validate fields
     producer.siret = producer.siret.replace(/\s+/g, "") // remove spaces
+    producer.phone = normalizeNumber(producer.phone)
     const checkError = await checkCompany(producer.siret)
     if (checkError) {
       return respond(res, {

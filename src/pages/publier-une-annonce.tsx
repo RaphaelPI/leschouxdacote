@@ -8,7 +8,7 @@ import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
 import { usePlace } from "src/helpers/maps"
 import { formatPricePerUnit } from "src/helpers/text"
-import { validateLength } from "src/helpers/validators"
+import { validatePhoneNumber } from "src/helpers/validators"
 
 const ACCEPTED_MIMETYPES = "image/jpeg,image/png,image/webp,image/tiff" // https://sharp.pixelplumbing.com/#formats
 
@@ -73,7 +73,7 @@ const NewProductPage = () => {
           type="tel"
           name="phone"
           label="Téléphone"
-          validate={validateLength(10, "Désolé, le numéro de téléphone doit comporter 10 chiffres")}
+          validate={validatePhoneNumber}
           defaultValue={producer?.phone}
         />
         <TextInput
