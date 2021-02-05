@@ -1,12 +1,14 @@
+import styled, { css } from "styled-components"
+
 import { useUser } from "src/helpers/auth"
 import Loader from "src/components/Loader"
 import { Button, ButtonGroup } from "src/components/Button"
 import Link, { ButtonLink } from "src/components/Link"
+import { useMenu } from "src/helpers/menu"
+import { ellipsis } from "src/helpers/text"
+import { COLORS } from "src/constants"
 
 import DownIcon from "src/assets/down.svg"
-import styled, { css } from "styled-components"
-import { COLORS } from "src/constants"
-import { useMenu } from "src/helpers/menu"
 
 const Dropdown = styled.div`
   svg {
@@ -66,7 +68,7 @@ const UserZone = () => {
 
   const title = (
     <span>
-      {producer?.name} <DownIcon />
+      {ellipsis(producer?.name)} <DownIcon />
     </span>
   )
 
