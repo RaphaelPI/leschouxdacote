@@ -5,6 +5,7 @@ import { firestore, GeoPoint, getObject } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
+import { normalizeNumber } from "src/helpers/validators"
 
 const checkRequired = (data: Record<string, any>, fields: string[]) => {
   const found = fields.find((field) => !data[field])
@@ -72,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       description: fields.description,
       photo,
       email: fields.email || null,
-      phone: fields.phone || null,
+      phone: fields.phone ? normalizeNumber(fields.phone) : null,
       expires: addDays(created, Number(fields.days)),
       // data fan-out:
       producer: producer.name,
