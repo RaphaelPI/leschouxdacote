@@ -107,8 +107,11 @@ const AccountProduct = ({ product, odd }: Props) => {
   const active = product.expires ? product.expires > Date.now() : false
 
   const handlePublish: Submit<{ days: string }> = async (data) => {
-    const payload: Publish = { id: product.id, days: Number(data.days) }
-    await api.post("publish", payload)
+    const days = Number(data.days)
+    if (days) {
+      const payload: Publish = { id: product.id, days }
+      await api.post("publish", payload)
+    }
     setModal(null)
   }
 

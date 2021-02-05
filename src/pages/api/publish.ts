@@ -23,6 +23,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       updated: now,
       expires: addDays(product.expires || now, days),
     })
+
+    return respond(res)
   }
 
   // unpublish

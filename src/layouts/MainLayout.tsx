@@ -2,11 +2,11 @@ import { FC } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 
-import { COLORS, LAYOUT } from "src/constants"
 import Link, { ButtonLink } from "src/components/Link"
 import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 import UserZone from "src/components/UserZone"
+import { COLORS, LAYOUT } from "src/constants"
 
 import LogoSvg from "src/assets/logo.svg"
 

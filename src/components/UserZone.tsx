@@ -6,7 +6,7 @@ import { Button, ButtonGroup } from "src/components/Button"
 import { ButtonLink } from "src/components/Link"
 
 const UserZone: FC = () => {
-  const { loading, user, signout } = useUser()
+  const { loading, user, producer, signout } = useUser()
 
   if (loading) {
     return <Loader />
@@ -15,7 +15,7 @@ const UserZone: FC = () => {
   if (user) {
     return (
       <Button $variant="white" onClick={signout}>
-        Se déconnecter
+        {producer?.name}
       </Button>
     )
   }
