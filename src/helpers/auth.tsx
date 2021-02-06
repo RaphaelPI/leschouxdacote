@@ -1,11 +1,13 @@
 import { useRouter } from "next/router"
 import { createContext, FC, useContext, useEffect, useState } from "react"
 
-import { PRIVATE_ROUTES, PUBLIC_ROUTES } from "src/constants"
 import { auth, firestore, getObject } from "src/helpers/firebase"
+
+const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
 export interface IUserContext {
   loading: boolean
+  redirecting: boolean
   user: User | null
   producer: Producer | null
   signin: (email: string, pass: string) => Promise<UserCredential>
@@ -51,11 +53,13 @@ export const UserProvider: FC = ({ children }) => {
 
   const signin = (email: string, password: string) => auth.signInWithEmailAndPassword(email, password)
 
+  const isPrivateRoute = pathname.startsWith("/compte")
+
   const signout = () => {
-    auth.signOut()
-    if (PRIVATE_ROUTES.includes(pathname)) {
+    if (isPrivateRoute) {
       replace("/")
     }
+    auth.signOut()
   }
 
   const redirectUrl = (() => {
@@ -63,10 +67,10 @@ export const UserProvider: FC = ({ children }) => {
       return null
     }
     const destination = query.next as string
-    if (user && PUBLIC_ROUTES.includes(pathname)) {
-      return destination || "/"
+    if (user && ANONYMOUS_ROUTES.includes(pathname)) {
+      return destination || "/compte"
     }
-    if (!user && PRIVATE_ROUTES.includes(pathname)) {
+    if (!user && isPrivateRoute) {
       return "/connexion?next=" + pathname
     }
   })()
@@ -77,7 +81,11 @@ export const UserProvider: FC = ({ children }) => {
     }
   }, [redirectUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return <UserContext.Provider value={{ user, producer, loading, signout, signin }}>{children}</UserContext.Provider>
+  return (
+    <UserContext.Provider value={{ loading, redirecting: Boolean(redirectUrl), user, producer, signin, signout }}>
+      {children}
+    </UserContext.Provider>
+  )
 }
 
 export const useUser = () => useContext(UserContext) as IUserContext

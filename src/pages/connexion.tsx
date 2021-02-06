@@ -53,8 +53,7 @@ const LoginPage = () => {
           <p>Désolé, vous devez être connecté pour accéder à cette page</p>
         </Warning>
       )}
-      <Form onSubmit={handleSubmit}>
-        <h1>Connexion au compte vendeur</h1>
+      <Form title="Connexion au compte vendeur" onSubmit={handleSubmit}>
         <TextInput name="email" label="Adresse e-mail" type="email" required />
         <TextInput name="password" label="Mot de passe" type="password" required />
         <LostPassword>

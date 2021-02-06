@@ -52,11 +52,11 @@ interface Props {
 
 const SearchBar = ({ className }: Props) => {
   const router = useRouter()
-  const [state, setState] = useState({ what: "", where: "", ...router.query })
+  const [query, setQuery] = useState({ what: "", where: "", ...router.query })
 
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
+    setQuery({
+      ...query,
       [currentTarget.name]: currentTarget.value,
     })
   }
@@ -66,15 +66,15 @@ const SearchBar = ({ className }: Props) => {
 
     router.push({
       pathname: "/recherche",
-      query: state,
+      query,
     })
   }
 
   return (
     <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
       <InputGroup>
-        <Input name="what" value={state.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
-        <Input name="where" value={state.where} onChange={handleChange} placeholder="Où ?" />
+        <Input name="what" value={query.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
+        <Input name="where" value={query.where} onChange={handleChange} placeholder="Où ?" />
       </InputGroup>
       <Sumbit $variant="green" type="submit">
         <SearchIcon />

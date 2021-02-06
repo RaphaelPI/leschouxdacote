@@ -10,7 +10,8 @@ import { usePlace } from "src/helpers/maps"
 import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
 
-const ACCEPTED_MIMETYPES = "image/jpeg,image/png,image/webp,image/tiff" // https://sharp.pixelplumbing.com/#formats
+// https://sharp.pixelplumbing.com/#formats
+const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]
 
 const PriceInfos = () => {
   const { watch } = useFormContext()
@@ -26,9 +27,9 @@ const PriceInfos = () => {
 const NewProductPage = () => {
   const { user, producer } = useUser()
   const { push } = useRouter()
-  const place = usePlace("place")
+  const place = usePlace(user && "place") // TODO: improve address input
 
-  const handleSubmit: Submit<RegisteringProduct> = async (_, target) => {
+  const handleSubmit: Submit<RegisteringProduct> = async (values, target) => {
     const data = new FormData(target)
 
     if (!data.get("email") && !data.get("phone")) {
@@ -45,13 +46,12 @@ const NewProductPage = () => {
     data.append("uid", (user as User).uid)
 
     await api.post("product", data)
-    push("/mes-annonces") // TODO: confirmation message
+    push("/compte/annonces") // TODO: confirmation message
   }
 
   return (
-    <MainLayout title="Publier une annonce">
-      <Form onSubmit={handleSubmit}>
-        <h1>Publier une annonce</h1>
+    <MainLayout title="Créer une annonce">
+      <Form title="Création d’une annonce" hasRequired onSubmit={handleSubmit}>
         <TextInput name="title" label="Titre" required maxLength={100} />
         <Row>
           <TextInput name="quantity" label="Quantité" type="number" min={0} step={0.01} />
@@ -67,7 +67,7 @@ const NewProductPage = () => {
         <PriceInfos />
         <TextInput name="address" label="Adresse" required placeholder="" id="place" />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
-        <TextInput name="photo" label="Photo" type="file" required accept={ACCEPTED_MIMETYPES} />
+        <TextInput name="photo" label="Photo" type="file" required accept={ACCEPTED_MIMETYPES.join(",")} />
         <TextInput type="email" name="email" label="Adresse e-mail" defaultValue={user?.email} />
         <TextInput
           type="tel"
@@ -87,7 +87,6 @@ const NewProductPage = () => {
         />
         <ProductEndDate />
         <SubmitButton />
-        <p>* requis</p>
       </Form>
     </MainLayout>
   )

@@ -24,11 +24,11 @@ const PopupContent = styled.div`
   }
 `
 
-const Loading = () => <Loader>Chargement de la carte…</Loader>
-
 const Map = dynamic(import("src/components/Map"), {
   ssr: false,
-  loading: Loading,
+  loading() {
+    return <Loader>Chargement de la carte…</Loader>
+  },
 })
 
 interface Props {

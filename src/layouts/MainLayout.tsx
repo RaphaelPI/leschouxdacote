@@ -6,6 +6,8 @@ import Link, { ButtonLink } from "src/components/Link"
 import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 import UserZone from "src/components/UserZone"
+import Loader from "src/components/Loader"
+import { useUser } from "src/helpers/auth"
 import { COLORS, LAYOUT } from "src/constants"
 
 import LogoSvg from "src/assets/logo.svg"
@@ -46,6 +48,9 @@ const Container = styled.div<{ $bg: boolean }>`
   min-height: 100vh;
   padding-top: ${LAYOUT.headerHeight}px;
 `
+const Loading = styled(Loader)`
+  margin: 35vh auto 0;
+`
 const Main = styled.main<{ $full?: boolean }>`
   ${({ $full }) => ($full ? `` : `max-width: ${LAYOUT.maxWidth}px; margin: 0 auto; padding: 32px;`)}
 `
@@ -56,6 +61,8 @@ interface Props {
 
 const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
   const { pathname } = useRouter()
+  const { loading, redirecting } = useUser()
+
   const isHome = pathname === "/"
 
   return (
@@ -71,15 +78,13 @@ const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
         )}
         <Actions>
           {!isHome && <SearchBar />}
-          <ButtonLink href="/publier-une-annonce" $variant="green">
-            Publier une annonce
+          <ButtonLink href="/compte/annonce" $variant="green">
+            Créer une annonce
           </ButtonLink>
           <UserZone />
         </Actions>
       </Header>
-      <Container $bg={isHome}>
-        <Main $full={full}>{children}</Main>
-      </Container>
+      <Container $bg={isHome}>{loading || redirecting ? <Loading /> : <Main $full={full}>{children}</Main>}</Container>
     </>
   )
 }
