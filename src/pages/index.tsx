@@ -7,13 +7,12 @@ import LogoSvg from "src/assets/logo.svg"
 
 const Logo = styled(LogoSvg)`
   display: block;
-  margin: 10vh auto;
-  width: 80%;
+  margin: 9vh auto 6vh;
+  width: 75%;
   max-width: 800px;
 `
 const SearchGroup = styled(SearchBar)`
   margin: 5vh auto;
-  width: 80%;
   input {
     padding: 16px 32px;
     font-size: 1.5em;

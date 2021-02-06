@@ -23,17 +23,28 @@ export class ValidationError extends Error {
   }
 }
 
-export const StyledForm = styled.form`
+const StyledForm = styled.form`
   width: 100%;
   max-width: ${LAYOUT.formWidth}px;
   margin: 0 auto;
 `
+const Title = styled.h1`
+  text-align: center;
+`
+const Required = styled.p`
+  font-style: italic;
+  color: ${COLORS.grey};
+  text-align: center;
+  margin: -1em 0 1em;
+`
 
 interface FormProps<T extends FieldValues> extends Omit<FormHTMLAttributes<HTMLFormElement>, "onSubmit"> {
+  title?: string
+  hasRequired?: boolean
   onSubmit: Submit<T>
 }
 
-export function Form<T extends FieldValues>({ onSubmit, ...delegated }: FormProps<T>) {
+export function Form<T extends FieldValues>({ title, hasRequired, onSubmit, children, ...delegated }: FormProps<T>) {
   const form = useForm<T>()
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -53,7 +64,11 @@ export function Form<T extends FieldValues>({ onSubmit, ...delegated }: FormProp
 
   return (
     <FormProvider {...form}>
-      <StyledForm method="POST" onSubmit={handleSubmit} {...delegated} />
+      <StyledForm method="POST" onSubmit={handleSubmit} {...delegated}>
+        {title && <Title>{title}</Title>}
+        {hasRequired && <Required>* champs obligatoires</Required>}
+        {children}
+      </StyledForm>
     </FormProvider>
   )
 }

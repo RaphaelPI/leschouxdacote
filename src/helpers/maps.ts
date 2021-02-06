@@ -4,10 +4,13 @@ import { loadScript } from "src/helpers/scripts"
 
 const API_URL = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_FIREBASE_KEY}&libraries=places`
 
-export const usePlace = (id = "place") => {
+export const usePlace = (id: string | null) => {
   const [place, setPlace] = useState<Place | null>()
 
   useEffect(() => {
+    if (!id) {
+      return
+    }
     loadScript("gmaps", API_URL).then(() => {
       const target = document.getElementById(id) as HTMLInputElement
       const autocomplete = new google.maps.places.Autocomplete(target, {

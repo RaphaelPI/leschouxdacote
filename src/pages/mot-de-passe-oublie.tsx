@@ -29,8 +29,7 @@ const LostPasswordPage = () => {
 
   return (
     <MainLayout title="Mot de passe oublié">
-      <Form onSubmit={handleSubmit}>
-        <h1>Mot de passe oublié</h1>
+      <Form title="Mot de passe oublié" onSubmit={handleSubmit}>
         {sent ? (
           <p>Veuillez cliquer sur le lien de réinitialisation que nous venons de vous envoyer</p>
         ) : (

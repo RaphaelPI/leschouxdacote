@@ -32,6 +32,3 @@ export const LAYOUT = {
 }
 
 export const FONT = "'Roboto', sans-serif"
-
-export const PUBLIC_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
-export const PRIVATE_ROUTES = ["/publier-une-annonce", "/mes-annonces"]

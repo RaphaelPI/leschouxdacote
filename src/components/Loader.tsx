@@ -8,7 +8,7 @@ const spin = keyframes`
   }
 `
 
-const Spinner = styled.div`
+const Loader = styled.div`
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -18,4 +18,4 @@ const Spinner = styled.div`
   animation: ${spin} 0.6s linear infinite;
 `
 
-export default Spinner
+export default Loader

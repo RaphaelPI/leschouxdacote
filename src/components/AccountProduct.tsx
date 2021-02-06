@@ -144,7 +144,7 @@ const AccountProduct = ({ product, odd }: Props) => {
           </Days>
         </Infos>
         <Actions>
-          <Link href={`/modifier/${product.id}`}>
+          <Link href={`/compte/annonce/${product.id}`}>
             <EditIcon />
           </Link>
           <button onClick={() => setModal("delete")}>
@@ -176,8 +176,7 @@ const AccountProduct = ({ product, odd }: Props) => {
       {modal && (
         <Modal onClose={handleClose}>
           {modal === "publish" && (
-            <Form onSubmit={handlePublish}>
-              <h1>{product.title}</h1>
+            <Form title={product.title} onSubmit={handlePublish}>
               <p>
                 Publier l’annonce pour une durée de{" "}
                 <Input type="number" name="days" min={0} step={1} defaultValue={0} /> jour(s) supplémentaires
@@ -187,15 +186,13 @@ const AccountProduct = ({ product, odd }: Props) => {
             </Form>
           )}
           {modal === "disable" && (
-            <Form onSubmit={handleDisable}>
-              <h1>{product.title}</h1>
+            <Form title={product.title} onSubmit={handleDisable}>
               <p>Désactiver l’annonce ?</p>
               <SubmitButton />
             </Form>
           )}
           {modal === "delete" && (
-            <Form onSubmit={handleDelete}>
-              <h1>{product.title}</h1>
+            <Form title={product.title} onSubmit={handleDelete}>
               <p>Supprimer l’annonce ?</p>
               <SubmitButton />
             </Form>

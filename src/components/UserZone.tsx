@@ -34,6 +34,7 @@ const Menu = styled.div`
   border-top: 1px solid ${COLORS.border};
 `
 const entryCss = css`
+  display: block;
   border: none;
   outline: none;
   padding: 8px 16px;
@@ -50,10 +51,9 @@ const entryCss = css`
 
 const Entry = styled(Link)`
   ${entryCss}
-  display: block;
 `
 
-const Logout = styled.button`
+const Logout = styled.a`
   ${entryCss}
   border-top: 1px solid ${COLORS.border};
 `
@@ -62,7 +62,7 @@ const UserZone = () => {
   const { loading, user, producer, signout } = useUser()
   const { ref, open, setOpen } = useMenu()
 
-  if (loading) {
+  if (loading || (user && !producer)) {
     return <Loader />
   }
 
@@ -80,8 +80,8 @@ const UserZone = () => {
           {title}
           {open && (
             <Menu>
-              <Entry href="/mes-annonces">Mes annonces</Entry>
-              <Entry href="/mon-compte">Mon compte</Entry>
+              <Entry href="/compte/annonces">Mes annonces</Entry>
+              <Entry href="/compte">Mon compte</Entry>
               <Logout onClick={signout}>Déconnexion</Logout>
             </Menu>
           )}
