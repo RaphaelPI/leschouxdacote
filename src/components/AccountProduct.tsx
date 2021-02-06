@@ -177,6 +177,7 @@ const AccountProduct = ({ product, odd }: Props) => {
         <Modal onClose={handleClose}>
           {modal === "publish" && (
             <Form onSubmit={handlePublish}>
+              <h1>{product.title}</h1>
               <p>
                 Publier l’annonce pour une durée de{" "}
                 <Input type="number" name="days" min={0} step={1} defaultValue={0} /> jour(s) supplémentaires
@@ -187,13 +188,15 @@ const AccountProduct = ({ product, odd }: Props) => {
           )}
           {modal === "disable" && (
             <Form onSubmit={handleDisable}>
-              <p>Désactiver l’anonce ?</p>
+              <h1>{product.title}</h1>
+              <p>Désactiver l’annonce ?</p>
               <SubmitButton />
             </Form>
           )}
           {modal === "delete" && (
             <Form onSubmit={handleDelete}>
-              <p>Supprimer l’anonce ?</p>
+              <h1>{product.title}</h1>
+              <p>Supprimer l’annonce ?</p>
               <SubmitButton />
             </Form>
           )}
