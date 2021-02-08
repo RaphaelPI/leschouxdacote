@@ -18,8 +18,8 @@ const checkRequired = (data: Record<string, any>, fields: string[]) => {
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProduct>>) => {
-  if (req.method === "POST") {
-    const [fields, files] = await getFormData(req)
+  if (req.method === "POST" || req.method === "PUT") {
+    const [fields, files] = await getFormData<ProductPayload>(req)
 
     const errors = checkRequired(fields, ["title", "price", "address", "description", "days"])
     if (errors) {
@@ -35,11 +35,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
         email: "Vous devez au moins spécifier une adresse e-mail ou un numéro de téléphone",
       })
     }
-    if (!files.photo) {
-      return respond(res, {
-        photo: "La photo est requise",
-      })
-    }
     const price = fields.price * 100 // store cents
     if (isNaN(price) || price < 0 || !Number.isInteger(price)) {
       return respond(res, {
@@ -53,14 +48,38 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     }
     const producer = getObject(producerDoc) as Producer
 
-    const productDoc = firestore.collection("products").doc()
+    let ref: FirebaseFirestore.DocumentReference
+    let existing: Product | null
+    if (req.method === "PUT") {
+      if (!fields.id) {
+        throw new Error("Missing product ID parameter")
+      }
+      ref = firestore.collection("products").doc(fields.id)
+      const doc = await ref.get()
+      if (!doc.exists) {
+        throw new Error("Product not found: " + fields.id)
+      }
+      existing = getObject(doc) as Product
+    } else {
+      ref = firestore.collection("products").doc()
+      existing = null
+    }
+
     let photo: string
-    try {
-      const resized = await resize(files.photo.path)
-      photo = await upload(resized, productDoc.id)
-    } catch (error) {
+    if (files.photo?.size) {
+      try {
+        const resized = await resize(files.photo.path)
+        photo = await upload(resized, ref.id)
+      } catch (error) {
+        return respond(res, {
+          photo: error.message,
+        })
+      }
+    } else if (existing) {
+      photo = existing.photo
+    } else {
       return respond(res, {
-        photo: error.message,
+        photo: "La photo est requise",
       })
     }
 
@@ -87,11 +106,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       producer: producer.name,
     }
 
-    await productDoc.set(product)
+    await ref.set(product)
 
     const record: Product = {
       ...product,
-      objectID: productDoc.id,
+      objectID: ref.id,
       created: product.created.getTime(),
       expires: product.expires.getTime(),
       _geoloc: position,

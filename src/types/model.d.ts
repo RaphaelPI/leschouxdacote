@@ -61,3 +61,10 @@ interface RegisteringProduct extends Registering<Product> {
   expires: Date
   _geoloc: GeoPoint
 }
+
+interface ProductPayload extends Omit<RegisteringProduct, "created" | "expires" | "_geoloc"> {
+  id?: string
+  days: string
+  lat: string
+  lng: string
+}
