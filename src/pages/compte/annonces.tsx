@@ -41,7 +41,7 @@ const MyAdsPage = () => {
   const { producer } = useUser()
   const [tab, setTab] = useState<Tab>("all")
 
-  const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.objectID] : false)
+  const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.objectID] : false, true)
 
   const now = Date.now()
   const tabsData: Record<Tab, Product[]> = {

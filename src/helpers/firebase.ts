@@ -4,6 +4,8 @@ import "firebase/firestore"
 
 import { useState, useEffect } from "react"
 
+import { handleError } from "src/helpers/errors"
+
 const app = firebase.apps.length
   ? firebase.app()
   : firebase.initializeApp({
@@ -18,6 +20,7 @@ const app = firebase.apps.length
 
 export const auth = app.auth()
 export const firestore = app.firestore()
+export const GeoPoint = firebase.firestore.GeoPoint
 
 export const getObject = (doc: firebase.firestore.DocumentData) => {
   const data = doc.data()
@@ -44,7 +47,8 @@ interface QueryProps<T> {
 
 export const useQuery = function <T extends Identified>(
   collection: string,
-  where?: WhereClause | false
+  where?: WhereClause | false,
+  live?: boolean
 ): QueryProps<T> {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<T[]>([])
@@ -61,11 +65,16 @@ export const useQuery = function <T extends Identified>(
       ref = ref.where(...where)
     }
 
-    return ref.onSnapshot((snapshot) => {
-      const list = snapshot.docs.map(getObject) as T[]
-      setData(list)
+    const callback = (snapshot: QuerySnapshot) => {
+      setData(snapshot.docs.map(getObject) as T[])
       setLoading(false)
-    })
+    }
+
+    if (live) {
+      return ref.onSnapshot(callback, handleError)
+    } else {
+      ref.get().then(callback).catch(handleError)
+    }
   }, [collection, JSON.stringify(where)]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return { data, loading }
@@ -76,23 +85,33 @@ interface ObjectQueryProps<T> {
   loading: boolean
 }
 
-export const useObjectQuery = function <T extends Identified>(collection: string, id: ID | false): ObjectQueryProps<T> {
+export const useObjectQuery = function <T extends Identified>(
+  collection: string,
+  id?: ID,
+  live?: boolean
+): ObjectQueryProps<T> {
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<T>()
 
   useEffect(() => {
-    if (id === false) {
-      // false => no query at this point
+    if (!id) {
+      // no query at this point
       return
     }
 
     const ref = firestore.collection(collection).doc(id)
 
-    return ref.onSnapshot((snapshot) => {
-      setData(getObject(snapshot) as T)
+    const callback = (doc: DocumentSnapshot) => {
+      setData(getObject(doc) as T)
       setLoading(false)
-    })
-  }, [collection, id])
+    }
+
+    if (live) {
+      return ref.onSnapshot(callback, handleError)
+    } else {
+      ref.get().then(callback).catch(handleError)
+    }
+  }, [collection, id, live])
 
   return { data, loading }
 }

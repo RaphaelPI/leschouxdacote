@@ -6,7 +6,7 @@ import Link, { ButtonLink } from "src/components/Link"
 import SEO, { SEOProps } from "src/components/Seo"
 import SearchBar from "src/components/SearchBar"
 import UserZone from "src/components/UserZone"
-import Loader from "src/components/Loader"
+import { Loading } from "src/components/Loader"
 import { useUser } from "src/helpers/auth"
 import { COLORS, LAYOUT } from "src/constants"
 
@@ -48,9 +48,6 @@ const Container = styled.div<{ $bg: boolean }>`
   min-height: 100vh;
   padding-top: ${LAYOUT.headerHeight}px;
 `
-const Loading = styled(Loader)`
-  margin: 35vh auto 0;
-`
 const Main = styled.main<{ $full?: boolean }>`
   ${({ $full }) => ($full ? `` : `max-width: ${LAYOUT.maxWidth}px; margin: 0 auto; padding: 32px;`)}
 `
@@ -84,7 +81,9 @@ const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
           <UserZone />
         </Actions>
       </Header>
-      <Container $bg={isHome}>{loading || redirecting ? <Loading /> : <Main $full={full}>{children}</Main>}</Container>
+      <Container $bg={isHome}>
+        <Main $full={full}>{loading || redirecting ? <Loading /> : children}</Main>
+      </Container>
     </>
   )
 }
