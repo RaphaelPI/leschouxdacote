@@ -1,12 +1,14 @@
 import { format, differenceInCalendarDays, addDays } from "date-fns"
 import fr from "date-fns/locale/fr"
 
-export const formatDate = (ts: number | Date | null) => {
+export const formatDate = (ts: number | Date | null, pattern = "do MMMM yyyy") => {
   if (!ts) {
     return ""
   }
-  return format(ts, "do MMMM yyyy", { locale: fr }).replace("ème", "")
+  return format(ts, pattern, { locale: fr }).replace("ème", "")
 }
+
+export const formatDateTime = (date: number | Date | null) => formatDate(date, "do MMMM yyyy à HH:mm")
 
 export const daysFromNow = (ts: number | Date | null) => {
   if (!ts) {
@@ -17,5 +19,5 @@ export const daysFromNow = (ts: number | Date | null) => {
 
 export const formatEnd = (days: number, start?: number | Date | null) => {
   const end = addDays(start || new Date(), days)
-  return formatDate(end)
+  return formatDateTime(end)
 }

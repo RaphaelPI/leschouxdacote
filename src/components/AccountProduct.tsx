@@ -7,7 +7,7 @@ import Modal from "src/components/Modal"
 import { Form, BasicInput, SubmitButton } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
 import { formatAmount, formatQuantity } from "src/helpers/text"
-import { formatDate, daysFromNow } from "src/helpers/date"
+import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES } from "src/constants"
 
@@ -155,7 +155,7 @@ const AccountProduct = ({ product, odd }: Props) => {
       {active ? (
         <Bottom>
           <End>
-            La publication se termine le {formatDate(product.expires)} ({daysFromNow(product.expires)})
+            La publication se termine le {formatDateTime(product.expires)} ({daysFromNow(product.expires)})
           </End>
           <Button $variant="green" onClick={() => setModal("publish")}>
             Ajouter des jours

@@ -6,6 +6,7 @@ type UserCredential = firebase.default.auth.UserCredential
 type FieldPath = firebase.default.firestore.FieldPath
 type WhereFilterOp = firebase.default.firestore.WhereFilterOp
 type DocumentData = firebase.default.firestore.DocumentData
+type DocumentSnapshot<D = DocumentData> = firebase.default.firestore.DocumentSnapshot<D>
 type CollectionReference<D = DocumentData> = firebase.default.firestore.CollectionReference<D>
 type Query<D = DocumentData> = firebase.default.firestore.Query<D>
 type QuerySnapshot<D = DocumentData> = firebase.default.firestore.QuerySnapshot<D>

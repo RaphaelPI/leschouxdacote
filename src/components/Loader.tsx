@@ -19,3 +19,7 @@ const Loader = styled.div`
 `
 
 export default Loader
+
+export const Loading = styled(Loader)`
+  margin: 35vh auto 0;
+`

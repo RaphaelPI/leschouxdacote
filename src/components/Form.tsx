@@ -7,7 +7,7 @@ import {
   FC,
 } from "react"
 import styled from "styled-components"
-import { useForm, useFormContext, FieldValues, FormProvider, FieldName } from "react-hook-form"
+import { useForm, useFormContext, FieldValues, FormProvider, FieldName, DefaultValues } from "react-hook-form"
 
 import { COLORS, LAYOUT } from "src/constants"
 import { Button } from "src/components/Button"
@@ -42,10 +42,18 @@ interface FormProps<T extends FieldValues> extends Omit<FormHTMLAttributes<HTMLF
   title?: string
   hasRequired?: boolean
   onSubmit: Submit<T>
+  defaultValues?: DefaultValues<T>
 }
 
-export function Form<T extends FieldValues>({ title, hasRequired, onSubmit, children, ...delegated }: FormProps<T>) {
-  const form = useForm<T>()
+export function Form<T extends FieldValues>({
+  title,
+  hasRequired,
+  onSubmit,
+  defaultValues,
+  children,
+  ...delegated
+}: FormProps<T>) {
+  const form = useForm<T>({ defaultValues })
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     try {
