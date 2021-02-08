@@ -41,7 +41,7 @@ const MyAdsPage = () => {
   const { producer } = useUser()
   const [tab, setTab] = useState<Tab>("all")
 
-  const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.id] : false)
+  const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.objectID] : false)
 
   const now = Date.now()
   const tabsData: Record<Tab, Product[]> = {
@@ -65,7 +65,7 @@ const MyAdsPage = () => {
         ))}
       </div>
       {tabsData[tab].map((product, index) => (
-        <AccountProduct key={product.id} product={product} odd={index % 2 === 0} />
+        <AccountProduct key={product.objectID} product={product} odd={index % 2 === 0} />
       ))}
     </MainLayout>
   )

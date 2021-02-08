@@ -60,6 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
         // phoneNumber: producer.phone.replace(/\s+/g, "").replace(/^0/, "+33"),
       })
 
+      delete producer.password
       await firestore.collection("producers").doc(user.uid).set(producer)
 
       const link = await auth.generateEmailVerificationLink(producer.email, {

@@ -52,7 +52,7 @@ const ProducerPage = ({ producer, products }: Props) => {
       <h2>{products.length} annonces en ligne</h2>
       <Products $col={3}>
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.objectID} product={product} />
         ))}
       </Products>
     </MainLayout>

@@ -3,6 +3,7 @@ import { addDays } from "date-fns"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
+import algolia from "src/helpers-api/algolia"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProduct>>) => {
   const { id, days } = req.body as Publish
@@ -19,10 +20,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     if (!days) {
       return badRequest(res, 400)
     }
+    const expires = addDays(product.expires || now, days)
     await ref.update({
       updated: now,
-      expires: addDays(product.expires || now, days),
+      expires,
     })
+    product.expires = expires.getTime()
+    product.updated = now.getTime()
+    await algolia.saveObject(product)
 
     return respond(res)
   }
@@ -33,6 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       updated: now,
       expires: null,
     })
+    await algolia.deleteObject(product.objectID)
 
     return respond(res)
   }
@@ -40,6 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
   // delete
   if (req.method === "DELETE") {
     await ref.delete()
+    await algolia.deleteObject(product.objectID)
 
     return respond(res)
   }

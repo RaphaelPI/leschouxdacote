@@ -102,7 +102,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
                 </Text>
               </Price>
             </PriceContainer>
-            <Link href={`/producteur/${producer.id}`}>{producer.name}</Link>
+            <Link href={`/producteur/${producer.objectID}`}>{producer.name}</Link>
             <br />
             <Address href={getMapsLink(product)} target="_blank">
               <PinIcon />
@@ -140,7 +140,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
           <h2>Ce producteur vend aussi</h2>
           <Products $col={3}>
             {otherProducts.map((prod) => (
-              <ProductCard key={prod.id} product={prod} />
+              <ProductCard key={prod.objectID} product={prod} />
             ))}
           </Products>
         </section>
@@ -163,7 +163,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
   const producer = getObject(await firestore.collection("producers").doc(product.uid).get()) as Producer
 
   const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
-  const otherProducts = (docs.map(getObject) as Product[]).filter((p) => p.id !== product.id)
+  const otherProducts = (docs.map(getObject) as Product[]).filter(({ objectID }) => objectID !== product.objectID)
 
   return {
     props: {

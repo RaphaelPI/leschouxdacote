@@ -22,6 +22,6 @@ type CollectionOrQuery = CollectionReference<DocumentData> | Query<DocumentData>
 
 // for getObject() helpers
 interface DataObject {
-  id: string
+  objectID: ID
   [key: string]: any
 }

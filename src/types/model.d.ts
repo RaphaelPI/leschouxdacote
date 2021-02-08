@@ -5,14 +5,37 @@ interface User {
 }
 
 interface Identified {
-  id: string
+  objectID: string
   created: number // timestamp in ms
   updated?: number // timestamp in ms
 }
 
-type Registering<T> = Omit<T, "id" | "updated">
+type Registering<T> = Omit<T, "objectID" | "updated">
 
 type Unit = "g" | "kg" | "l" | "u"
+
+interface Geoloc {
+  lat: number
+  lng: number
+}
+
+interface Producer extends Identified {
+  slug: string
+  siret: string
+  name: string // company name
+  firstname: string
+  lastname: string
+  address: string
+  // _geoloc: Geoloc
+  description: string
+  email: string
+  phone: string
+}
+
+interface RegisteringProducer extends Registering<Producer> {
+  created: Date
+  password?: string
+}
 
 interface Product extends Identified {
   uid: string // user ID (producer)
@@ -21,7 +44,8 @@ interface Product extends Identified {
   unit: Unit | null
   price: number // total, in cents
   address: string
-  location: [number, number] // latitude, longitude
+  _geoloc: Geoloc
+  placeId: string // from Google places
   city: string
   description: string
   photo: string
@@ -35,23 +59,5 @@ interface Product extends Identified {
 interface RegisteringProduct extends Registering<Product> {
   created: Date
   expires: Date
-  location: GeoPoint
-}
-
-interface Producer extends Identified {
-  slug: string
-  siret: string
-  name: string // company name
-  firstname: string
-  lastname: string
-  address: string
-  // location: [number, number] // latitude, longitude
-  description: string
-  email: string
-  phone: string
-}
-
-interface RegisteringProducer extends Registering<Producer> {
-  created: Date
-  password: string
+  _geoloc: GeoPoint
 }

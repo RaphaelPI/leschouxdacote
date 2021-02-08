@@ -13,6 +13,7 @@ interface MapMarker {
 }
 
 interface Place {
+  id: string
   lat: number
   lng: number
   city: string

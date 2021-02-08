@@ -15,11 +15,11 @@ export const usePlace = (id: string | null) => {
       const target = document.getElementById(id) as HTMLInputElement
       const autocomplete = new google.maps.places.Autocomplete(target, {
         componentRestrictions: { country: "fr" },
-        fields: ["geometry", "address_components"], // TODO: get more infos?
+        fields: ["geometry", "address_components", "place_id"], // TODO: get more infos?
       })
       autocomplete.addListener("place_changed", () => {
         const data = autocomplete.getPlace()
-        if (!data || !data.geometry || !data.address_components) {
+        if (!data || !data.geometry || !data.address_components || !data.place_id) {
           setPlace(null)
           return
         }
@@ -30,6 +30,7 @@ export const usePlace = (id: string | null) => {
         }
         const { location } = data.geometry
         setPlace({
+          id: data.place_id,
           lat: location.lat(),
           lng: location.lng(),
           city: city.short_name,

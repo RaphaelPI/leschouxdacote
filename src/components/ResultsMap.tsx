@@ -36,9 +36,9 @@ interface Props {
 }
 
 const ResultsMap = ({ products }: Props) => {
-  const markers: MapMarker[] = products.map(({ location, title, producer }) => {
+  const markers: MapMarker[] = products.map(({ _geoloc, title, producer }) => {
     return {
-      position: location,
+      position: _geoloc,
       content: (
         <PopupContent>
           <h2>{producer}</h2>
