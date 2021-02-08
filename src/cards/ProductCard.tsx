@@ -58,7 +58,7 @@ interface Props {
 const ProductCard = ({ product }: Props) => {
   return (
     <Container>
-      <Link href={`/annonce/${product.id}`}>
+      <Link href={`/annonce/${product.objectID}`}>
         <ImageContainer>
           <img src={product.photo} alt={product.title} />
         </ImageContainer>

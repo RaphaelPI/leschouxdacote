@@ -40,9 +40,10 @@ const NewProductPage = () => {
       throw new ValidationError("address", "Veuillez sélectionner l'adresse dans la liste déroulante")
     }
 
-    data.append("city", place.city)
+    data.append("placeId", place.id)
     data.append("lat", String(place.lat))
     data.append("lng", String(place.lng))
+    data.append("city", place.city)
     data.append("uid", (user as User).uid)
 
     await api.post("product", data)

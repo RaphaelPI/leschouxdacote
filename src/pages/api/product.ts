@@ -6,6 +6,7 @@ import { respond, badRequest } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
 import { normalizeNumber } from "src/helpers/validators"
+import algolia from "src/helpers-api/algolia"
 
 const checkRequired = (data: Record<string, any>, fields: string[]) => {
   const found = fields.find((field) => !data[field])
@@ -20,9 +21,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
   if (req.method === "POST") {
     const [fields, files] = await getFormData(req)
 
-    const errors = checkRequired(fields, ["title", "price", "description", "days"])
+    const errors = checkRequired(fields, ["title", "price", "address", "description", "days"])
     if (errors) {
       return respond(res, errors)
+    }
+    if (!fields.placeId) {
+      return respond(res, {
+        address: "Vous devez sélectionner une adresse suggérée par Google dans la liste déroulante",
+      })
     }
     if (!fields.email && !fields.phone) {
       return respond(res, {
@@ -59,6 +65,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     }
 
     const created = new Date()
+    const position = { lat: Number(fields.lat), lng: Number(fields.lng) }
 
     const product: RegisteringProduct = {
       created,
@@ -68,7 +75,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       unit: fields.unit || null,
       price,
       address: fields.address,
-      location: new GeoPoint(Number(fields.lat), Number(fields.lng)),
+      _geoloc: new GeoPoint(position.lat, position.lng),
+      placeId: fields.placeId,
       city: fields.city,
       description: fields.description,
       photo,
@@ -79,7 +87,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       producer: producer.name,
     }
 
-    productDoc.set(product)
+    await productDoc.set(product)
+
+    const record: Product = {
+      ...product,
+      objectID: productDoc.id,
+      created: product.created.getTime(),
+      expires: product.expires.getTime(),
+      _geoloc: position,
+    }
+
+    await algolia.saveObject(record)
 
     return respond(res)
   }

@@ -109,20 +109,20 @@ const AccountProduct = ({ product, odd }: Props) => {
   const handlePublish: Submit<{ days: string }> = async (data) => {
     const days = Number(data.days)
     if (days) {
-      const payload: Publish = { id: product.id, days }
+      const payload: Publish = { id: product.objectID, days }
       await api.post("publish", payload)
     }
     setModal(null)
   }
 
   const handleDisable: Submit<never> = async () => {
-    const payload: Publish = { id: product.id }
+    const payload: Publish = { id: product.objectID }
     await api.put("publish", payload)
     setModal(null)
   }
 
   const handleDelete: Submit<never> = async () => {
-    const payload: Publish = { id: product.id }
+    const payload: Publish = { id: product.objectID }
     await api.delete("publish", payload)
     setModal(null)
   }
@@ -144,7 +144,7 @@ const AccountProduct = ({ product, odd }: Props) => {
           </Days>
         </Infos>
         <Actions>
-          <Link href={`/compte/annonce/${product.id}`}>
+          <Link href={`/compte/annonce/${product.objectID}`}>
             <EditIcon />
           </Link>
           <button onClick={() => setModal("delete")}>

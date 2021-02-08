@@ -19,12 +19,12 @@ export const GeoPoint = admin.firestore.GeoPoint
 export const getObject = (doc: admin.firestore.DocumentData) => {
   const data = doc.data()
   const obj: DataObject = {
-    id: doc.id,
+    objectID: doc.id,
   }
   for (const key in data) {
     const value = data[key]
     if (value instanceof admin.firestore.GeoPoint) {
-      obj[key] = [value.latitude, value.longitude]
+      obj[key] = { lat: value.latitude, lng: value.longitude } as Geoloc
     } else if (value instanceof admin.firestore.Timestamp) {
       obj[key] = value.toMillis()
     } else {

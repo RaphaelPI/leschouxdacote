@@ -18,7 +18,7 @@ const SearchResults = ({ products }: Props) => {
       <h1>Les producteurs près de chez vous</h1>
       <Products $col={2}>
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.objectID} product={product} />
         ))}
       </Products>
     </Container>

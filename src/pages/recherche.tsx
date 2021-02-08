@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
 import styled from "styled-components"
+import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
 import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
-import { firestore, getObject } from "src/helpers/firebase"
+import algolia from "src/helpers/algolia"
+import { handleError } from "src/helpers/errors"
 
 const Row = styled.div`
   display: flex;
@@ -18,16 +20,19 @@ const RightCol = styled.div`
 `
 
 const SearchPage = () => {
+  const { query } = useRouter()
   const [results, setResults] = useState<Product[]>([])
-  // TODO: replace with Algolia geo query
+
   useEffect(() => {
-    firestore
-      .collection("products")
-      .get()
-      .then((snapshot) => {
-        setResults(snapshot.docs.map(getObject) as Product[])
-      })
-  }, [])
+    if (typeof query.what === "string") {
+      algolia
+        .search<Product>(query.what) // TODO: where
+        .then((res) => {
+          setResults(res.hits)
+        })
+        .catch(handleError)
+    }
+  }, [query.what])
 
   return (
     <MainLayout title="Recherche" full>

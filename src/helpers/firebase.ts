@@ -22,12 +22,12 @@ export const firestore = app.firestore()
 export const getObject = (doc: firebase.firestore.DocumentData) => {
   const data = doc.data()
   const obj: DataObject = {
-    id: doc.id,
+    objectID: doc.id,
   }
   for (const key in data) {
     const value = data[key]
     if (value instanceof firebase.firestore.GeoPoint) {
-      obj[key] = [value.latitude, value.longitude]
+      obj[key] = { lat: value.latitude, lng: value.longitude } as Geoloc
     } else if (value instanceof firebase.firestore.Timestamp) {
       obj[key] = value.toMillis()
     } else {
