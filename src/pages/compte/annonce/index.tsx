@@ -1,6 +1,8 @@
-import { useFormContext } from "react-hook-form"
+import { useFormContext, DefaultValues } from "react-hook-form"
+import { differenceInCalendarDays } from "date-fns"
 import { useRouter } from "next/router"
 
+import { Loading } from "src/components/Loader"
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
@@ -9,9 +11,15 @@ import { useUser } from "src/helpers/auth"
 import { usePlace } from "src/helpers/maps"
 import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
+import { useObjectQuery } from "src/helpers/firebase"
+import styled from "styled-components"
 
 // https://sharp.pixelplumbing.com/#formats
 const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]
+
+const Photo = styled.img`
+  width: 100%;
+`
 
 const PriceInfos = () => {
   const { watch } = useFormContext()
@@ -24,15 +32,43 @@ const PriceInfos = () => {
   return <p>Soit {formatPricePerUnit({ price, quantity, unit })}</p>
 }
 
-const NewProductPage = () => {
+const EditProductPage = () => {
   const { user, producer } = useUser()
-  const { push } = useRouter()
-  const place = usePlace(user && "place") // TODO: improve address input
+  const { query, push } = useRouter()
 
-  const handleSubmit: Submit<RegisteringProduct> = async (values, target) => {
-    const data = new FormData(target)
+  const productId = Array.isArray(query.id) ? undefined : query.id
 
-    if (!data.get("email") && !data.get("phone")) {
+  const { data, loading } = useObjectQuery<Product>("products", productId)
+
+  const visibleForm = user && !(productId && loading)
+
+  // TODO: improve input
+  let place = usePlace(visibleForm ? "place" : null)
+  if (!place && data) {
+    place = { id: data.placeId, city: data.city, lat: data._geoloc.lat, lng: data._geoloc.lng }
+  }
+
+  const title = productId ? "Modifier une annonce" : "Créer une annonce"
+
+  if (productId && loading) {
+    return (
+      <MainLayout title={title}>
+        <Loading />
+      </MainLayout>
+    )
+  }
+
+  const defaultValues: DefaultValues<ProductPayload> | undefined = data && {
+    ...data,
+    price: data.price / 100,
+    days: String(data.expires ? differenceInCalendarDays(data.expires, new Date()) : 0),
+    photo: "",
+  }
+
+  const handleSubmit: Submit<ProductPayload> = async (values, target) => {
+    const payload = new FormData(target)
+
+    if (!payload.get("email") && !payload.get("phone")) {
       throw new ValidationError("email", "Vous devez au moins spécifier une adresse e-mail ou un numéro de téléphone")
     }
 
@@ -40,19 +76,25 @@ const NewProductPage = () => {
       throw new ValidationError("address", "Veuillez sélectionner l'adresse dans la liste déroulante")
     }
 
-    data.append("placeId", place.id)
-    data.append("lat", String(place.lat))
-    data.append("lng", String(place.lng))
-    data.append("city", place.city)
-    data.append("uid", (user as User).uid)
+    payload.append("placeId", place.id)
+    payload.append("lat", String(place.lat))
+    payload.append("lng", String(place.lng))
+    payload.append("city", place.city)
+    payload.append("uid", (user as User).uid)
 
-    await api.post("product", data)
+    if (productId) {
+      payload.append("id", productId)
+      await api.put("product", payload)
+    } else {
+      await api.post("product", payload)
+    }
+
     push("/compte/annonces") // TODO: confirmation message
   }
 
   return (
-    <MainLayout title="Créer une annonce">
-      <Form title="Création d’une annonce" hasRequired onSubmit={handleSubmit}>
+    <MainLayout title={title}>
+      <Form title={title} hasRequired onSubmit={handleSubmit} defaultValues={defaultValues}>
         <TextInput name="title" label="Titre" required maxLength={100} />
         <Row>
           <TextInput name="quantity" label="Quantité" type="number" min={0} step={0.01} />
@@ -68,7 +110,14 @@ const NewProductPage = () => {
         <PriceInfos />
         <TextInput name="address" label="Adresse" required placeholder="" id="place" />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
-        <TextInput name="photo" label="Photo" type="file" required accept={ACCEPTED_MIMETYPES.join(",")} />
+        {data && <Photo src={data.photo} />}
+        <TextInput
+          name="photo"
+          label={productId ? "Changer la photo" : "Photo"}
+          type="file"
+          required={productId ? false : true}
+          accept={ACCEPTED_MIMETYPES.join(",")}
+        />
         <TextInput type="email" name="email" label="Adresse e-mail" defaultValue={user?.email} />
         <TextInput
           type="tel"
@@ -93,4 +142,4 @@ const NewProductPage = () => {
   )
 }
 
-export default NewProductPage
+export default EditProductPage

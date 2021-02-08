@@ -1,11 +1,3 @@
-import MainLayout from "src/layouts/MainLayout"
-
-const EditProductPage = () => {
-  return (
-    <MainLayout title="Modifier une annonce">
-      <p>En construction</p>
-    </MainLayout>
-  )
-}
+import EditProductPage from "./index"
 
 export default EditProductPage
