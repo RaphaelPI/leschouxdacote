@@ -46,6 +46,7 @@ const GlobalStyle = createGlobalStyle`
   button {
     cursor: pointer;
     font-size: inherit;
+    outline: none;
   }
 `
 

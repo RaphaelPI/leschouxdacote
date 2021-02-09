@@ -20,7 +20,6 @@ const BASE_BUTTON = css<ButtonProps>`
   transition: background-color 150ms;
   border: 1px solid ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][2]};
   border-radius: 8px;
-  outline: none;
   position: relative;
   font-size: ${SIZES.regular}px;
   font-weight: 400;

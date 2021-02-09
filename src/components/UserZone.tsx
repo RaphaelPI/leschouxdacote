@@ -36,7 +36,6 @@ const Menu = styled.div`
 const entryCss = css`
   display: block;
   border: none;
-  outline: none;
   padding: 8px 16px;
   width: 100%;
   text-align: left;

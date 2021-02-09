@@ -7,14 +7,11 @@ import Link from "src/components/Link"
 const Container = styled.div`
   box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
 `
-const ImageContainer = styled.div`
+const Image = styled.img`
+  display: block;
+  width: 100%;
   height: 180px;
-  position: relative;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  object-fit: cover;
 `
 const Content = styled.div`
   padding: 8px 10px 6px;
@@ -25,16 +22,16 @@ const Title = styled.h2`
   font-size: 1.4em;
 `
 const Producer = styled.h3`
-  margin: 8px 0 0;
+  margin: 0.4em 0 0;
   font-weight: 300;
   color: ${COLORS.green};
 `
 const Location = styled.h4`
-  margin: 2px 0 0;
+  margin: 0.1em 0 0;
   font-weight: 300;
 `
 const Price = styled.div`
-  margin: 12px 0 0;
+  margin: 0.4em 0 0;
   font-size: 1.7em;
   font-weight: 500;
 `
@@ -46,7 +43,7 @@ const PPU = styled.div`
 const Quantity = styled.div`
   position: absolute;
   right: 10px;
-  bottom: 32px;
+  bottom: calc(10px + 2em);
   font-size: 0.8em;
   font-weight: 400;
 `
@@ -55,26 +52,30 @@ interface Props {
   product: Product
 }
 
+export const ProductInfos = ({ product }: Props) => {
+  return (
+    <Link href={`/annonce/${product.objectID}`}>
+      <Image src={product.photo} alt="" />
+      <Content>
+        <Title>{product.title}</Title>
+        <Producer>{product.producer}</Producer>
+        <Location>{product.city}</Location>
+        <Price>{formatPrice(product)}</Price>
+        {product.quantity && product.unit && (
+          <>
+            <PPU>{formatPricePerUnit(product)}</PPU>
+            <Quantity>{formatQuantity(product)}</Quantity>
+          </>
+        )}
+      </Content>
+    </Link>
+  )
+}
+
 const ProductCard = ({ product }: Props) => {
   return (
     <Container>
-      <Link href={`/annonce/${product.objectID}`}>
-        <ImageContainer>
-          <img src={product.photo} alt={product.title} />
-        </ImageContainer>
-        <Content>
-          <Title>{product.title}</Title>
-          <Producer>{product.producer}</Producer>
-          <Location>{product.city}</Location>
-          <Price>{formatPrice(product)}</Price>
-          {product.quantity && product.unit && (
-            <>
-              <PPU>{formatPricePerUnit(product)}</PPU>
-              <Quantity>{formatQuantity(product)}</Quantity>
-            </>
-          )}
-        </Content>
-      </Link>
+      <ProductInfos product={product} />
     </Container>
   )
 }
