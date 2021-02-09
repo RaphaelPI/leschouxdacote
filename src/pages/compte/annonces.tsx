@@ -20,7 +20,6 @@ type Tab = "all" | "online" | "disabled"
 const Tab = styled.button<{ $active: boolean }>`
   background-color: transparent;
   border: none;
-  outline: none;
   color: ${({ $active }) => ($active ? COLORS.green : COLORS.dark)};
   padding: 0;
   font-size: ${SIZES.large}px;

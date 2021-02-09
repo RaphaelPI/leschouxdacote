@@ -29,6 +29,7 @@ export const LAYOUT = {
   headerHeight: 80,
   maxWidth: 1100,
   formWidth: 500,
+  mapPopupWidth: 250,
 }
 
 export const FONT = "'Roboto', sans-serif"
