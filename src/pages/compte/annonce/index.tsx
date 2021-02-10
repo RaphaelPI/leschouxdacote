@@ -2,7 +2,6 @@ import { useFormContext, DefaultValues } from "react-hook-form"
 import { differenceInCalendarDays } from "date-fns"
 import { useRouter } from "next/router"
 
-import { Loading } from "src/components/Loader"
 import MainLayout from "src/layouts/MainLayout"
 import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
@@ -49,14 +48,6 @@ const EditProductPage = () => {
   }
 
   const title = productId ? "Modifier une annonce" : "Créer une annonce"
-
-  if (productId && loading) {
-    return (
-      <MainLayout title={title}>
-        <Loading />
-      </MainLayout>
-    )
-  }
 
   const defaultValues: DefaultValues<ProductPayload> | undefined = data && {
     ...data,

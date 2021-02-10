@@ -7,7 +7,7 @@ const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-d
 
 export interface IUserContext {
   loading: boolean
-  redirecting: boolean
+  wait: boolean
   user: User | null
   producer: Producer | null
   signin: (email: string, pass: string) => Promise<UserCredential>
@@ -20,7 +20,7 @@ export const UserProvider: FC = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [producer, setProducer] = useState<Producer | null>(null)
   const [loading, setLoading] = useState(true)
-  const { pathname, query, replace } = useRouter()
+  const { pathname, asPath, query, replace } = useRouter()
 
   useEffect(() => {
     return auth.onAuthStateChanged((firebaseUser) => {
@@ -57,9 +57,10 @@ export const UserProvider: FC = ({ children }) => {
 
   const signout = () => {
     if (isPrivateRoute) {
-      replace("/")
+      replace("/").then(() => auth.signOut())
+    } else {
+      auth.signOut()
     }
-    auth.signOut()
   }
 
   const redirectUrl = (() => {
@@ -71,7 +72,7 @@ export const UserProvider: FC = ({ children }) => {
       return destination || "/compte"
     }
     if (!user && isPrivateRoute) {
-      return "/connexion?next=" + pathname
+      return "/connexion?next=" + asPath
     }
   })()
 
@@ -81,10 +82,10 @@ export const UserProvider: FC = ({ children }) => {
     }
   }, [redirectUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const wait = Boolean(redirectUrl) || (isPrivateRoute && !producer)
+
   return (
-    <UserContext.Provider value={{ loading, redirecting: Boolean(redirectUrl), user, producer, signin, signout }}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={{ loading, wait, user, producer, signin, signout }}>{children}</UserContext.Provider>
   )
 }
 

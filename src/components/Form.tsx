@@ -1,4 +1,5 @@
 import {
+  useEffect,
   FormEvent,
   InputHTMLAttributes,
   TextareaHTMLAttributes,
@@ -54,6 +55,10 @@ export function Form<T extends FieldValues>({
   ...delegated
 }: FormProps<T>) {
   const form = useForm<T>({ defaultValues })
+
+  useEffect(() => {
+    form.reset({ ...defaultValues } as DefaultValues<T>)
+  }, [defaultValues]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     try {

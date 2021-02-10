@@ -56,6 +56,7 @@ export const useQuery = function <T extends Identified>(
   useEffect(() => {
     if (where === false) {
       // false => no query at this point
+      setData([])
       return
     }
 
@@ -96,6 +97,7 @@ export const useObjectQuery = function <T extends Identified>(
   useEffect(() => {
     if (!id) {
       // no query at this point
+      setData(undefined)
       return
     }
 
