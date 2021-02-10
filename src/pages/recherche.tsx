@@ -26,7 +26,9 @@ const SearchPage = () => {
   useEffect(() => {
     if (typeof query.what === "string") {
       algolia
-        .search<Product>(query.what) // TODO: where & filter out expired ads
+        .search<Product>(query.what, {
+          cacheable: false,
+        }) // TODO: where & filter out expired ads
         .then((res) => {
           setResults(res.hits)
         })

@@ -58,7 +58,7 @@ interface Props {
 
 const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
   const { pathname } = useRouter()
-  const { loading, redirecting } = useUser()
+  const { wait } = useUser()
 
   const isHome = pathname === "/"
 
@@ -82,7 +82,7 @@ const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
         </Actions>
       </Header>
       <Container $bg={isHome}>
-        <Main $full={full}>{loading || redirecting ? <Loading /> : children}</Main>
+        <Main $full={full}>{wait ? <Loading /> : children}</Main>
       </Container>
     </>
   )

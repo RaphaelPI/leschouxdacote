@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
         email: "Vous devez au moins spécifier une adresse e-mail ou un numéro de téléphone",
       })
     }
-    const price = fields.price * 100 // store cents
+    const price = Math.round(fields.price * 100) // store cents
     if (isNaN(price) || price < 0 || !Number.isInteger(price)) {
       return respond(res, {
         price: "Prix invalide",
