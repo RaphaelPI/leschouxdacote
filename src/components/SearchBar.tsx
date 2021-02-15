@@ -1,11 +1,13 @@
-import { ChangeEvent, useState, FormEvent } from "react"
+import { ChangeEvent, useState, FormEvent, useRef, useEffect } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 
 import { Input } from "src/components/Input"
 import { Button } from "src/components/Button"
+import { loadGmaps } from "src/helpers/scripts"
 
 import SearchIcon from "src/assets/search.svg"
+import { ParsedUrlQueryInput } from "querystring"
 
 const Form = styled.form`
   position: relative;
@@ -50,9 +52,49 @@ interface Props {
   className?: string
 }
 
+interface Query extends ParsedUrlQueryInput {
+  what: string
+  where: string
+  lat: string
+  lng: string
+}
+const INITIAL_QUERY: Query = { what: "", where: "", lat: "", lng: "" }
+
 const SearchBar = ({ className }: Props) => {
   const router = useRouter()
-  const [query, setQuery] = useState({ what: "", where: "", ...router.query })
+  const [query, setQuery] = useState<Query>({ ...INITIAL_QUERY, ...router.query })
+
+  useEffect(() => {
+    setQuery({ ...INITIAL_QUERY, ...router.query })
+  }, [router.query])
+
+  const autocomplete = useRef<google.maps.places.Autocomplete>()
+  const handleRef = (el: HTMLInputElement | null) => {
+    loadGmaps().then(() => {
+      if (!el || autocomplete.current) {
+        return
+      }
+      autocomplete.current = new google.maps.places.Autocomplete(el, {
+        componentRestrictions: { country: "fr" },
+        fields: ["geometry", "formatted_address"],
+        types: ["(regions)"],
+      })
+      autocomplete.current.addListener("place_changed", () => {
+        const place = autocomplete.current?.getPlace()
+        if (!place) {
+          return
+        }
+        if (place.formatted_address && place.geometry) {
+          setQuery({
+            ...query,
+            where: place.formatted_address,
+            lat: String(place.geometry.location.lat()),
+            lng: String(place.geometry.location.lng()),
+          })
+        }
+      })
+    })
+  }
 
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
     setQuery({
@@ -74,7 +116,7 @@ const SearchBar = ({ className }: Props) => {
     <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
       <InputGroup>
         <Input name="what" value={query.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
-        <Input name="where" value={query.where} onChange={handleChange} placeholder="Où ?" />
+        <Input name="where" value={query.where} onChange={handleChange} placeholder="Où ?" ref={handleRef} />
       </InputGroup>
       <Sumbit $variant="green" type="submit">
         <SearchIcon />

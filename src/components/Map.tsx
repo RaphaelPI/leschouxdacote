@@ -1,9 +1,11 @@
+import { useEffect } from "react"
 import "leaflet/dist/leaflet.css"
-import { icon, LeafletEventHandlerFnMap } from "leaflet"
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import { icon, LeafletEventHandlerFnMap, LatLngExpression } from "leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import styled from "styled-components"
 
-import { COLORS } from "src/constants"
+import { COLORS, TOULOUSE } from "src/constants"
+import { useRouter } from "next/router"
 
 const TILES_URL = "https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=" + process.env.NEXT_PUBLIC_MAPTILER_KEY // TODO: use vector tiles
 const TILES_ATTR = [
@@ -54,13 +56,31 @@ const HANDLERS: LeafletEventHandlerFnMap = {
   },
 }
 
-interface Props {
+interface CentererProps {
+  center: LatLngExpression
+}
+
+const Centerer = ({ center }: CentererProps) => {
+  const map = useMap()
+
+  useEffect(() => {
+    map.setView(center)
+  }, [center, map])
+
+  return null
+}
+
+interface MapProps {
   markers: MapMarker[]
 }
 
-const Map = ({ markers }: Props) => {
+const Map = ({ markers }: MapProps) => {
+  const { query } = useRouter()
+  const center: LatLngExpression = query.lat && query.lng ? [Number(query.lat), Number(query.lng)] : TOULOUSE
+
   return (
-    <Container center={[43.62, 1.42]} zoom={11}>
+    <Container center={center} zoom={11}>
+      <Centerer center={center} />
       <TileLayer url={TILES_URL} tileSize={512} zoomOffset={-1} minZoom={1} attribution={TILES_ATTR} crossOrigin />
       {markers.map(({ position, content }, index) => (
         <Marker key={index} position={position} icon={ICON_INACTIVE} eventHandlers={HANDLERS}>

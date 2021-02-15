@@ -1,3 +1,5 @@
+import type { LatLngExpression } from "leaflet"
+
 export const CONTACT_EMAIL = "contact@leschouxdacote.fr"
 
 export const COLORS = {
@@ -33,3 +35,5 @@ export const LAYOUT = {
 }
 
 export const FONT = "'Roboto', sans-serif"
+
+export const TOULOUSE: LatLngExpression = [43.62, 1.42]

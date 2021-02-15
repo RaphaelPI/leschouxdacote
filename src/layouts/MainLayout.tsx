@@ -17,7 +17,7 @@ const Header = styled.header`
   top: 0;
   width: 100%;
   padding: 0 32px;
-  z-index: 1111;
+  z-index: 100;
   background-color: ${COLORS.white};
   height: ${LAYOUT.headerHeight}px;
   display: flex;
