@@ -8,7 +8,7 @@ import { COLORS, LAYOUT } from "src/constants"
 import PrevIcon from "src/assets/prev.svg"
 import NextIcon from "src/assets/next.svg"
 
-const LeafletMap = dynamic(import("src/components/Map"), {
+const Map = dynamic(import("src/components/Map"), {
   ssr: false,
   loading() {
     return <Loader>Chargement de la carte…</Loader>
@@ -111,7 +111,7 @@ const ResultsMap = ({ products }: Props) => {
 
   return (
     <Container>
-      <LeafletMap markers={markers} />
+      <Map markers={markers} />
     </Container>
   )
 }

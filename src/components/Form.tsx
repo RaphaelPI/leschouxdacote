@@ -1,5 +1,6 @@
 import {
   useEffect,
+  forwardRef,
   FormEvent,
   InputHTMLAttributes,
   TextareaHTMLAttributes,
@@ -132,6 +133,7 @@ interface InputProps {
   label?: string
   suffix?: string
   validate?: (value: string) => true | string
+  ref?: (el: any) => void
 }
 
 type CombinedAttributes = InputHTMLAttributes<HTMLInputElement> &
@@ -140,27 +142,41 @@ type CombinedAttributes = InputHTMLAttributes<HTMLInputElement> &
 
 type WithTag = { Tag: "input" | "select" | "textarea" }
 
-const BaseInput = ({ Tag, label, suffix, validate, ...props }: InputProps & CombinedAttributes & WithTag) => {
-  const { register, errors } = useFormContext()
-  const error = errors[props.name]
+const BaseInput = forwardRef(
+  ({ Tag, label, suffix, validate, ...props }: InputProps & CombinedAttributes & WithTag, ref) => {
+    const { register, errors } = useFormContext()
+    const error = errors[props.name]
 
-  return (
-    <Label $error={Boolean(error)}>
-      {label} {props.required && "*"}
-      <Row>
-        <Tag ref={register({ validate })} {...props} />
-        {suffix && <Suffix>{suffix}</Suffix>}
-      </Row>
-      {error && <ErrorMessage>{error.message}</ErrorMessage>}
-    </Label>
-  )
-}
+    const handleRef = (el: any) => {
+      register({ validate })(el)
+      if (typeof ref === "function") {
+        ref(el)
+      }
+    }
 
-export const TextInput = (props: InputProps & CombinedAttributes) => (
-  <BaseInput Tag={props.rows ? "textarea" : "input"} {...props} />
+    return (
+      <Label $error={Boolean(error)}>
+        {label} {props.required && "*"}
+        <Row>
+          <Tag ref={handleRef} {...props} />
+          {suffix && <Suffix>{suffix}</Suffix>}
+        </Row>
+        {error && <ErrorMessage>{error.message}</ErrorMessage>}
+      </Label>
+    )
+  }
 )
+BaseInput.displayName = "BaseInput"
 
-export const SelectInput = (props: InputProps & CombinedAttributes) => <BaseInput Tag="select" {...props} />
+export const TextInput = forwardRef((props: InputProps & CombinedAttributes, ref) => (
+  <BaseInput Tag={props.rows ? "textarea" : "input"} ref={ref} {...props} />
+))
+TextInput.displayName = "TextInput"
+
+export const SelectInput = forwardRef((props: InputProps & CombinedAttributes, ref) => (
+  <BaseInput Tag="select" ref={ref} {...props} />
+))
+SelectInput.displayName = "SelectInput"
 
 export const StyledButton = styled(Button)`
   display: block;

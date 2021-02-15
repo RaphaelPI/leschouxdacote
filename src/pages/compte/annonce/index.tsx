@@ -1,5 +1,7 @@
+import { useRef, useState, useEffect } from "react"
 import { useFormContext, DefaultValues } from "react-hook-form"
 import { differenceInCalendarDays } from "date-fns"
+import styled from "styled-components"
 import { useRouter } from "next/router"
 
 import MainLayout from "src/layouts/MainLayout"
@@ -7,11 +9,10 @@ import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from
 import ProductEndDate from "src/components/ProductEndDate"
 import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
-import { usePlace } from "src/helpers/maps"
 import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
 import { useObjectQuery } from "src/helpers/firebase"
-import styled from "styled-components"
+import { loadGmaps } from "src/helpers/scripts"
 
 // https://sharp.pixelplumbing.com/#formats
 const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]
@@ -37,15 +38,15 @@ const EditProductPage = () => {
 
   const productId = Array.isArray(query.id) ? undefined : query.id
 
-  const { data, loading } = useObjectQuery<Product>("products", productId)
+  const { data } = useObjectQuery<Product>("products", productId)
 
-  const visibleForm = user && !(productId && loading)
+  const [place, setPlace] = useState<Place | null>()
 
-  // TODO: improve input
-  let place = usePlace(visibleForm ? "place" : null)
-  if (!place && data) {
-    place = { id: data.placeId, city: data.city, lat: data._geoloc.lat, lng: data._geoloc.lng }
-  }
+  useEffect(() => {
+    if (!place && data) {
+      setPlace({ id: data.placeId, city: data.city, lat: data._geoloc.lat, lng: data._geoloc.lng })
+    }
+  }, [place, data])
 
   const title = productId ? "Modifier une annonce" : "Créer une annonce"
 
@@ -83,6 +84,39 @@ const EditProductPage = () => {
     push("/compte/annonces") // TODO: confirmation message
   }
 
+  const autocomplete = useRef<google.maps.places.Autocomplete>()
+  const handleRef = (el: HTMLInputElement | null) => {
+    loadGmaps().then(() => {
+      if (!el || autocomplete.current) {
+        return
+      }
+      autocomplete.current = new google.maps.places.Autocomplete(el, {
+        componentRestrictions: { country: "fr" },
+        fields: ["geometry", "address_components", "place_id"], // TODO: get more infos?
+        types: ["geocode", "establishment"], // https://developers.google.com/places/web-service/supported_types#table3
+      })
+      autocomplete.current.addListener("place_changed", () => {
+        const res = autocomplete.current?.getPlace()
+        if (!res || !res.geometry || !res.address_components || !res.place_id) {
+          setPlace(null)
+          return
+        }
+        const city = res.address_components.find((c) => c.types.includes("locality"))
+        if (!city) {
+          setPlace(null)
+          return
+        }
+        const { location } = res.geometry
+        setPlace({
+          id: res.place_id,
+          lat: location.lat(),
+          lng: location.lng(),
+          city: city.short_name,
+        })
+      })
+    })
+  }
+
   return (
     <MainLayout title={title}>
       <Form title={title} hasRequired onSubmit={handleSubmit} defaultValues={defaultValues}>
@@ -99,7 +133,7 @@ const EditProductPage = () => {
         </Row>
         <TextInput name="price" label="Prix total" required type="number" min={0} step={0.01} suffix="euros" />
         <PriceInfos />
-        <TextInput name="address" label="Adresse" required placeholder="" id="place" />
+        <TextInput name="address" label="Adresse" required placeholder="" id="place" ref={handleRef} />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
         {data && <Photo src={data.photo} />}
         <TextInput
