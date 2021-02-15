@@ -1,5 +1,5 @@
 import "leaflet/dist/leaflet.css"
-import { icon } from "leaflet"
+import { icon, LeafletEventHandlerFnMap } from "leaflet"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import styled from "styled-components"
 
@@ -11,7 +11,12 @@ const TILES_ATTR = [
   '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
 ].join(" ")
 
-const ICON = icon({
+const ICON_INACTIVE = icon({
+  iconUrl: "/marker-inactive.png",
+  iconSize: [32, 32],
+  popupAnchor: [0, -10],
+})
+const ICON_ACTIVE = icon({
   iconUrl: "/marker.png",
   iconSize: [32, 32],
   popupAnchor: [0, -10],
@@ -40,6 +45,15 @@ const StyledPopup = styled(Popup)`
   }
 `
 
+const HANDLERS: LeafletEventHandlerFnMap = {
+  mouseover({ target }) {
+    target.setIcon(ICON_ACTIVE)
+  },
+  mouseout({ target }) {
+    target.setIcon(ICON_INACTIVE)
+  },
+}
+
 interface Props {
   markers: MapMarker[]
 }
@@ -49,7 +63,7 @@ const Map = ({ markers }: Props) => {
     <Container center={[43.62, 1.42]} zoom={11}>
       <TileLayer url={TILES_URL} tileSize={512} zoomOffset={-1} minZoom={1} attribution={TILES_ATTR} crossOrigin />
       {markers.map(({ position, content }, index) => (
-        <Marker key={index} position={position} icon={ICON}>
+        <Marker key={index} position={position} icon={ICON_INACTIVE} eventHandlers={HANDLERS}>
           <StyledPopup>{content}</StyledPopup>
         </Marker>
       ))}
