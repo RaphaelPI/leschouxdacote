@@ -1,4 +1,4 @@
-import type { GetStaticPaths, GetStaticProps } from "next"
+import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 
 import styled from "styled-components"
@@ -149,15 +149,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const { docs } = await firestore.collection("products").get()
-  return {
-    paths: docs.map((doc) => ({ params: { id: doc.id } })),
-    fallback: false,
-  }
-}
-
-export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
   const { id } = params as Params
   const product = getObject(await firestore.collection("products").doc(id).get()) as Product
   const producer = getObject(await firestore.collection("producers").doc(product.uid).get()) as Producer
