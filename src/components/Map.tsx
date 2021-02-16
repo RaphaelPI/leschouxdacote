@@ -70,13 +70,21 @@ const Centerer = ({ center }: CentererProps) => {
   return null
 }
 
+const getCenter = ({ ll }: SearchQuery): LatLngExpression => {
+  if (!ll) {
+    return TOULOUSE
+  }
+  const [lat, lng] = ll.split(",")
+  return [Number(lat), Number(lng)]
+}
+
 interface MapProps {
   markers: MapMarker[]
 }
 
 const Map = ({ markers }: MapProps) => {
   const { query } = useRouter()
-  const center: LatLngExpression = query.lat && query.lng ? [Number(query.lat), Number(query.lng)] : TOULOUSE
+  const center = getCenter(query as SearchQuery)
 
   return (
     <Container center={center} zoom={11}>

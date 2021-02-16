@@ -7,6 +7,7 @@ import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
 import algolia from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
+import { SEARCH_RADIUS } from "src/constants"
 
 const Row = styled.div`
   display: flex;
@@ -19,22 +20,26 @@ const RightCol = styled.div`
   flex: 1;
 `
 
+const getOptions = (ll?: string) => {
+  if (ll) {
+    return {
+      aroundLatLng: ll,
+      aroundRadius: SEARCH_RADIUS,
+    }
+  }
+}
+
 const SearchPage = () => {
   const { query } = useRouter()
   const [results, setResults] = useState<Product[]>([])
+  const { what, ll } = query as SearchQuery
 
   useEffect(() => {
-    if (typeof query.what === "string") {
-      algolia
-        .search<Product>(query.what, {
-          cacheable: false,
-        }) // TODO: where & filter out expired ads
-        .then((res) => {
-          setResults(res.hits)
-        })
-        .catch(handleError)
-    }
-  }, [query.what])
+    algolia
+      .search<Product>(what || "", getOptions(ll))
+      .then(({ hits }) => setResults(hits))
+      .catch(handleError)
+  }, [what, ll])
 
   return (
     <MainLayout title="Recherche" full>
