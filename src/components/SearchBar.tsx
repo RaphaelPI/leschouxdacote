@@ -7,7 +7,6 @@ import { Button } from "src/components/Button"
 import { loadGmaps } from "src/helpers/scripts"
 
 import SearchIcon from "src/assets/search.svg"
-import { ParsedUrlQueryInput } from "querystring"
 
 const Form = styled.form`
   position: relative;
@@ -52,20 +51,14 @@ interface Props {
   className?: string
 }
 
-interface Query extends ParsedUrlQueryInput {
-  what: string
-  where: string
-  lat: string
-  lng: string
-}
-const INITIAL_QUERY: Query = { what: "", where: "", lat: "", lng: "" }
+const INITIAL_QUERY: SearchQuery = { what: "", where: "", ll: "" }
 
 const SearchBar = ({ className }: Props) => {
   const router = useRouter()
-  const [query, setQuery] = useState<Query>({ ...INITIAL_QUERY, ...router.query })
+  const [query, setQuery] = useState<SearchQuery>({ ...INITIAL_QUERY, ...router.query })
 
   useEffect(() => {
-    setQuery({ ...INITIAL_QUERY, ...router.query })
+    setQuery((previous) => ({ ...previous, ...router.query }))
   }, [router.query])
 
   const autocomplete = useRef<google.maps.places.Autocomplete>()
@@ -76,21 +69,18 @@ const SearchBar = ({ className }: Props) => {
       }
       autocomplete.current = new google.maps.places.Autocomplete(el, {
         componentRestrictions: { country: "fr" },
-        fields: ["geometry", "formatted_address"],
+        fields: ["geometry", "name"],
         types: ["(regions)"],
       })
       autocomplete.current.addListener("place_changed", () => {
         const place = autocomplete.current?.getPlace()
-        if (!place) {
-          return
-        }
-        if (place.formatted_address && place.geometry) {
-          setQuery({
-            ...query,
-            where: place.formatted_address,
-            lat: String(place.geometry.location.lat()),
-            lng: String(place.geometry.location.lng()),
-          })
+        if (place?.geometry) {
+          const { location } = place.geometry
+          setQuery((previous) => ({
+            ...previous,
+            where: place.name,
+            ll: `${location.lat()},${location.lng()}`,
+          }))
         }
       })
     })
