@@ -1,11 +1,12 @@
 import styled from "styled-components"
 
 import { COLORS } from "src/constants"
-import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import Link from "src/components/Link"
+import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
+import { useHover } from "src/helpers/hover"
 
-const Container = styled.div`
-  box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
+const Container = styled.div<{ $hover: boolean }>`
+  box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.shadow.regular : COLORS.shadow.light)};
 `
 const Image = styled.img`
   display: block;
@@ -73,8 +74,14 @@ export const ProductInfos = ({ product }: Props) => {
 }
 
 const ProductCard = ({ product }: Props) => {
+  const { productId, setProduct } = useHover()
+
   return (
-    <Container>
+    <Container
+      onMouseOver={() => setProduct(product.objectID)}
+      onMouseOut={() => setProduct(null)}
+      $hover={productId === product.objectID}
+    >
       <ProductInfos product={product} />
     </Container>
   )

@@ -13,7 +13,7 @@ export const COLORS = {
   red: "#DF3D3D",
   shadow: {
     light: "#0000001A",
-    regular: "#00000029",
+    regular: "#0000004A",
   },
 }
 

@@ -7,6 +7,7 @@ import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
 import algolia from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
+import { HoverProvider } from "src/helpers/hover"
 import { SEARCH_RADIUS } from "src/constants"
 
 const Row = styled.div`
@@ -43,14 +44,16 @@ const SearchPage = () => {
 
   return (
     <MainLayout title="Recherche" full>
-      <Row>
-        <LeftCol>
-          <ResultsList products={results} />
-        </LeftCol>
-        <RightCol>
-          <ResultsMap products={results} />
-        </RightCol>
-      </Row>
+      <HoverProvider>
+        <Row>
+          <LeftCol>
+            <ResultsList products={results} />
+          </LeftCol>
+          <RightCol>
+            <ResultsMap products={results} />
+          </RightCol>
+        </Row>
+      </HoverProvider>
     </MainLayout>
   )
 }
