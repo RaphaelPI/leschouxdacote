@@ -1,21 +1,19 @@
-import { FC } from "react"
+import { FC, AnchorHTMLAttributes } from "react"
 import NextLink, { LinkProps } from "next/link"
 
 import { LinkButton, ButtonProps } from "src/components/Button"
 
-interface StyledProps {
-  className?: string
-}
+type Props = Pick<LinkProps, "href"> & AnchorHTMLAttributes<HTMLAnchorElement>
 
-const Link: FC<LinkProps & StyledProps> = ({ children, className, ...props }) => (
-  <NextLink {...props}>
-    <a className={className}>{children}</a>
+const Link: FC<Props> = ({ children, href, ...props }) => (
+  <NextLink href={href}>
+    <a {...props}>{children}</a>
   </NextLink>
 )
 
-export const ButtonLink: FC<LinkProps & StyledProps & ButtonProps> = ({ children, className, $variant, ...props }) => (
-  <NextLink passHref {...props}>
-    <LinkButton className={className} $variant={$variant}>
+export const ButtonLink: FC<Props & ButtonProps> = ({ children, href, $variant, ...props }) => (
+  <NextLink href={href} passHref>
+    <LinkButton $variant={$variant} {...props}>
       {children}
     </LinkButton>
   </NextLink>

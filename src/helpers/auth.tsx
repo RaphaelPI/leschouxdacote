@@ -89,4 +89,4 @@ export const UserProvider: FC = ({ children }) => {
   )
 }
 
-export const useUser = () => useContext(UserContext) as IUserContext
+export const useUser = () => useContext(UserContext)

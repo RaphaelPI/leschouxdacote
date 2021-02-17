@@ -15,11 +15,6 @@ interface SearchQuery extends ParsedUrlQueryInput {
   ll?: string
 }
 
-interface MapMarker {
-  position: import("leaflet").LatLngExpression
-  content: import("react").ReactNode
-}
-
 interface Place {
   id: string
   lat: number

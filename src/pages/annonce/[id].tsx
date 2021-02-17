@@ -49,7 +49,7 @@ const ImageContainer = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    box-shadow: 0px 3px 6px ${COLORS.shadow.regular};
+    box-shadow: 0px 3px 6px ${COLORS.shadow.light};
   }
 `
 const Address = styled.a`
