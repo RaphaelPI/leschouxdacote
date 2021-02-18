@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
+import { SearchOptions } from "@algolia/client-search"
 
 import MainLayout from "src/layouts/MainLayout"
 import ResultsMap from "src/components/ResultsMap"
@@ -22,12 +23,14 @@ const RightCol = styled.div`
 `
 
 const getOptions = (ll?: string) => {
-  if (ll) {
-    return {
-      aroundLatLng: ll,
-      aroundRadius: SEARCH_RADIUS,
-    }
+  const options: Mutable<SearchOptions> = {
+    numericFilters: `expires > ${Date.now()}`,
   }
+  if (ll) {
+    options.aroundLatLng = ll
+    options.aroundRadius = SEARCH_RADIUS.city
+  }
+  return options
 }
 
 const SearchPage = () => {

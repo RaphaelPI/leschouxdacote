@@ -6,7 +6,7 @@ import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/tex
 import { useHover } from "src/helpers/hover"
 
 const Container = styled.div<{ $hover: boolean }>`
-  box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.shadow.regular : COLORS.shadow.light)};
+  box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
 `
 const Image = styled.img`
   display: block;

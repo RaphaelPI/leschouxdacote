@@ -1,18 +1,7 @@
-# next-starter-antoine
+# Les choux d'à côté
 
-My opinionated [Next.js](https://nextjs.org/) SSG starter template.
-
-It starts from [the default Next.js template](https://github.com/vercel/next.js/tree/master/packages/create-next-app/templates/default), and adds:
-
-- [TypeScript](https://www.typescriptlang.org/)
-- [Eslint](https://eslint.org/) & [Prettier](https://prettier.io/)
-- [Bugsnag](https://www.bugsnag.com/)
-- [Styled Components](https://styled-components.com/)
-- [Absolute imports](https://nextjs.org/docs/advanced-features/module-path-aliases)
-
-See also [Next.js > examples >with-typescript-styled-components](https://github.com/vercel/next.js/tree/canary/examples/with-typescript-styled-components)
-
-It is made for static-only (SSG), not SSR.
+Classified food ads.
+[leschouxdacote.fr](https://leschouxdacote.fr/)
 
 ## Requirements
 
