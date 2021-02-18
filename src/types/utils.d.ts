@@ -13,3 +13,8 @@ type ObjectKeys<T> = T extends object
 interface ObjectConstructor {
   keys<T>(o: T): ObjectKeys<T>
 }
+
+// https://github.com/microsoft/TypeScript/issues/24509
+type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
+}

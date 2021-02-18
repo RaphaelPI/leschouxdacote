@@ -37,4 +37,10 @@ export const LAYOUT = {
 export const FONT = "'Roboto', sans-serif"
 
 export const TOULOUSE: LatLngExpression = [43.62, 1.42]
-export const SEARCH_RADIUS = 15_000 // meters, see https://www.algolia.com/doc/api-reference/api-parameters/aroundRadius/
+
+export const SEARCH_RADIUS = {
+  // meters, see https://www.algolia.com/doc/api-reference/api-parameters/aroundRadius/
+  city: 50_000,
+  department: 120_000,
+  region: 300_000,
+}
