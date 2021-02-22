@@ -54,9 +54,10 @@ const Main = styled.main<{ $full?: boolean }>`
 
 interface Props {
   full?: boolean
+  loading?: boolean
 }
 
-const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
+const MainLayout: FC<Props & SEOProps> = ({ full, loading, children, ...props }) => {
   const { pathname } = useRouter()
   const { wait } = useUser()
 
@@ -82,7 +83,7 @@ const MainLayout: FC<Props & SEOProps> = ({ full, children, ...props }) => {
         </Actions>
       </Header>
       <Container $bg={isHome}>
-        <Main $full={full}>{wait ? <Loading /> : children}</Main>
+        <Main $full={full}>{loading || wait ? <Loading /> : children}</Main>
       </Container>
     </>
   )

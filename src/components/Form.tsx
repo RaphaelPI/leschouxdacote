@@ -45,6 +45,7 @@ interface FormProps<T extends FieldValues> extends Omit<FormHTMLAttributes<HTMLF
   hasRequired?: boolean
   onSubmit: Submit<T>
   defaultValues?: DefaultValues<T>
+  resetOnChange?: any
 }
 
 export function Form<T extends FieldValues>({
@@ -52,6 +53,7 @@ export function Form<T extends FieldValues>({
   hasRequired,
   onSubmit,
   defaultValues,
+  resetOnChange,
   children,
   ...delegated
 }: FormProps<T>) {
@@ -59,7 +61,7 @@ export function Form<T extends FieldValues>({
 
   useEffect(() => {
     form.reset({ ...defaultValues } as DefaultValues<T>)
-  }, [defaultValues]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [resetOnChange]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     try {
