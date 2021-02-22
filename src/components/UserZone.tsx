@@ -10,6 +10,10 @@ import { COLORS } from "src/constants"
 
 import DownIcon from "src/assets/down.svg"
 
+const Name = styled.span`
+  min-width: 100px;
+  display: inline-block;
+`
 const Dropdown = styled.div`
   svg {
     vertical-align: middle;
@@ -66,9 +70,9 @@ const UserZone = () => {
   }
 
   const title = (
-    <span>
+    <Name>
       {ellipsis(producer?.name)} <DownIcon />
-    </span>
+    </Name>
   )
 
   if (user) {

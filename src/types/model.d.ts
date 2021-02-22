@@ -11,6 +11,7 @@ interface Identified {
 }
 
 type Registering<T> = Omit<T, "objectID" | "updated">
+type Updating<T> = Omit<T, "objectID" | "created">
 
 type Unit = "g" | "kg" | "l" | "u"
 
@@ -20,7 +21,6 @@ interface Geoloc {
 }
 
 interface Producer extends Identified {
-  slug: string
   siret: string
   name: string // company name
   firstname: string
@@ -35,6 +35,10 @@ interface Producer extends Identified {
 interface RegisteringProducer extends Registering<Producer> {
   created: Date
   password?: string
+}
+
+interface UpdatingProducer extends Omit<Updating<Producer>, "siret"> {
+  updated: Date
 }
 
 interface Product extends Identified {

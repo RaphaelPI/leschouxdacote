@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { addDays } from "date-fns"
 
-import { firestore, getObject } from "src/helpers-api/firebase"
+import { firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
 
@@ -13,6 +13,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     return badRequest(res, 404)
   }
   const product = getObject(doc) as Product
+
+  const token = await getToken(req)
+  if (!token || token.uid !== product.uid) {
+    return badRequest(res, 403)
+  }
+
   const now = new Date()
 
   // add days

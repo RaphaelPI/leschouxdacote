@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin"
+import { NextApiRequest } from "next"
 
 const app = admin.apps.length
   ? admin.app()
@@ -32,4 +33,12 @@ export const getObject = (doc: admin.firestore.DocumentData) => {
     }
   }
   return obj
+}
+
+export const getToken = (req: NextApiRequest) => {
+  const token = req.headers["x-token"]
+  if (typeof token !== "string") {
+    return null
+  }
+  return auth.verifyIdToken(token)
 }

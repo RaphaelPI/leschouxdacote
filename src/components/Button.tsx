@@ -3,14 +3,17 @@ import { darken, lighten } from "polished"
 
 import { COLORS, SIZES } from "src/constants"
 
-// [background-color, color, border-color, focus]
-const BUTTON_VARIANT: Record<string, string[]> = {
-  green: [COLORS.green, COLORS.white, COLORS.green, COLORS.green],
-  white: [COLORS.white, COLORS.input, COLORS.border, COLORS.grey],
-}
+type ButtonVariant = "green" | "white" | "red"
 
 export interface ButtonProps {
-  $variant?: "green" | "white"
+  $variant?: ButtonVariant
+}
+
+// [background-color, color, border-color, focus]
+const BUTTON_VARIANT: Record<ButtonVariant, string[]> = {
+  green: [COLORS.green, COLORS.white, COLORS.green, COLORS.green],
+  white: [COLORS.white, COLORS.input, COLORS.border, COLORS.grey],
+  red: [COLORS.red, COLORS.white, COLORS.red, COLORS.red],
 }
 
 const BASE_BUTTON = css<ButtonProps>`

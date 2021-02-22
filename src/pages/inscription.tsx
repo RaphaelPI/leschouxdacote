@@ -8,8 +8,8 @@ import { validateSiret, validatePhoneNumber, validatePassword } from "src/helper
 const RegisterPage = () => {
   const { push } = useRouter()
 
-  const handleSubmit: Submit<RegisteringProducer> = async (data) => {
-    await api.post("user", data)
+  const handleSubmit: Submit<RegisteringProducer> = async (values) => {
+    await api.post("user", values)
     push("/confirmation")
   }
 

@@ -2,9 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import fetch from "node-fetch"
 
 import ALLOWED_CODES from "src/helpers-api/activityCodes"
-import { auth, firestore } from "src/helpers-api/firebase"
+import { auth, firestore, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import { sendEmail } from "src/helpers-api/mail"
+import algolia from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
 import { CONTACT_EMAIL } from "src/constants"
 
@@ -44,13 +45,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     // user registration
     const producer = req.body as RegisteringProducer // TODO: validate fields
     producer.siret = producer.siret.replace(/\s+/g, "") // remove spaces
-    producer.phone = normalizeNumber(producer.phone)
     const checkError = await checkCompany(producer.siret)
     if (checkError) {
       return respond(res, {
         siret: checkError,
       })
     }
+
+    producer.created = new Date()
+    producer.phone = normalizeNumber(producer.phone)
 
     try {
       const user = await auth.createUser({
@@ -88,6 +91,40 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       // TODO: report
       throw error
     }
+
+    return respond(res)
+  }
+
+  if (req.method === "PUT") {
+    const token = await getToken(req)
+    if (!token) {
+      return badRequest(res, 403)
+    }
+
+    const producer = req.body as UpdatingProducer // TODO: validate fields
+    producer.updated = new Date()
+    producer.phone = normalizeNumber(producer.phone)
+
+    await firestore.collection("producers").doc(token.uid).update(producer)
+
+    return respond(res)
+  }
+
+  if (req.method === "DELETE") {
+    const token = await getToken(req)
+    if (!token) {
+      return badRequest(res, 403)
+    }
+
+    const snapshot = await firestore.collection("products").where("uid", "==", token.uid).get()
+    const deletions: Readonly<Promise<any>>[] = []
+    snapshot.forEach((doc) => {
+      deletions.push(doc.ref.delete())
+      deletions.push(algolia.deleteObject(doc.id))
+    })
+    await Promise.all(deletions)
+    await firestore.collection("producers").doc(token.uid).delete()
+    await auth.deleteUser(token.uid)
 
     return respond(res)
   }

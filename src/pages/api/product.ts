@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { addDays } from "date-fns"
 
-import { firestore, GeoPoint, getObject } from "src/helpers-api/firebase"
+import { firestore, GeoPoint, getObject, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
@@ -20,6 +20,11 @@ const checkRequired = (data: Record<string, any>, fields: string[]) => {
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProduct>>) => {
   if (req.method === "POST" || req.method === "PUT") {
     const [fields, files] = await getFormData<ProductPayload>(req)
+
+    const token = await getToken(req)
+    if (!token || token.uid !== fields.uid) {
+      return badRequest(res, 403)
+    }
 
     const errors = checkRequired(fields, ["title", "price", "address", "description", "days"])
     if (errors) {
