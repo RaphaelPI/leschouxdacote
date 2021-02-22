@@ -4,7 +4,6 @@ import { useRouter } from "next/router"
 import { SearchOptions } from "@algolia/client-search"
 
 import MainLayout from "src/layouts/MainLayout"
-import { Loading } from "src/components/Loader"
 import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
 import algolia from "src/helpers/algolia"
@@ -50,21 +49,17 @@ const SearchPage = () => {
   }, [isReady, what, ll, type])
 
   return (
-    <MainLayout title="Recherche" full>
-      {results ? (
-        <HoverProvider>
-          <Row>
-            <LeftCol>
-              <ResultsList products={results} />
-            </LeftCol>
-            <RightCol>
-              <ResultsMap products={results} />
-            </RightCol>
-          </Row>
-        </HoverProvider>
-      ) : (
-        <Loading />
-      )}
+    <MainLayout title="Recherche" full loading={!results}>
+      <HoverProvider>
+        <Row>
+          <LeftCol>
+            <ResultsList products={results} />
+          </LeftCol>
+          <RightCol>
+            <ResultsMap products={results} />
+          </RightCol>
+        </Row>
+      </HoverProvider>
     </MainLayout>
   )
 }

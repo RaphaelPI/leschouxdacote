@@ -57,6 +57,7 @@ export const useQuery = function <T extends Identified>(
     if (where === false) {
       // false => no query at this point
       setData([])
+      setLoading(false)
       return
     }
 
@@ -98,6 +99,7 @@ export const useObjectQuery = function <T extends Identified>(
     if (!id) {
       // no query at this point
       setData(undefined)
+      setLoading(false)
       return
     }
 

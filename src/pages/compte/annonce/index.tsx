@@ -38,7 +38,7 @@ const EditProductPage = () => {
 
   const productId = Array.isArray(query.id) ? undefined : query.id
 
-  const { data } = useObjectQuery<Product>("products", productId)
+  const { data, loading } = useObjectQuery<Product>("products", productId)
 
   const [place, setPlace] = useState<Place | null>()
 
@@ -85,41 +85,48 @@ const EditProductPage = () => {
   }
 
   const autocomplete = useRef<google.maps.places.Autocomplete>()
-  const handleRef = (el: HTMLInputElement | null) => {
-    loadGmaps().then(() => {
-      if (!el || autocomplete.current) {
+  const handleRef = async (el: HTMLInputElement | null) => {
+    if (!el || autocomplete.current) {
+      return
+    }
+
+    await loadGmaps()
+
+    autocomplete.current = new google.maps.places.Autocomplete(el, {
+      componentRestrictions: { country: "fr" },
+      fields: ["geometry", "address_components", "place_id"], // TODO: get more infos?
+      types: ["geocode", "establishment"], // https://developers.google.com/places/web-service/supported_types#table3
+    })
+    autocomplete.current.addListener("place_changed", () => {
+      const res = autocomplete.current?.getPlace()
+      if (!res || !res.geometry || !res.address_components || !res.place_id) {
+        setPlace(null)
         return
       }
-      autocomplete.current = new google.maps.places.Autocomplete(el, {
-        componentRestrictions: { country: "fr" },
-        fields: ["geometry", "address_components", "place_id"], // TODO: get more infos?
-        types: ["geocode", "establishment"], // https://developers.google.com/places/web-service/supported_types#table3
-      })
-      autocomplete.current.addListener("place_changed", () => {
-        const res = autocomplete.current?.getPlace()
-        if (!res || !res.geometry || !res.address_components || !res.place_id) {
-          setPlace(null)
-          return
-        }
-        const city = res.address_components.find((c) => c.types.includes("locality"))
-        if (!city) {
-          setPlace(null)
-          return
-        }
-        const { location } = res.geometry
-        setPlace({
-          id: res.place_id,
-          lat: location.lat(),
-          lng: location.lng(),
-          city: city.short_name,
-        })
+      const city = res.address_components.find((c) => c.types.includes("locality"))
+      if (!city) {
+        setPlace(null)
+        return
+      }
+      const { location } = res.geometry
+      setPlace({
+        id: res.place_id,
+        lat: location.lat(),
+        lng: location.lng(),
+        city: city.short_name,
       })
     })
   }
 
   return (
-    <MainLayout title={title}>
-      <Form title={title} hasRequired onSubmit={handleSubmit} defaultValues={defaultValues}>
+    <MainLayout title={title} loading={loading}>
+      <Form
+        title={title}
+        hasRequired
+        onSubmit={handleSubmit}
+        defaultValues={defaultValues}
+        resetOnChange={data?.objectID}
+      >
         <TextInput name="title" label="Titre" required maxLength={100} />
         <Row>
           <TextInput name="quantity" label="Quantité" type="number" min={0} step={0.01} />

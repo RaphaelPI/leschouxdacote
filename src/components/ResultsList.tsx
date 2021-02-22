@@ -9,14 +9,14 @@ const Container = styled.div`
 `
 
 interface Props {
-  products: Product[]
+  products?: Product[]
 }
 
 const SearchResults = ({ products }: Props) => {
   return (
     <Container>
       <h1>Les producteurs près de chez vous</h1>
-      {products.length ? (
+      {products?.length ? (
         <Products $col={2}>
           {products.map((product) => (
             <ProductCard key={product.objectID} product={product} />

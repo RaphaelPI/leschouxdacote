@@ -22,15 +22,11 @@ const Loader = styled.div`
 `
 
 interface Props {
-  products: Product[]
+  products?: Product[]
 }
 
 const ResultsMap = ({ products }: Props) => {
-  return (
-    <Container>
-      <Map products={products} />
-    </Container>
-  )
+  return <Container>{products && <Map products={products} />}</Container>
 }
 
 export default ResultsMap
