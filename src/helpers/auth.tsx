@@ -10,6 +10,7 @@ export interface IUserContext {
   wait: boolean
   user: User | null
   producer: Producer | null
+  update: (values: UpdatingProducer) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
 }
@@ -84,8 +85,18 @@ export const UserProvider: FC = ({ children }) => {
 
   const wait = Boolean(redirectUrl) || (isPrivateRoute && !producer)
 
+  const update = (values: UpdatingProducer) => {
+    setProducer({
+      ...(producer as Producer),
+      ...values,
+      updated: Date.now(),
+    })
+  }
+
   return (
-    <UserContext.Provider value={{ loading, wait, user, producer, signin, signout }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ loading, wait, user, producer, update, signin, signout }}>
+      {children}
+    </UserContext.Provider>
   )
 }
 

@@ -2,6 +2,7 @@ import HttpError from "standard-http-error"
 import ERROR_CODES from "standard-http-error/codes"
 
 import { ValidationError } from "src/components/Form"
+import { auth } from "src/helpers/firebase"
 
 export type Payload = Record<string, any>
 export type Query = Record<string, string>
@@ -14,6 +15,11 @@ const queryString = (query: Query) =>
 const request = async <T>(method: string, path: string, params?: Payload | Query): Promise<T> => {
   const headers = new Headers()
   headers.set("Accept", "application/json")
+
+  if (auth.currentUser) {
+    const token = await auth.currentUser.getIdToken()
+    headers.set("X-Token", token)
+  }
 
   const init: RequestInit = {
     method,
@@ -59,5 +65,5 @@ export default {
   get: <T = unknown>(path: string, params?: Query) => request<T>("GET", path, params),
   post: <T = unknown>(path: string, params: Payload) => request<ApiResponse<T>>("POST", path, params),
   put: <T = unknown>(path: string, params: Payload) => request<ApiResponse<T>>("PUT", path, params),
-  delete: <T = unknown>(path: string, params: Payload) => request<ApiResponse<T>>("DELETE", path, params),
+  delete: <T = unknown>(path: string, params?: Payload) => request<ApiResponse<T>>("DELETE", path, params),
 }
