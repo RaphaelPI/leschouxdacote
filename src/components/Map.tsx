@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react"
 import "leaflet/dist/leaflet.css"
-import { icon, LatLngExpression } from "leaflet"
+import { icon, LatLngTuple, LatLngBoundsLiteral } from "leaflet"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 
 import { ProductInfos } from "src/cards/ProductCard"
 import { useHover } from "src/helpers/hover"
-import { TOULOUSE, COLORS, LAYOUT } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 
 import PrevIcon from "src/assets/prev.svg"
 import NextIcon from "src/assets/next.svg"
+
+const ZOOM = {
+  city: 12,
+  dpt: 9,
+  region: 7,
+}
 
 const TILES_URL = "https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=" + process.env.NEXT_PUBLIC_MAPTILER_KEY // TODO: use vector tiles
 const TILES_ATTR = [
@@ -88,17 +94,18 @@ interface PlaceProps {
 }
 
 const PlacePopup = ({ products }: PlaceProps) => {
+  const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
   const { setProduct } = useHover()
 
   const current = products[index].objectID
 
   useEffect(() => {
-    setProduct(current)
-  }, [setProduct, current])
+    setProduct(open ? current : null)
+  }, [setProduct, current, open])
 
   return (
-    <StyledPopup onOpen={() => setProduct(current)} onClose={() => setProduct(null)}>
+    <StyledPopup onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
       <PopupContent>
         <Slider style={{ transform: `translateX(${-LAYOUT.mapPopupWidth * index}px)` }}>
           {products.map((product) => (
@@ -124,25 +131,30 @@ const PlacePopup = ({ products }: PlaceProps) => {
 }
 
 interface CentererProps {
-  center: LatLngExpression
+  bounds: LatLngBoundsLiteral
 }
 
-const Centerer = ({ center }: CentererProps) => {
+const Centerer = ({ bounds }: CentererProps) => {
   const map = useMap()
+  const { query } = useRouter()
+  const { type, ll } = query as SearchQuery
+
+  const placeCoords = ll ? (ll.split(",").map(Number) as LatLngTuple) : null
 
   useEffect(() => {
-    map.setView(center)
-  }, [center, map])
+    if (bounds.length) {
+      map.fitBounds(placeCoords ? bounds.concat(placeCoords) : bounds, {
+        padding: [50, 50],
+        maxZoom: 15,
+      })
+    } else if (placeCoords) {
+      map.setView(placeCoords, ZOOM[type || "city"])
+    } else {
+      map.setView([46.7, 1.7], 6) // France
+    }
+  }, [map, type, JSON.stringify(bounds), JSON.stringify(placeCoords)]) // eslint-disable-line
 
   return null
-}
-
-const getCenter = ({ ll }: SearchQuery): LatLngExpression => {
-  if (!ll) {
-    return TOULOUSE
-  }
-  const [lat, lng] = ll.split(",")
-  return [Number(lat), Number(lng)]
 }
 
 interface MapProps {
@@ -150,21 +162,21 @@ interface MapProps {
 }
 
 const Map = ({ products }: MapProps) => {
-  const { query } = useRouter()
-  const center = getCenter(query as SearchQuery)
   const { productId } = useHover()
 
   const places: Record<Product["placeId"], Product[]> = {}
+  const bounds: LatLngBoundsLiteral = []
   products.forEach((product) => {
     if (!places[product.placeId]) {
       places[product.placeId] = []
+      bounds.push([product._geoloc.lat, product._geoloc.lng])
     }
     places[product.placeId].push(product)
   })
 
   return (
-    <Container center={center} zoom={11}>
-      <Centerer center={center} />
+    <Container>
+      <Centerer bounds={bounds} />
       <TileLayer url={TILES_URL} tileSize={512} zoomOffset={-1} minZoom={1} attribution={TILES_ATTR} crossOrigin />
       {Object.keys(places).map((placeId) => {
         const list = places[placeId]
