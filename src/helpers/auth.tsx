@@ -69,7 +69,7 @@ export const UserProvider: FC = ({ children }) => {
     }
     const destination = query.next as string
     if (user && ANONYMOUS_ROUTES.includes(pathname)) {
-      return destination || "/compte"
+      return destination || "/compte/annonces"
     }
     if (!user && isPrivateRoute) {
       return "/connexion?next=" + asPath
