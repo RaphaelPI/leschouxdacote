@@ -47,6 +47,19 @@ const Sumbit = styled(Button)`
   }
 `
 
+const getType = (types?: string[]): SearchQuery["type"] => {
+  if (!types) {
+    return "city"
+  }
+  if (types.includes("administrative_area_level_1")) {
+    return "region"
+  }
+  if (types.includes("administrative_area_level_2")) {
+    return "dpt"
+  }
+  return "city"
+}
+
 interface Props {
   className?: string
 }
@@ -69,17 +82,21 @@ const SearchBar = ({ className }: Props) => {
       }
       autocomplete.current = new google.maps.places.Autocomplete(el, {
         componentRestrictions: { country: "fr" },
-        fields: ["geometry", "name"],
+        fields: ["geometry", "name", "types"],
         types: ["(regions)"],
       })
       autocomplete.current.addListener("place_changed", () => {
         const place = autocomplete.current?.getPlace()
-        if (place?.geometry) {
+        if (!place) {
+          return
+        }
+        if (place.geometry) {
           const { location } = place.geometry
           setQuery((previous) => ({
             ...previous,
             where: place.name,
             ll: `${location.lat()},${location.lng()}`,
+            type: getType(place.types),
           }))
         }
       })
@@ -95,6 +112,8 @@ const SearchBar = ({ className }: Props) => {
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    //TODO: FIXME: ll not emptied when place is emptied
 
     router.push({
       pathname: "/recherche",

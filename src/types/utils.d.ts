@@ -1,5 +1,3 @@
-declare type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 type ObjectKeys<T> = T extends object
   ? (keyof T)[]
@@ -15,6 +13,6 @@ interface ObjectConstructor {
 }
 
 // https://github.com/microsoft/TypeScript/issues/24509
-type Mutable<T> = {
-  -readonly [P in keyof T]: T[P]
+type Mutable<T extends Record<string, unknown>> = {
+  -readonly [K in keyof T]: T[K]
 }

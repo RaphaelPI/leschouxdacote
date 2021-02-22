@@ -16,11 +16,15 @@ const SearchResults = ({ products }: Props) => {
   return (
     <Container>
       <h1>Les producteurs près de chez vous</h1>
-      <Products $col={2}>
-        {products.map((product) => (
-          <ProductCard key={product.objectID} product={product} />
-        ))}
-      </Products>
+      {products.length ? (
+        <Products $col={2}>
+          {products.map((product) => (
+            <ProductCard key={product.objectID} product={product} />
+          ))}
+        </Products>
+      ) : (
+        <p>Aucun producteur trouvé pour ces critères de recherche</p>
+      )}
     </Container>
   )
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import { SearchOptions } from "@algolia/client-search"
 
 import MainLayout from "src/layouts/MainLayout"
+import { Loading } from "src/components/Loader"
 import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
 import algolia from "src/helpers/algolia"
@@ -22,41 +23,48 @@ const RightCol = styled.div`
   flex: 1;
 `
 
-const getOptions = (ll?: string) => {
+const getOptions = (type: SearchQuery["type"] = "city", ll?: string) => {
   const options: Mutable<SearchOptions> = {
     numericFilters: `expires > ${Date.now()}`,
   }
   if (ll) {
     options.aroundLatLng = ll
-    options.aroundRadius = SEARCH_RADIUS.city
+    options.aroundRadius = SEARCH_RADIUS[type]
   }
   return options
 }
 
 const SearchPage = () => {
-  const { query } = useRouter()
-  const [results, setResults] = useState<Product[]>([])
-  const { what, ll } = query as SearchQuery
+  const { query, isReady } = useRouter()
+  const [results, setResults] = useState<Product[]>()
+  const { what, type, ll } = query as SearchQuery
 
   useEffect(() => {
+    if (!isReady) {
+      return
+    }
     algolia
-      .search<Product>(what || "", getOptions(ll))
+      .search<Product>(what || "", getOptions(type, ll))
       .then(({ hits }) => setResults(hits))
       .catch(handleError)
-  }, [what, ll])
+  }, [isReady, what, ll, type])
 
   return (
     <MainLayout title="Recherche" full>
-      <HoverProvider>
-        <Row>
-          <LeftCol>
-            <ResultsList products={results} />
-          </LeftCol>
-          <RightCol>
-            <ResultsMap products={results} />
-          </RightCol>
-        </Row>
-      </HoverProvider>
+      {results ? (
+        <HoverProvider>
+          <Row>
+            <LeftCol>
+              <ResultsList products={results} />
+            </LeftCol>
+            <RightCol>
+              <ResultsMap products={results} />
+            </RightCol>
+          </Row>
+        </HoverProvider>
+      ) : (
+        <Loading />
+      )}
     </MainLayout>
   )
 }

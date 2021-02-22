@@ -1,5 +1,3 @@
-import type { LatLngExpression } from "leaflet"
-
 export const CONTACT_EMAIL = "contact@leschouxdacote.fr"
 
 export const COLORS = {
@@ -36,11 +34,9 @@ export const LAYOUT = {
 
 export const FONT = "'Roboto', sans-serif"
 
-export const TOULOUSE: LatLngExpression = [43.62, 1.42]
-
 export const SEARCH_RADIUS = {
   // meters, see https://www.algolia.com/doc/api-reference/api-parameters/aroundRadius/
   city: 50_000,
-  department: 120_000,
+  dpt: 120_000,
   region: 300_000,
 }
