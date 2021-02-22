@@ -80,7 +80,7 @@ const UserZone = () => {
           {open && (
             <Menu>
               <Entry href="/compte/annonces">Mes annonces</Entry>
-              <Entry href="/compte">Mon compte</Entry>
+              <Entry href="/compte/profil">Mon profil</Entry>
               <Logout onClick={signout}>Déconnexion</Logout>
             </Menu>
           )}

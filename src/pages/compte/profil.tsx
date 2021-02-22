@@ -19,8 +19,9 @@ const MyAccountPage = () => {
       <Titles>
         <h1>Mon compte</h1>
         <h2>{producer?.name}</h2>
-        <p>En construction</p>
       </Titles>
+      <h3>Mon profil</h3>
+      <p>En construction</p>
     </MainLayout>
   )
 }
