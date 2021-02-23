@@ -105,6 +105,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     producer.updated = new Date()
     producer.phone = normalizeNumber(producer.phone)
 
+    const snapshot = await firestore.collection("products").where("uid", "==", token.uid).get()
+    const updates: Readonly<Promise<any>>[] = []
+    snapshot.forEach((doc) => {
+      updates.push(doc.ref.update({ producer: producer.name }))
+      updates.push(algolia.partialUpdateObject({ objectID: doc.id, producer: producer.name }))
+    })
+    await Promise.all(updates)
     await firestore.collection("producers").doc(token.uid).update(producer)
 
     return respond(res)
