@@ -1,4 +1,4 @@
-import type { GetStaticPaths, GetStaticProps } from "next"
+import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 
 import styled from "styled-components"
@@ -59,17 +59,8 @@ const ProducerPage = ({ producer, products }: Props) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const { docs } = await firestore.collection("producers").get()
-  return {
-    paths: docs.map((doc) => ({ params: { id: doc.id } })),
-    fallback: false,
-  }
-}
-
-export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
   const { id } = params as Params
-  // https://github.com/vercel/next.js/issues/10933#issuecomment-598297975
   const producer = getObject(await firestore.collection("producers").doc(id).get()) as Producer
   const { docs } = await firestore.collection("products").where("uid", "==", id).get()
   const products = docs.map(getObject) as Product[]
