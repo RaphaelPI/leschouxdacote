@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from "styled-components"
 import Head from "next/head"
 import { AppProps } from "next/app"
 
+import Nprogress from "src/components/Nprogress"
 import { ErrorBoundary } from "src/helpers/bugsnag"
 import { LAYOUT, FONT } from "src/constants"
 import { UserProvider } from "src/helpers/auth"
@@ -99,6 +100,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           rel="stylesheet"
         />
       </Head>
+      <Nprogress />
       <UserProvider>
         <Component {...pageProps} />
       </UserProvider>
