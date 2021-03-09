@@ -5,6 +5,8 @@ import "nprogress/nprogress.css"
 
 const Nprogress = () => {
   useEffect(() => {
+    nprogress.configure({ showSpinner: false })
+
     const handleStart = () => {
       nprogress.set(0.25)
       nprogress.start()
