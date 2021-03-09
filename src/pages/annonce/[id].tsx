@@ -158,7 +158,10 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
   const producer = getObject(await firestore.collection("producers").doc(product.uid).get()) as Producer
 
   const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
-  const otherProducts = (docs.map(getObject) as Product[]).filter(({ objectID }) => objectID !== product.objectID)
+  const now = Date.now()
+  const otherProducts = (docs.map(getObject) as Product[]).filter(
+    ({ objectID, expires }) => objectID !== product.objectID && expires && expires > now
+  )
 
   return {
     props: {
