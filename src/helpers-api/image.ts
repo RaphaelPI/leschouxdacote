@@ -3,8 +3,8 @@ import { stat } from "fs"
 
 import { storage } from "src/helpers-api/firebase"
 
-const MIN_SIZE = 100 // ko
-const WIDTH = 900 // pixels
+const MIN_SIZE = 75 // ko
+const WIDTH = 600 // pixels
 const QUALITY = 75 // %
 
 export const getSize = (path: string): Promise<number> =>
