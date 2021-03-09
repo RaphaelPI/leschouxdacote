@@ -62,6 +62,7 @@ interface Product extends Identified {
 
 interface RegisteringProduct extends Registering<Product> {
   created: Date
+  updated?: Date
   expires: Date
   _geoloc: GeoPoint
 }

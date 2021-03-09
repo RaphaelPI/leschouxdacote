@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     if (!days) {
       return badRequest(res, 400)
     }
-    const expires = addDays(product.expires || now, days)
+    const expires = addDays(product.expires && product.expires > now.getTime() ? product.expires : now, days)
     await ref.update({
       updated: now,
       expires,
