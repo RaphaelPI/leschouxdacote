@@ -53,7 +53,7 @@ const EditProductPage = () => {
   const defaultValues: DefaultValues<ProductPayload> | undefined = data && {
     ...data,
     price: data.price / 100,
-    days: String(data.expires ? differenceInCalendarDays(data.expires, new Date()) : 0),
+    days: String(data.expires && data.expires > Date.now() ? differenceInCalendarDays(data.expires, new Date()) : 0),
     photo: "",
   }
 

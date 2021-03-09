@@ -181,7 +181,7 @@ const AccountProduct = ({ product, odd }: Props) => {
                 Publier l’annonce pour une durée de{" "}
                 <Input type="number" name="days" min={0} step={1} defaultValue={0} /> jour(s) supplémentaires
               </p>
-              <ProductEndDate start={product.expires} />
+              <ProductEndDate start={active ? product.expires : null} />
               <SubmitButton />
             </Form>
           )}
