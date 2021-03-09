@@ -59,6 +59,9 @@ const Address = styled.a`
     vertical-align: -2px;
   }
 `
+const Description = styled.p`
+  white-space: pre-line;
+`
 
 interface Params extends ParsedUrlQuery {
   id: string
@@ -116,7 +119,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 
       <section>
         <h2>Description</h2>
-        <p>{product.description}</p>
+        <Description>{product.description}</Description>
         {product.email && (
           <>
             <h2>E-mail</h2>
