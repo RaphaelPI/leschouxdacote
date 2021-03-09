@@ -20,6 +20,9 @@ const Address = styled.a`
     margin: 0 8px 0 24px;
   }
 `
+const Description = styled.p`
+  white-space: pre-line;
+`
 
 interface Params extends ParsedUrlQuery {
   id: string
@@ -40,7 +43,7 @@ const ProducerPage = ({ producer, products }: Props) => {
         </Address>
       </h1>
       <h2>Description</h2>
-      <p>{producer.description}</p>
+      <Description>{producer.description}</Description>
       <h2>E-mail</h2>
       <p>
         <a href={`mailto:${producer.email}`}>{producer.email}</a>
