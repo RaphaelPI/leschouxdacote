@@ -63,16 +63,25 @@ const Footer = styled.footer`
   font-size: 0.8em;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  > div {
+    flex: 1;
+  }
+  p {
+    margin: 5px 0;
+  }
   a {
-    display: inline-block;
     svg {
-      width: 16px;
-      height: 16px;
-      vertical-align: middle;
-      margin: 0 0 0 20px;
+      width: 36px;
+      height: 36px;
+      padding: 8px;
       fill: ${COLORS.green};
     }
   }
+`
+const Social = styled.div`
+  text-align: right;
+  margin-right: -8px;
 `
 
 interface Props {
@@ -110,12 +119,32 @@ const MainLayout: FC<Props & SEOProps> = ({ full, loading, children, ...props })
       </Container>
       <Footer>
         <div>
-          © {YEAR} Les Choux d’à Côté - <a href="https://www.leschouxdacote.fr/notre-charte">Notre charte</a> -{" "}
-          <a href="https://www.leschouxdacote.fr/cgs">CGU</a> -{" "}
-          <a href="https://www.leschouxdacote.fr/mentions-l%C3%A9gales">Mentions légales</a>
+          <p>
+            <a href="https://www.leschouxdacote.fr/notre-charte">Notre charte</a>
+          </p>
+          <p>
+            <a href="https://www.leschouxdacote.fr/cgs">CGU</a>
+          </p>
+          <p>
+            <a href="https://www.leschouxdacote.fr/mentions-l%C3%A9gales">Mentions légales</a>
+          </p>
+          <p>© {YEAR} Les Choux d’à Côté</p>
         </div>
         <div>
-          <a href="mailto:contact@leschouxdacote.fr">Nous contacter</a>
+          <p>
+            <a href="https://www.leschouxdacote.fr/foire-aux-questions">FAQ</a>
+          </p>
+          <p>
+            <a href="https://www.leschouxdacote.fr/%C3%A0-propos">À propos</a>
+          </p>
+          <p>
+            <a href="https://www.leschouxdacote.fr/actualit%C3%A9s">Actualité</a>
+          </p>
+          <p>
+            <a href="mailto:contact@leschouxdacote.fr">Contact</a>
+          </p>
+        </div>
+        <Social>
           <a href="https://www.facebook.com/leschouxdacote">
             <Facebook />
           </a>
@@ -125,7 +154,7 @@ const MainLayout: FC<Props & SEOProps> = ({ full, loading, children, ...props })
           <a href="https://www.linkedin.com/company/les-choux-d-%C3%A0-c%C3%B4t%C3%A9/">
             <Linkedin />
           </a>
-        </div>
+        </Social>
       </Footer>
     </>
   )
