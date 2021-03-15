@@ -104,9 +104,11 @@ const SearchBar = ({ className }: Props) => {
   }
 
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = currentTarget
     setQuery({
       ...query,
-      [currentTarget.name]: currentTarget.value,
+      [name]: value,
+      ll: name === "where" ? "" : query.ll,
     })
   }
 
