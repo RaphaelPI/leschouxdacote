@@ -3,6 +3,8 @@ export const CONTACT_EMAIL = "contact@leschouxdacote.fr"
 export const COLORS = {
   white: "#ffffff",
   dark: "#101010",
+  menu: "#4A4A4A",
+  divider: "#666666",
   grey: "#a6a6a6",
   input: "#686666",
   border: "#D6D6D6",
@@ -26,10 +28,11 @@ export const SIZES = {
 }
 
 export const LAYOUT = {
-  headerHeight: 80,
   maxWidth: 1100,
   formWidth: 500,
   mapPopupWidth: 250,
+  mobile: 900,
+  tablet: 1200,
 }
 
 export const FONT = "'Roboto', sans-serif"

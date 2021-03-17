@@ -1,17 +1,25 @@
 import { ErrorInfo } from "react"
-import styled, { createGlobalStyle } from "styled-components"
+import styled from "@emotion/styled"
+import { css, Global } from "@emotion/react"
 import Head from "next/head"
 import { AppProps } from "next/app"
 
-import Nprogress from "src/components/Nprogress"
+import "src/components/Nprogress"
 import { ErrorBoundary } from "src/helpers/bugsnag"
-import { LAYOUT, FONT } from "src/constants"
+import { FONT, LAYOUT } from "src/constants"
 import { UserProvider } from "src/helpers/auth"
 
-const GlobalStyle = createGlobalStyle`
+const globalStyle = css`
+  :root {
+    --header-height: 80px;
+    @media (max-width: ${LAYOUT.mobile}px) {
+      --header-height: 60px;
+    }
+  }
+
   html {
+    scroll-padding-top: calc(var(--header-height) + 30px);
     box-sizing: border-box;
-    scroll-padding-top: ${LAYOUT.headerHeight + 30}px;
   }
   *,
   *:before,
@@ -86,7 +94,7 @@ const ErrorComponent = ({ error }: FallbackProps) => (
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const children = (
     <>
-      <GlobalStyle />
+      <Global styles={globalStyle} />
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
@@ -100,7 +108,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           rel="stylesheet"
         />
       </Head>
-      <Nprogress />
       <UserProvider>
         <Component {...pageProps} />
       </UserProvider>

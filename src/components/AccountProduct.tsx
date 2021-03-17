@@ -1,5 +1,8 @@
 import { useState } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
+
+import EditIcon from "@material-ui/icons/Edit"
+import DeleteIcon from "@material-ui/icons/Delete"
 
 import { Button } from "src/components/Button"
 import Link from "src/components/Link"
@@ -10,9 +13,6 @@ import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES } from "src/constants"
-
-import EditIcon from "src/assets/edit.svg"
-import DeleteIcon from "src/assets/delete.svg"
 
 const Container = styled.div<{ $odd?: boolean }>`
   margin: 20px 0;

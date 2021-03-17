@@ -1,7 +1,7 @@
 import { DefaultValues } from "react-hook-form"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import { Button } from "src/components/Button"
 import { useUser } from "src/helpers/auth"
@@ -33,7 +33,7 @@ const MyAccountPage = () => {
   }
 
   return (
-    <MainLayout title="Mon compte" noindex>
+    <Layout title="Mon compte" noindex>
       <Form title="Mon profil" hasRequired onSubmit={handleSubmit} defaultValues={defaultValues}>
         <TextInput name="name" label="Nom commercial" required maxLength={180} />
         <TextInput name="address" label="Adresse" rows={3} required />
@@ -49,7 +49,7 @@ const MyAccountPage = () => {
           </Button>
         </DangerZone>
       </Form>
-    </MainLayout>
+    </Layout>
   )
 }
 

@@ -1,7 +1,7 @@
 import { useState } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import { useUser } from "src/helpers/auth"
 import { COLORS, SIZES } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
@@ -50,7 +50,7 @@ const MyAdsPage = () => {
   }
 
   return (
-    <MainLayout title="Mes annonces" noindex>
+    <Layout title="Mes annonces" noindex>
       <Titles>
         <h1>Mon compte</h1>
         <h2>{producer?.name}</h2>
@@ -66,7 +66,7 @@ const MyAdsPage = () => {
       {tabsData[tab].map((product, index) => (
         <AccountProduct key={product.objectID} product={product} odd={index % 2 === 0} />
       ))}
-    </MainLayout>
+    </Layout>
   )
 }
 

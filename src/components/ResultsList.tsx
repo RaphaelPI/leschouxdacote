@@ -1,4 +1,4 @@
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"

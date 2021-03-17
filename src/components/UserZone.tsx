@@ -1,4 +1,5 @@
-import styled, { css } from "styled-components"
+import styled from "@emotion/styled"
+import { css } from "@emotion/react"
 
 import { useUser } from "src/helpers/auth"
 import Loader from "src/components/Loader"
@@ -85,7 +86,7 @@ const UserZone = () => {
             <Menu>
               <Entry href="/compte/annonces">Mes annonces</Entry>
               <Entry href="/compte/profil">Mon profil</Entry>
-              <Logout onClick={signout}>Déconnexion</Logout>
+              <Logout onClick={signout}>Se déconnecter</Logout>
             </Menu>
           )}
         </ProducerButton>

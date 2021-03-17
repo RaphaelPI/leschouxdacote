@@ -8,7 +8,7 @@ import {
   FormHTMLAttributes,
   FC,
 } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { useForm, useFormContext, FieldValues, FormProvider, FieldName, DefaultValues } from "react-hook-form"
 
 import { COLORS, LAYOUT } from "src/constants"

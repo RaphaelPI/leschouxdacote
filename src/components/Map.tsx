@@ -2,15 +2,15 @@ import { useEffect, useState } from "react"
 import "leaflet/dist/leaflet.css"
 import { icon, LatLngTuple, LatLngBoundsLiteral } from "leaflet"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 
 import { ProductInfos } from "src/cards/ProductCard"
 import { useHover } from "src/helpers/hover"
 import { COLORS, LAYOUT } from "src/constants"
 
-import PrevIcon from "src/assets/prev.svg"
-import NextIcon from "src/assets/next.svg"
+import PrevIcon from "@material-ui/icons/NavigateBefore"
+import NextIcon from "@material-ui/icons/NavigateNext"
 
 const ZOOM = {
   city: 12,

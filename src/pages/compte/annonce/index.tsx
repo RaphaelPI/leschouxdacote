@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from "react"
 import { useFormContext, DefaultValues } from "react-hook-form"
 import { differenceInCalendarDays } from "date-fns"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
 import api from "src/helpers/api"
@@ -119,7 +119,7 @@ const EditProductPage = () => {
   }
 
   return (
-    <MainLayout title={title} loading={loading}>
+    <Layout title={title} loading={loading}>
       <Form
         title={title}
         hasRequired
@@ -170,7 +170,7 @@ const EditProductPage = () => {
         <ProductEndDate />
         <SubmitButton />
       </Form>
-    </MainLayout>
+    </Layout>
   )
 }
 
