@@ -53,6 +53,9 @@ const ImageContainer = styled.div`
     box-shadow: 0px 3px 6px ${COLORS.shadow.light};
   }
 `
+const ProducerLink = styled(Link)`
+  color: ${COLORS.green};
+`
 const Address = styled.a`
   padding: 8px 0;
   svg {
@@ -113,7 +116,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
                 </Text>
               </Price>
             </PriceContainer>
-            <Link href={`/producteur/${producer.objectID}`}>{producer.name}</Link>
+            <ProducerLink href={`/producteur/${producer.objectID}`}>{producer.name}</ProducerLink>
             <br />
             <Address href={getMapsLink(product)} target="_blank">
               <PinIcon />
