@@ -41,7 +41,7 @@ const MyAccountPage = () => {
         <TextInput name="lastname" label="Nom" required maxLength={50} />
         <TextInput name="description" label="Description" rows={6} required minLength={15} maxLength={4000} />
         <TextInput name="phone" label="Téléphone" type="tel" required validate={validatePhoneNumber} />
-        <TextInput name="email" label="E-mail" type="email" required />
+        <TextInput name="email" label="E-mail" type="email" disabled />
         <SubmitButton />
         <DangerZone>
           <Button type="button" $variant="red" onClick={handleDelete}>
