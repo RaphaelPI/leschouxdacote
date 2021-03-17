@@ -1,6 +1,6 @@
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import SearchBar from "src/components/SearchBar"
 
 import LogoSvg from "src/assets/logo.svg"
@@ -28,10 +28,10 @@ const SearchGroup = styled(SearchBar)`
 
 const HomePage = () => {
   return (
-    <MainLayout>
+    <Layout>
       <Logo />
       <SearchGroup />
-    </MainLayout>
+    </Layout>
   )
 }
 

@@ -1,4 +1,5 @@
-import styled, { css } from "styled-components"
+import styled from "@emotion/styled"
+import { css } from "@emotion/react"
 import { darken, lighten } from "polished"
 
 import { COLORS, SIZES } from "src/constants"
@@ -16,24 +17,24 @@ const BUTTON_VARIANT: Record<ButtonVariant, string[]> = {
   red: [COLORS.red, COLORS.white, COLORS.red, COLORS.red],
 }
 
-const BASE_BUTTON = css<ButtonProps>`
-  background-color: ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][0]};
-  color: ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][1]};
+const getButtonCss = ($variant: ButtonVariant) => css`
+  background-color: ${BUTTON_VARIANT[$variant][0]};
+  color: ${BUTTON_VARIANT[$variant][1]};
   padding: 8px 16px;
   transition: background-color 150ms;
-  border: 1px solid ${({ $variant }) => BUTTON_VARIANT[$variant || "white"][2]};
+  border: 1px solid ${BUTTON_VARIANT[$variant][2]};
   border-radius: 8px;
   position: relative;
   font-size: ${SIZES.regular}px;
   font-weight: 400;
 
   &:hover {
-    background-color: ${({ $variant }) => darken(0.1, BUTTON_VARIANT[$variant || "white"][0])};
+    background-color: ${darken(0.1, BUTTON_VARIANT[$variant][0])};
   }
 
   &:active,
   &:focus {
-    box-shadow: 0 0 0 0.25rem ${({ $variant }) => lighten(0.3, BUTTON_VARIANT[$variant || "white"][3])};
+    box-shadow: 0 0 0 0.25rem ${lighten(0.3, BUTTON_VARIANT[$variant][3])};
     z-index: 1;
   }
 
@@ -44,23 +45,23 @@ const BASE_BUTTON = css<ButtonProps>`
   }
 `
 
-export const Button = styled.button`
-  ${BASE_BUTTON}
+export const Button = styled.button<ButtonProps>`
+  ${({ $variant }) => getButtonCss($variant || "white")}
 `
-export const LinkButton = styled.a`
-  ${BASE_BUTTON}
+export const LinkButton = styled.a<ButtonProps>`
+  ${({ $variant }) => getButtonCss($variant || "white")}
   display: inline-block;
 `
 
 export const ButtonGroup = styled.div`
-  > *:first-child {
+  > *:first-of-type {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  > *:not(:first-child) {
+  > *:not(:first-of-type) {
     margin-left: -1px;
   }
-  > *:last-child {
+  > *:last-of-type {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }

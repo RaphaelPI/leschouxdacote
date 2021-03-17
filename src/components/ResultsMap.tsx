@@ -1,7 +1,7 @@
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import dynamic from "next/dynamic"
 
-import { COLORS, LAYOUT } from "src/constants"
+import { COLORS } from "src/constants"
 
 const Map = dynamic(import("src/components/Map"), {
   ssr: false,
@@ -13,8 +13,8 @@ const Map = dynamic(import("src/components/Map"), {
 const Container = styled.div`
   background-color: ${COLORS.border};
   position: sticky;
-  top: ${LAYOUT.headerHeight}px;
-  height: calc(100vh - ${LAYOUT.headerHeight}px);
+  top: var(--header-height);
+  height: calc(100vh - var(--header-height));
 `
 const Loader = styled.div`
   padding-top: 40vh;

@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import { Form, TextInput, SubmitButton, ValidationError } from "src/components/Form"
 import Link from "src/components/Link"
 import { auth } from "src/helpers/firebase"
@@ -28,7 +28,7 @@ const LostPasswordPage = () => {
   }
 
   return (
-    <MainLayout title="Mot de passe oublié">
+    <Layout title="Mot de passe oublié">
       <Form title="Mot de passe oublié" onSubmit={handleSubmit}>
         {sent ? (
           <p>Veuillez cliquer sur le lien de réinitialisation que nous venons de vous envoyer</p>
@@ -42,7 +42,7 @@ const LostPasswordPage = () => {
           </>
         )}
       </Form>
-    </MainLayout>
+    </Layout>
   )
 }
 

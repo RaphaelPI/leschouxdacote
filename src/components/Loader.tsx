@@ -1,4 +1,5 @@
-import styled, { keyframes } from "styled-components"
+import styled from "@emotion/styled"
+import { keyframes } from "@emotion/react"
 
 import { COLORS } from "src/constants"
 
@@ -9,6 +10,7 @@ const spin = keyframes`
 `
 
 const Loader = styled.div`
+  display: inline-block;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -21,5 +23,6 @@ const Loader = styled.div`
 export default Loader
 
 export const Loading = styled(Loader)`
+  display: block;
   margin: 35vh auto 0;
 `

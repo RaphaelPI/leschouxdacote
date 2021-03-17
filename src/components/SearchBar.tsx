@@ -1,5 +1,5 @@
 import { ChangeEvent, useState, FormEvent, useRef, useEffect } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 
 import { Input } from "src/components/Input"
@@ -14,14 +14,14 @@ const Form = styled.form`
 const InputGroup = styled.div`
   input {
     width: 50%;
-    &:first-child {
+    &:first-of-type {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
-    &:not(:first-child) {
+    &:not(:first-of-type) {
       margin-left: -1px;
     }
-    &:last-child {
+    &:last-of-type {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       padding-right: 8%;

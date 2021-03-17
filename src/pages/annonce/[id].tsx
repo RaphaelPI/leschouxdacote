@@ -1,10 +1,10 @@
 import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES } from "src/constants"
 import { getMapsLink, formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
@@ -89,7 +89,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const priceParts = price.split(",")
 
   return (
-    <MainLayout title={product.title} description={description}>
+    <Layout title={product.title} description={description}>
       <section>
         <Top>
           <ImageContainer>
@@ -156,7 +156,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
           </Products>
         </section>
       )}
-    </MainLayout>
+    </Layout>
   )
 }
 

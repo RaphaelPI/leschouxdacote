@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import { SearchOptions } from "@algolia/client-search"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
 import algolia from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
 import { HoverProvider } from "src/helpers/hover"
-import { SEARCH_RADIUS } from "src/constants"
+import { SEARCH_RADIUS, LAYOUT } from "src/constants"
 
 const Row = styled.div`
   display: flex;
@@ -20,6 +20,9 @@ const LeftCol = styled.div`
 `
 const RightCol = styled.div`
   flex: 1;
+  @media (max-width: ${LAYOUT.tablet}px) {
+    display: none;
+  }
 `
 
 const getOptions = (type: SearchQuery["type"] = "city", ll?: string) => {
@@ -49,7 +52,7 @@ const SearchPage = () => {
   }, [isReady, what, ll, type])
 
   return (
-    <MainLayout title="Recherche" full loading={!results}>
+    <Layout title="Recherche" full loading={!results}>
       <HoverProvider>
         <Row>
           <LeftCol>
@@ -60,7 +63,7 @@ const SearchPage = () => {
           </RightCol>
         </Row>
       </HoverProvider>
-    </MainLayout>
+    </Layout>
   )
 }
 

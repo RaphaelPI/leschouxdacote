@@ -1,10 +1,10 @@
 import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
 import { getMapsLink } from "src/helpers/text"
@@ -40,7 +40,7 @@ const ProducerPage = ({ producer, products }: Props) => {
   }
 
   return (
-    <MainLayout title={producer.name} description={producer.description}>
+    <Layout title={producer.name} description={producer.description}>
       <h1>
         {producer.name}
         <Address href={getMapsLink(producer)} target="_blank">
@@ -67,7 +67,7 @@ const ProducerPage = ({ producer, products }: Props) => {
           </Products>
         </>
       )}
-    </MainLayout>
+    </Layout>
   )
 }
 

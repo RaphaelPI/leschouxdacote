@@ -1,11 +1,11 @@
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 
 import { Form, SubmitButton, TextInput, ValidationError } from "src/components/Form"
 import Link from "src/components/Link"
 import { COLORS } from "src/constants"
 import { useUser } from "src/helpers/auth"
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 
 const Warning = styled.div`
   color: ${COLORS.red};
@@ -47,7 +47,7 @@ const LoginPage = () => {
   }
 
   return (
-    <MainLayout title="Connexion">
+    <Layout title="Connexion">
       {query.next && (
         <Warning>
           <p>Désolé, vous devez être connecté pour accéder à cette page</p>
@@ -64,7 +64,7 @@ const LoginPage = () => {
           <Link href="/inscription">Pas encore inscrit ? Créer un compte vendeur</Link>
         </Register>
       </Form>
-    </MainLayout>
+    </Layout>
   )
 }
 

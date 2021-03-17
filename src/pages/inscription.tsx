@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 
-import MainLayout from "src/layouts/MainLayout"
+import Layout from "src/layout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
 import { validateSiret, validatePhoneNumber, validatePassword } from "src/helpers/validators"
@@ -14,7 +14,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <MainLayout title="Inscription">
+    <Layout title="Inscription">
       <Form title="Création du profil vendeur" hasRequired onSubmit={handleSubmit}>
         <TextInput name="siret" label="SIRET" required validate={validateSiret} />
         <TextInput name="name" label="Nom commercial" required maxLength={180} />
@@ -35,7 +35,7 @@ const RegisterPage = () => {
         />
         <SubmitButton />
       </Form>
-    </MainLayout>
+    </Layout>
   )
 }
 
