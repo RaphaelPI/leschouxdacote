@@ -3,6 +3,7 @@ import type { ParsedUrlQuery } from "querystring"
 
 import styled from "styled-components"
 
+import ErrorPage from "src/pages/_error"
 import MainLayout from "src/layouts/MainLayout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES } from "src/constants"
@@ -68,12 +69,19 @@ interface Params extends ParsedUrlQuery {
 }
 
 interface Props {
-  product: Product
-  producer: Producer
-  otherProducts: Product[]
+  product: Product | null
+  producer: Producer | null
+  otherProducts?: Product[]
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
+  if (!product) {
+    return <ErrorPage statusCode={404} title="Produit introuvable" />
+  }
+  if (!producer) {
+    return <ErrorPage statusCode={404} title="Producteur introuvable" />
+  }
+
   const price = formatPrice(product)
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
@@ -138,7 +146,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
         )}
       </section>
 
-      {otherProducts.length > 0 && (
+      {otherProducts && otherProducts.length > 0 && (
         <section>
           <h2>Ce producteur vend aussi</h2>
           <Products $col={3}>
@@ -152,24 +160,24 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
   const { id } = params as Params
-  const product = getObject(await firestore.collection("products").doc(id).get()) as Product
-  const producer = getObject(await firestore.collection("producers").doc(product.uid).get()) as Producer
+  const product = getObject<Product>(await firestore.collection("products").doc(id).get())
+  const producer = product && getObject<Producer>(await firestore.collection("producers").doc(product.uid).get())
 
-  const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
-  const now = Date.now()
-  const otherProducts = (docs.map(getObject) as Product[]).filter(
-    ({ objectID, expires }) => objectID !== product.objectID && expires && expires > now
-  )
+  const props: Props = { product, producer }
 
-  return {
-    props: {
-      product,
-      producer,
-      otherProducts,
-    },
+  if (product && producer) {
+    const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
+    const now = Date.now()
+    props.otherProducts = (docs.map(getObject) as Product[]).filter(
+      ({ objectID, expires }) => objectID !== product.objectID && expires && expires > now
+    )
+  } else {
+    res.statusCode = 404
   }
+
+  return { props }
 }
 
 export default ProductPage

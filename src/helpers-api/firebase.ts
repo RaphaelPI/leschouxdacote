@@ -17,7 +17,10 @@ export const firestore = app.firestore()
 export const storage = app.storage()
 export const GeoPoint = admin.firestore.GeoPoint
 
-export const getObject = (doc: admin.firestore.DocumentData) => {
+export const getObject = <T extends DataObject = DataObject>(doc: admin.firestore.DocumentSnapshot) => {
+  if (!doc.exists) {
+    return null
+  }
   const data = doc.data()
   const obj: DataObject = {
     objectID: doc.id,
@@ -32,7 +35,7 @@ export const getObject = (doc: admin.firestore.DocumentData) => {
       obj[key] = value
     }
   }
-  return obj
+  return obj as T
 }
 
 export const getToken = (req: NextApiRequest) => {
