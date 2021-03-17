@@ -3,6 +3,7 @@ import type { ParsedUrlQuery } from "querystring"
 
 import styled from "styled-components"
 
+import ErrorPage from "src/pages/_error"
 import MainLayout from "src/layouts/MainLayout"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
@@ -29,11 +30,15 @@ interface Params extends ParsedUrlQuery {
 }
 
 interface Props {
-  producer: Producer
-  products: Product[]
+  producer: Producer | null
+  products?: Product[]
 }
 
 const ProducerPage = ({ producer, products }: Props) => {
+  if (!producer) {
+    return <ErrorPage statusCode={404} title="Producteur introuvable" />
+  }
+
   return (
     <MainLayout title={producer.name} description={producer.description}>
       <h1>
@@ -52,29 +57,33 @@ const ProducerPage = ({ producer, products }: Props) => {
       <p>
         <a href={`tel:${producer.phone}`}>{producer.phone}</a>
       </p>
-      <h2>{products.length} annonces en ligne</h2>
-      <Products $col={3}>
-        {products.map((product) => (
-          <ProductCard key={product.objectID} product={product} />
-        ))}
-      </Products>
+      {products && (
+        <>
+          <h2>{products.length} annonces en ligne</h2>
+          <Products $col={3}>
+            {products.map((product) => (
+              <ProductCard key={product.objectID} product={product} />
+            ))}
+          </Products>
+        </>
+      )}
     </MainLayout>
   )
 }
 
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
   const { id } = params as Params
-  const producer = getObject(await firestore.collection("producers").doc(id).get()) as Producer
-  const { docs } = await firestore.collection("products").where("uid", "==", id).get()
-  const now = Date.now()
-  const products = (docs.map(getObject) as Product[]).filter(({ expires }) => expires && expires > now)
+  const producer = getObject<Producer>(await firestore.collection("producers").doc(id).get())
 
-  return {
-    props: {
-      producer,
-      products,
-    },
+  const props: Props = { producer }
+
+  if (producer) {
+    const { docs } = await firestore.collection("products").where("uid", "==", id).get()
+    const now = Date.now()
+    props.products = (docs.map(getObject) as Product[]).filter(({ expires }) => expires && expires > now)
   }
+
+  return { props }
 }
 
 export default ProducerPage
