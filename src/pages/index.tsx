@@ -18,6 +18,7 @@ const Logo = styled(LogoSvg)`
 `
 const SearchGroup = styled(SearchBar)`
   margin: 5vh auto;
+  text-align: center;
   input {
     padding: 16px 32px;
     font-size: 1.5em;
@@ -32,14 +33,18 @@ const SearchGroup = styled(SearchBar)`
     height: 48px;
     @media (max-width: ${LAYOUT.mobile}px) {
       width: auto;
+      display: inline-flex;
       margin: 8px auto;
       padding: 0 20px;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+      justify-content: space-between;
       span {
         display: block;
         font-size: 1.2em;
-        flex: 1;
         margin-right: 16px;
+      }
+      svg {
+        width: auto;
       }
     }
     @media (min-width: ${LAYOUT.mobile}px) {
