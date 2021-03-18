@@ -2,48 +2,37 @@ import { ChangeEvent, useState, FormEvent, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 
-import { Input } from "src/components/Input"
+import SearchInput from "src/components/SearchInput"
 import { Button } from "src/components/Button"
 import { loadGmaps } from "src/helpers/scripts"
+import { LAYOUT } from "src/constants"
 
 import SearchIcon from "src/assets/search.svg"
 
 const Form = styled.form`
   position: relative;
 `
-const InputGroup = styled.div`
-  input {
-    width: 50%;
-    &:first-of-type {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-    &:not(:first-of-type) {
-      margin-left: -1px;
-    }
-    &:last-of-type {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-      padding-right: 8%;
-    }
-  }
-`
-const Sumbit = styled(Button)`
+const Submit = styled(Button)`
   width: 25px;
   height: 25px;
   border-radius: 25px;
   padding: 0;
-  right: 6px;
-  top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  span {
+    display: none;
+  }
   svg {
     width: 50%;
     height: 50%;
     min-width: 12px;
     min-height: 12px;
+  }
+  @media (min-width: ${LAYOUT.mobile}px) {
+    position: absolute;
+    right: 6px;
+    top: 4px;
   }
 `
 
@@ -125,13 +114,14 @@ const SearchBar = ({ className }: Props) => {
 
   return (
     <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
-      <InputGroup>
-        <Input name="what" value={query.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
-        <Input name="where" value={query.where} onChange={handleChange} placeholder="Où ?" ref={handleRef} />
-      </InputGroup>
-      <Sumbit $variant="green" type="submit">
+      <div>
+        <SearchInput name="what" value={query.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
+        <SearchInput name="where" value={query.where} onChange={handleChange} placeholder="Où ?" ref={handleRef} />
+      </div>
+      <Submit $variant="green" type="submit">
+        <span>Rechercher</span>
         <SearchIcon />
-      </Sumbit>
+      </Submit>
     </Form>
   )
 }
