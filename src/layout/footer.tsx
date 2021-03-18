@@ -12,10 +12,12 @@ const Container = styled.footer`
   color: ${COLORS.grey};
   font-size: 0.8em;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   > div {
     flex: 1;
+    min-width: 200px;
   }
   p {
     margin: 5px 0;
@@ -49,14 +51,13 @@ const Footer = () => {
         <p>
           <a href="https://www.leschouxdacote.fr/mentions-l%C3%A9gales">Mentions légales</a>
         </p>
-        <p>© {YEAR} Les Choux d’à Côté</p>
+        <p>
+          <a href="https://www.leschouxdacote.fr/%C3%A0-propos">À propos</a>
+        </p>
       </div>
       <div>
         <p>
-          <a href="https://www.leschouxdacote.fr/foire-aux-questions">FAQ</a>
-        </p>
-        <p>
-          <a href="https://www.leschouxdacote.fr/%C3%A0-propos">À propos</a>
+          <a href="https://assistance.leschouxdacote.fr/">Assistance</a>
         </p>
         <p>
           <a href="https://www.leschouxdacote.fr/actualit%C3%A9s">Actualité</a>
@@ -64,6 +65,7 @@ const Footer = () => {
         <p>
           <a href="mailto:contact@leschouxdacote.fr">Contact</a>
         </p>
+        <p>© {YEAR} Les Choux d’à Côté</p>
       </div>
       <Social>
         <a href="https://www.facebook.com/leschouxdacote">
