@@ -78,6 +78,7 @@
     "node": ">=10.13"
   },
   "devDependencies": {
+    "@emotion/babel-plugin": "^11.2.0",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "eslint": "^7.14.0",
