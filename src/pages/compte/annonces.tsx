@@ -3,9 +3,11 @@ import styled from "@emotion/styled"
 
 import Layout from "src/layout"
 import { useUser } from "src/helpers/auth"
-import { COLORS, SIZES } from "src/constants"
+import { COLORS, SIZES, LAYOUT } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
 import AccountProduct from "src/components/AccountProduct"
+
+type Tab = "all" | "online" | "disabled"
 
 const Titles = styled.div`
   text-align: center;
@@ -13,20 +15,28 @@ const Titles = styled.div`
   h2 {
     margin: 0 0 10px;
   }
+  @media (max-width: ${LAYOUT.mobile}px) {
+    display: none;
+  }
 `
-
-type Tab = "all" | "online" | "disabled"
-
+const Tabs = styled.div`
+  margin-bottom: 20px;
+`
 const Tab = styled.button<{ $active: boolean }>`
   background-color: transparent;
   border: none;
   color: ${({ $active }) => ($active ? COLORS.green : COLORS.dark)};
   padding: 0;
   font-size: ${SIZES.large}px;
-  &:not(:last-of-type) {
-    margin-right: 10px;
-    padding-right: 10px;
-    border-right: 1px solid ${COLORS.dark};
+  @media (max-width: ${LAYOUT.mobile}px) {
+    margin-bottom: 8px;
+  }
+  @media (min-width: ${LAYOUT.mobile}px) {
+    &:not(:last-of-type) {
+      margin-right: 10px;
+      padding-right: 10px;
+      border-right: 1px solid ${COLORS.dark};
+    }
   }
 `
 
@@ -54,15 +64,15 @@ const MyAdsPage = () => {
       <Titles>
         <h1>Mon compte</h1>
         <h2>{producer?.name}</h2>
+        <h3>Mes annonces</h3>
       </Titles>
-      <h3>Mes annonces</h3>
-      <div>
+      <Tabs>
         {TABS.map(({ id, title }) => (
           <Tab key={id} $active={id === tab} onClick={() => setTab(id)}>
             {title} ({tabsData[id].length})
           </Tab>
         ))}
-      </div>
+      </Tabs>
       {tabsData[tab].map((product, index) => (
         <AccountProduct key={product.objectID} product={product} odd={index % 2 === 0} />
       ))}

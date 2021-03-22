@@ -1,6 +1,7 @@
 import { useState } from "react"
 import styled from "@emotion/styled"
 
+import { IconButton } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
 
@@ -12,28 +13,37 @@ import ProductEndDate from "src/components/ProductEndDate"
 import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
-import { COLORS, SIZES } from "src/constants"
+import { COLORS, SIZES, LAYOUT } from "src/constants"
 
 const Container = styled.div<{ $odd?: boolean }>`
+  position: relative;
   margin: 20px 0;
   background-color: ${({ $odd }) => ($odd ? COLORS.odd : COLORS.white)};
   padding: 20px;
+  @media (max-width: ${LAYOUT.mobile}px) {
+    margin: 0 -24px;
+  }
 `
 const Ad = styled.div`
   display: flex;
-  padding-bottom: 17px;
-  border-bottom: 1px solid ${COLORS.border};
-  margin-bottom: 15px;
-  position: relative;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    margin-bottom: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid ${COLORS.border};
+  }
 `
 const Image = styled.div`
-  width: 200px;
-  height: 120px;
+  flex-shrink: 0;
   img {
-    width: 100%;
-    height: 100%;
+    display: block;
+    width: 200px;
+    height: 120px;
     object-fit: cover;
     border-radius: 6px;
+    @media (max-width: ${LAYOUT.mobile}px) {
+      width: 80px;
+      height: 80px;
+    }
   }
 `
 const Infos = styled.div`
@@ -43,22 +53,34 @@ const Infos = styled.div`
     font-weight: normal;
     margin: 0 0 5px;
   }
+  @media (max-width: ${LAYOUT.mobile}px) {
+    margin: 0 0 0 12px;
+  }
 `
 const Days = styled.div`
   margin: 15px 0;
   color: ${COLORS.grey};
+  @media (max-width: ${LAYOUT.mobile}px) {
+    margin: 8px 0;
+    font-size: 0.9em;
+  }
 `
 const Actions = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  a {
-    display: inline-block;
-    padding: 1px 6px;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    width: auto;
+    position: absolute;
+    top: 12px;
+    right: 12px;
   }
-  button {
-    border: none;
-    background-color: transparent;
+  a {
+    padding: 10px 12px;
+  }
+  svg {
+    fill: ${COLORS.dark};
   }
 `
 const End = styled.div`
@@ -66,17 +88,35 @@ const End = styled.div`
 `
 const Bottom = styled.div`
   position: relative;
-  button {
-    margin: 10px 10px 0 0;
-  }
   em {
     font-size: ${SIZES.regular}px;
   }
 `
+const BottomActions = styled.div`
+  button {
+    margin: 10px 10px 0 0;
+  }
+  @media (max-width: ${LAYOUT.mobile}px) {
+    display: flex;
+    justify-content: space-between;
+    button {
+      padding: 6px 12px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+    em {
+      display: none;
+    }
+  }
+`
 const Status = styled.div<{ $active: boolean }>`
-  position: absolute;
-  top: 0;
-  right: 0;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  margin-bottom: 8px;
   color: ${({ $active }) => ($active ? COLORS.green : COLORS.red)};
   font-weight: 400;
   font-size: ${SIZES.large}px;
@@ -143,34 +183,38 @@ const AccountProduct = ({ product, odd }: Props) => {
             {product.updated && <> et modifiée le {formatDate(product.updated)}</>}
           </Days>
         </Infos>
-        <Actions>
-          <Link href={`/compte/annonce/${product.objectID}`}>
-            <EditIcon />
-          </Link>
-          <button onClick={() => setModal("delete")}>
-            <DeleteIcon />
-          </button>
-        </Actions>
       </Ad>
+      <Actions>
+        <Link href={`/compte/annonce/${product.objectID}`}>
+          <EditIcon />
+        </Link>
+        <IconButton onClick={() => setModal("delete")}>
+          <DeleteIcon />
+        </IconButton>
+      </Actions>
       {active ? (
         <Bottom>
+          <Status $active={true}>Annonce en ligne</Status>
           <End>
             La publication se termine le {formatDateTime(product.expires)} ({daysFromNow(product.expires)})
           </End>
-          <Button $variant="green" onClick={() => setModal("publish")}>
-            Ajouter des jours
-          </Button>
-          <Button onClick={() => setModal("disable")}>Désactiver l’annonce</Button>
-          <em>Vous pourrez la réactiver à tout moment</em>
-          <Status $active={true}>Annonce en ligne</Status>
+          <BottomActions>
+            <Button $variant="green" onClick={() => setModal("publish")}>
+              Ajouter des jours
+            </Button>
+            <Button onClick={() => setModal("disable")}>Désactiver l’annonce</Button>
+            <em>Vous pourrez la réactiver</em>
+          </BottomActions>
         </Bottom>
       ) : (
         <Bottom>
-          <End>La publication est désactivée</End>
-          <Button $variant="green" onClick={() => setModal("publish")}>
-            Publier l’annonce
-          </Button>
           <Status $active={false}>Annonce désactivée</Status>
+          <End>La publication est désactivée</End>
+          <BottomActions>
+            <Button $variant="green" onClick={() => setModal("publish")}>
+              Publier l’annonce
+            </Button>
+          </BottomActions>
         </Bottom>
       )}
       {modal && (
