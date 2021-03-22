@@ -6,7 +6,7 @@ import styled from "@emotion/styled"
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
 import { Text } from "src/components/Text"
-import { COLORS, SIZES } from "src/constants"
+import { COLORS, SIZES, LAYOUT } from "src/constants"
 import { getMapsLink, formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import Link from "src/components/Link"
 import Products from "src/components/Products"
@@ -16,41 +16,50 @@ import PinIcon from "src/assets/pin.svg"
 import { firestore, getObject } from "src/helpers-api/firebase"
 
 const Top = styled.div`
-  display: flex;
-`
-const Title = styled.h1`
-  margin: 0;
-`
-const Data = styled.div`
-  min-width: 200px;
-`
-const PriceContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-top: 1px solid ${COLORS.shadow.light};
-  margin: 24px 0;
-  padding-top: 24px;
-`
-const Price = styled.div`
-  display: flex;
-
-  & > p:last-child {
-    margin-top: 4px;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    display: flex;
   }
 `
 const ImageContainer = styled.div`
-  height: 250px;
   position: relative;
-  flex: 1;
-  max-width: 50vh;
-  margin: 0 64px 32px 0;
+  margin: 0 0 16px;
+  max-height: 50vh;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    height: 250px;
+    flex: 1;
+    max-width: 50vh;
+    margin: 0 64px 32px 0;
+  }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     box-shadow: 0px 3px 6px ${COLORS.shadow.light};
+  }
+`
+const Data = styled.div`
+  min-width: 200px;
+  margin-bottom: 24px;
+`
+const Title = styled.h1`
+  margin: 0;
+`
+const PriceContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    border-top: 1px solid ${COLORS.shadow.light};
+    margin: 24px 0;
+    padding-top: 24px;
+  }
+`
+const Price = styled.div`
+  display: flex;
+
+  & > p:last-child {
+    margin-top: 4px;
   }
 `
 const ProducerLink = styled(Link)`
