@@ -77,10 +77,11 @@ const Actions = styled.div`
     right: 12px;
   }
   a {
-    padding: 10px 12px;
+    padding: 12px;
   }
   svg {
     fill: ${COLORS.dark};
+    vertical-align: middle;
   }
 `
 const End = styled.div`

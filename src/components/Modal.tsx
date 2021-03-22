@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useEffect } from "react"
 import styled from "@emotion/styled"
 
-import { COLORS } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 import Portal from "src/components/Portal"
 
 const Overlay = styled.div`
@@ -23,6 +23,9 @@ const Box = styled.div`
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
   position: relative;
   padding: 5px;
+  @media (max-width: ${LAYOUT.mobile}px) {
+    max-width: calc(100% - 32px);
+  }
 `
 const CloseButton = styled.button`
   position: absolute;
@@ -40,6 +43,9 @@ const Content = styled.div`
   overflow-y: auto;
   padding: 20px;
   text-align: center;
+  @media (max-width: ${LAYOUT.mobile}px) {
+    padding-bottom: 0;
+  }
 `
 
 export interface Props {
