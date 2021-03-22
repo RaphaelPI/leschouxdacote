@@ -9,12 +9,8 @@ import AccountProduct from "src/components/AccountProduct"
 
 type Tab = "all" | "online" | "disabled"
 
-const Titles = styled.div`
+const Title = styled.h1`
   text-align: center;
-  h1,
-  h2 {
-    margin: 0 0 10px;
-  }
   @media (max-width: ${LAYOUT.mobile}px) {
     display: none;
   }
@@ -61,11 +57,7 @@ const MyAdsPage = () => {
 
   return (
     <Layout title="Mes annonces" noindex>
-      <Titles>
-        <h1>Mon compte</h1>
-        <h2>{producer?.name}</h2>
-        <h3>Mes annonces</h3>
-      </Titles>
+      <Title>Mes annonces</Title>
       <Tabs>
         {TABS.map(({ id, title }) => (
           <Tab key={id} $active={id === tab} onClick={() => setTab(id)}>
