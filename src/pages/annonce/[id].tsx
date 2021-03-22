@@ -127,7 +127,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             </PriceContainer>
             <ProducerLink href={`/producteur/${producer.objectID}`}>{producer.name}</ProducerLink>
             <br />
-            <Address href={getMapsLink(product)} target="_blank">
+            <Address href={getMapsLink(product)} target="_blank" rel="noopener">
               <PinIcon />
               <Text as="span" $color={COLORS.input}>
                 {product.address}
