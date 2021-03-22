@@ -55,6 +55,7 @@ const StyledPopup = styled(Popup)`
   }
   .leaflet-popup-content a {
     color: ${COLORS.dark};
+    width: 100%;
   }
 `
 const PopupContent = styled.div`
