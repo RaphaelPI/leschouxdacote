@@ -1,6 +1,7 @@
 import { FC } from "react"
 import styled from "@emotion/styled"
 import NextLink from "next/link"
+import { useRouter } from "next/router"
 
 import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
@@ -41,6 +42,16 @@ const Container = styled.nav`
   hr {
     border-color: ${COLORS.divider};
   }
+  .Mui-selected {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: ${COLORS.green};
+    svg {
+      fill: ${COLORS.green};
+    }
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
 `
 const Center = styled.div`
   text-align: center;
@@ -50,13 +61,17 @@ const Center = styled.div`
 interface LinkProps {
   href: string
 }
-const ListItemLink: FC<LinkProps> = ({ href, children }) => (
-  <NextLink href={href} passHref>
-    <ListItem button component="a">
-      {children}
-    </ListItem>
-  </NextLink>
-)
+const ListItemLink: FC<LinkProps> = ({ href, children }) => {
+  const { pathname } = useRouter()
+
+  return (
+    <NextLink href={href} passHref>
+      <ListItem button component="a" selected={pathname === href}>
+        {children}
+      </ListItem>
+    </NextLink>
+  )
+}
 
 const Menu = () => {
   const { loading, user, producer, signout } = useUser()
