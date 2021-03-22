@@ -10,6 +10,7 @@ import {
 } from "react"
 import styled from "@emotion/styled"
 import { useForm, useFormContext, FieldValues, FormProvider, FieldName, DefaultValues } from "react-hook-form"
+import HttpError from "standard-http-error"
 
 import { COLORS, LAYOUT } from "src/constants"
 import { Button } from "src/components/Button"
@@ -72,6 +73,11 @@ export function Form<T extends FieldValues>({
           message: error.message,
           shouldFocus: true,
         })
+      } else if (error instanceof HttpError && error.code === 413) {
+        alert(`Désolé, votre fichier image est trop gros.
+La limite est pour l'instant de 5 Mo par photo.
+
+Nous espérons lever cette limitation dans les semaines à venir.`)
       } else {
         handleError(error)
       }
