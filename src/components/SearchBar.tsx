@@ -1,3 +1,5 @@
+import type { ParsedUrlQuery } from "querystring"
+
 import { ChangeEvent, useState, FormEvent, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
@@ -53,14 +55,23 @@ interface Props {
   className?: string
 }
 
-const INITIAL_QUERY: SearchQuery = { what: "", where: "", ll: "" }
+const INITIAL_QUERY: SearchQuery = { what: "", where: "", ll: "", type: "" }
+
+const getQuery = (previous: SearchQuery, routerQuery: ParsedUrlQuery) => {
+  const newQuery: SearchQuery = {}
+  for (const key in INITIAL_QUERY) {
+    newQuery[key] = routerQuery[key] || previous[key] || ""
+  }
+  return newQuery
+}
 
 const SearchBar = ({ className }: Props) => {
   const router = useRouter()
-  const [query, setQuery] = useState<SearchQuery>({ ...INITIAL_QUERY, ...router.query })
+
+  const [query, setQuery] = useState<SearchQuery>(getQuery(INITIAL_QUERY, router.query))
 
   useEffect(() => {
-    setQuery((previous) => ({ ...previous, ...router.query }))
+    setQuery((previous) => getQuery(previous, router.query))
   }, [router.query])
 
   const autocomplete = useRef<google.maps.places.Autocomplete>()
