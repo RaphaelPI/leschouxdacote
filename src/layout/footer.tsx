@@ -63,7 +63,7 @@ const Footer = () => {
           <a href="https://www.leschouxdacote.fr/actualit%C3%A9s">Actualité</a>
         </p>
         <p>
-          <a href="mailto:contact@leschouxdacote.fr">Contact</a>
+          Contact : <a href="mailto:contact@leschouxdacote.fr">contact@leschouxdacote.fr</a>
         </p>
         <p>© {YEAR} Les Choux d’à Côté</p>
       </div>
