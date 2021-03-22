@@ -39,13 +39,13 @@ const MobileSwitches = styled.div`
   }
 `
 
-const getOptions = (type: SearchQuery["type"] = "city", ll?: string) => {
+const getOptions = (type: SearchQuery["type"], ll?: string) => {
   const options: Mutable<SearchOptions> = {
     numericFilters: `expires > ${Date.now()}`,
   }
   if (ll) {
     options.aroundLatLng = ll
-    options.aroundRadius = SEARCH_RADIUS[type]
+    options.aroundRadius = SEARCH_RADIUS[type || "city"]
   }
   return options
 }

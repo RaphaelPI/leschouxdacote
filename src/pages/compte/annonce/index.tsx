@@ -90,6 +90,8 @@ const EditProductPage = () => {
       return
     }
 
+    // TODO: reset place on text change
+
     await loadGmaps()
 
     autocomplete.current = new google.maps.places.Autocomplete(el, {

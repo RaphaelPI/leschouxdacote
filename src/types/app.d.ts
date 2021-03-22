@@ -13,7 +13,7 @@ interface SearchQuery extends ParsedUrlQueryInput {
   what?: string
   where?: string
   ll?: string
-  type?: "city" | "dpt" | "region"
+  type?: "city" | "dpt" | "region" | ""
 }
 
 interface Place {
