@@ -5,11 +5,12 @@ export const validateSiret = (value: string) => {
   return true
 }
 
-export const validatePassword = (value: string) => {
-  const message =
-    "Désolé, le mot de passe doit contenir 8 caractères minimum dont au moins 1 majuscule, 1 minuscule et 1 chiffre"
+export const MIN_PASSWORD_LENGTH = 8
 
-  if (value.length < 8) {
+export const validatePassword = (value: string) => {
+  const message = `Désolé, le mot de passe doit contenir ${MIN_PASSWORD_LENGTH} caractères minimum dont au moins 1 majuscule, 1 minuscule et 1 chiffre`
+
+  if (value.length < MIN_PASSWORD_LENGTH) {
     return message
   }
 
