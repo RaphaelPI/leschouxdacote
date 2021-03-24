@@ -30,6 +30,7 @@ interface Producer extends Identified {
   description: string
   email: string
   phone: string
+  earlyAdopter?: boolean
 }
 
 interface RegisteringProducer extends Registering<Producer> {
