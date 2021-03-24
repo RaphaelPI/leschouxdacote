@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import Layout from "src/layout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
-import { validateSiret, validatePhoneNumber, validatePassword } from "src/helpers/validators"
+import { validateSiret, validatePhoneNumber, validatePassword, MIN_PASSWORD_LENGTH } from "src/helpers/validators"
 
 const RegisterPage = () => {
   const { push } = useRouter()
@@ -29,7 +29,7 @@ const RegisterPage = () => {
           label="Mot de passe"
           type="password"
           required
-          minLength={12}
+          minLength={MIN_PASSWORD_LENGTH}
           autoComplete="new-password"
           validate={validatePassword}
         />
