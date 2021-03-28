@@ -1,6 +1,7 @@
 import firebase from "firebase/app"
 import "firebase/auth"
 import "firebase/firestore"
+import "firebase/analytics"
 
 import { useState, useEffect } from "react"
 
@@ -17,6 +18,10 @@ const app = firebase.apps.length
       appId: process.env.NEXT_PUBLIC_FIREBASE_ID,
       measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASURE,
     })
+
+if (typeof window !== "undefined") {
+  app.analytics()
+}
 
 export const auth = app.auth()
 export const firestore = app.firestore()
