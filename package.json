@@ -1,25 +1,25 @@
 {
-  "name": "next-starter-antoine",
-  "version": "0.1.0",
-  "keywords": [
-    "next",
-    "starter",
-    "next.js",
-    "typescript",
-    "template"
-  ],
+  "name": "leschouxdacote",
+  "version": "1.0.0",
+  "private": true,
   "author": {
     "name": "Antoine Rousseau",
     "email": "antoine@rousseau.im",
     "url": "https://antoine.rousseau.im"
   },
+  "contributors": [
+    {
+      "name": "Raphaël Pi",
+      "email": "pi.raph@gmail.com"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/antoinerousseau/next-starter-antoine"
+    "url": "https://github.com/RaphaelPI/leschouxdacote"
   },
   "bugs": {
-    "url": "https://github.com/antoinerousseau/next-starter-antoine/issues",
+    "url": "https://github.com/RaphaelPI/leschouxdacote/issues",
     "email": "antoine@rousseau.im"
   },
   "scripts": {
