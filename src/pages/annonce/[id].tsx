@@ -23,9 +23,9 @@ const Top = styled.div`
 const ImageContainer = styled.div`
   position: relative;
   margin: 0 0 16px;
+  height: 250px;
   max-height: 50vh;
   @media (min-width: ${LAYOUT.mobile}px) {
-    height: 250px;
     flex: 1;
     max-width: 50vh;
     margin: 0 64px 32px 0;

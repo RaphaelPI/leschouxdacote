@@ -66,6 +66,7 @@ const PopupContent = styled.div`
 const Slider = styled.div`
   transition: transform 200ms ease-in-out;
   > a {
+    white-space: normal;
     display: inline-block;
     vertical-align: top;
     img {
@@ -167,6 +168,7 @@ const Map = ({ products }: MapProps) => {
 
   const places: Record<Product["placeId"], Product[]> = {}
   const bounds: LatLngBoundsLiteral = []
+  console.log(products)
   products.forEach((product) => {
     if (!places[product.placeId]) {
       places[product.placeId] = []
