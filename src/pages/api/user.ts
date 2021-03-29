@@ -9,7 +9,7 @@ import algolia from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
 import { CONTACT_EMAIL } from "src/constants"
 
-const checkCompany = async (siret: string) => {
+const checkCompany = async (siret: string, nocheck = false) => {
   const response = await fetch("https://api.insee.fr/entreprises/sirene/V3/siret/" + siret, {
     headers: {
       Authorization: `Bearer ${process.env.INSEE_TOKEN}`,
@@ -23,15 +23,17 @@ const checkCompany = async (siret: string) => {
     console.warn("INSEE API HTTP Error", response.status, response.statusText)
     // TODO: report
     return `Une erreur est survenue lors de l'obtention des informations sur votre société. Veuillez réessayer plus tard.
-Si le problème persiste, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
+    Si le problème persiste, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
   }
 
-  const data = await response.json()
-  const activityCode = data.etablissement.uniteLegale.activitePrincipaleUniteLegale.replace(".", "")
+  if (!nocheck) {
+    const data = await response.json()
+    const activityCode = data.etablissement.uniteLegale.activitePrincipaleUniteLegale.replace(".", "")
 
-  if (!ALLOWED_CODES.includes(activityCode)) {
-    return `Désolé, l'activité principale de votre société ne vous permet pas de publier des annonces sur notre plateforme.
+    if (!ALLOWED_CODES.includes(activityCode)) {
+      return `Désolé, l'activité principale de votre société ne vous permet pas de publier des annonces sur notre plateforme.
     Si vous avez des questions, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
+    }
   }
 
   const snapshot = await firestore.collection("producers").where("siret", "==", siret).get()
@@ -45,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     // user registration
     const producer = req.body as RegisteringProducer // TODO: validate fields
     producer.siret = producer.siret.replace(/\s+/g, "") // remove spaces
-    const checkError = await checkCompany(producer.siret)
+    const checkError = await checkCompany(producer.siret, producer.nocheck)
     if (checkError) {
       return respond(res, {
         siret: checkError,

@@ -6,9 +6,10 @@ import api from "src/helpers/api"
 import { validateSiret, validatePhoneNumber, validatePassword, MIN_PASSWORD_LENGTH } from "src/helpers/validators"
 
 const RegisterPage = () => {
-  const { push } = useRouter()
+  const { query, push } = useRouter()
 
   const handleSubmit: Submit<RegisteringProducer> = async (values) => {
+    values.nocheck = Boolean(query.nocheck)
     await api.post("user", values)
     push("/confirmation")
   }

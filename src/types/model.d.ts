@@ -36,6 +36,7 @@ interface Producer extends Identified {
 interface RegisteringProducer extends Registering<Producer> {
   created: Date
   password?: string
+  nocheck?: boolean
 }
 
 interface UpdatingProducer extends Omit<Updating<Producer>, "siret"> {
