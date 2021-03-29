@@ -44,11 +44,17 @@ const ALLOWED_CODES = [
   "1061B", // Autres activités du travail des grains
   "1062Z", // Fabrication de produits amylacés
   "1071A", // Fabrication industrielle de pain et de pâtisserie fraîche
+  "1071B", // Cuisson de produits de boulangerie
   "1071C", // Boulangerie et boulangerie-pâtisserie
   "1071D", // Pâtisserie
+  "1072Z", // Fabrication de biscuits, biscottes et pâtisseries de conservation
+  "1073Z", // Fabrication de pâtes alimentaires
+  "1081Z", // Fabrication de sucre
   "1082Z", // Fabrication de cacao, chocolat et de produits de confiserie
   "1083Z", // Transformation du thé et du café
   "1084Z", // Fabrication de condiments et assaisonnements
+  "1085Z", // Fabrication de plats préparés
+  "1086Z", // Fabrication d'aliments homogénéisés et diététiques
   "1089Z", // Fabrication d'autres produits alimentaires n.c.a.
   "1101Z", // Production de boissons alcooliques distillées
   "1102A", // Fabrication de vins effervescents
