@@ -43,6 +43,7 @@ const ALLOWED_CODES = [
   "1061A", // Meunerie
   "1061B", // Autres activités du travail des grains
   "1062Z", // Fabrication de produits amylacés
+  "1071A", // Fabrication industrielle de pain et de pâtisserie fraîche
   "1071C", // Boulangerie et boulangerie-pâtisserie
   "1071D", // Pâtisserie
   "1082Z", // Fabrication de cacao, chocolat et de produits de confiserie
