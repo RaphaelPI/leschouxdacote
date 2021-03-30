@@ -79,7 +79,7 @@ const ProducerPage = ({ producer, products }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
   const { id } = params as Params
   const producer = getObject<Producer>(await firestore.collection("producers").doc(id).get())
 
@@ -89,7 +89,11 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
     const { docs } = await firestore.collection("products").where("uid", "==", id).get()
     const now = Date.now()
     props.products = (docs.map(getObject) as Product[]).filter(({ expires }) => expires && expires > now)
+  } else {
+    res.statusCode = 404
   }
+
+  res.setHeader("cache-control", "s-maxage=1, stale-while-revalidate")
 
   return { props }
 }

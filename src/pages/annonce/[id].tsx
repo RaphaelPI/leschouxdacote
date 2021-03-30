@@ -189,6 +189,8 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
     res.statusCode = 404
   }
 
+  res.setHeader("cache-control", "s-maxage=1, stale-while-revalidate")
+
   return { props }
 }
 
