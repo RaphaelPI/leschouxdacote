@@ -7,12 +7,13 @@ const apiKey = process.env.NEXT_PUBLIC_BUGSNAG
 if (apiKey) {
   Bugsnag.start({
     apiKey,
-    releaseStage: process.env.NODE_ENV,
-    enabledReleaseStages: ["production"],
-    appVersion: process.env.COMMIT_REF || "local", // from Netlify
+    releaseStage: process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.NODE_ENV,
+    enabledReleaseStages: ["production", "preview"],
+    appVersion: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "local",
     metadata: {
-      deployUrl: process.env.DEPLOY_URL || "local", // from Netlify
+      deployUrl: process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "local",
       deployDate: new Date().toString(),
+      deployAuthor: `${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_NAME} (${process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_AUTHOR_LOGIN})`,
     },
     plugins: [new BugsnagReact(React)],
   })
