@@ -23,23 +23,20 @@ const Top = styled.div`
 const ImageContainer = styled.div`
   position: relative;
   margin: 0 0 16px;
-  height: 250px;
-  max-height: 50vh;
   @media (min-width: ${LAYOUT.mobile}px) {
-    flex: 1;
-    max-width: 50vh;
+    width: 300px;
     margin: 0 64px 32px 0;
   }
 
   img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-height: 50vh;
+    object-fit: contain;
     box-shadow: 0px 3px 6px ${COLORS.shadow.light};
   }
 `
 const Data = styled.div`
-  min-width: 200px;
+  flex: 1;
   margin-bottom: 24px;
 `
 const Title = styled.h1`
