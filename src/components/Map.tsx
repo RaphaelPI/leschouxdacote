@@ -168,7 +168,6 @@ const Map = ({ products }: MapProps) => {
 
   const places: Record<Product["placeId"], Product[]> = {}
   const bounds: LatLngBoundsLiteral = []
-  console.log(products)
   products.forEach((product) => {
     if (!places[product.placeId]) {
       places[product.placeId] = []
