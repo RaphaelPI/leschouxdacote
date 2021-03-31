@@ -4,7 +4,6 @@ import fetch from "node-fetch"
 import ALLOWED_CODES from "src/helpers-api/activityCodes"
 import { auth, firestore, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
-import { sendEmail } from "src/helpers-api/mail"
 import algolia from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
 import { CONTACT_EMAIL } from "src/constants"
@@ -67,13 +66,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
 
       delete producer.password
       await firestore.collection("producers").doc(user.uid).set(producer)
-
-      const link = await auth.generateEmailVerificationLink(producer.email, {
-        url: req.headers.origin + "/connexion",
-      })
-
-      const message = `Cliquez sur ce lien pour valider votre compte :\n\n${link}`
-      await sendEmail(producer.email, "Validation de votre compte", message)
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         return respond(res, {
