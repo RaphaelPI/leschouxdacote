@@ -24,8 +24,8 @@ const ImageContainer = styled.div`
   position: relative;
   margin: 0 0 16px;
   @media (min-width: ${LAYOUT.mobile}px) {
-    width: 300px;
-    margin: 0 64px 32px 0;
+    width: 324px;
+    margin: 0 48px 24px 0;
   }
 
   img {
