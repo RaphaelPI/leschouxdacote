@@ -1,6 +1,5 @@
 import { FC } from "react"
 import styled from "@emotion/styled"
-import { useRouter } from "next/router"
 
 import Header from "./header"
 import Footer from "./footer"
@@ -21,11 +20,8 @@ const Background = styled(Empty)`
   @media (max-width: ${LAYOUT.mobile}px) {
     background-size: 180%;
   }
-  @media (orientation: portrait) and (max-height: 800px) {
-    background-size: 120%;
-  }
   @media (orientation: portrait) and (max-height: 700px) {
-    background-image: none;
+    background-size: 120%;
   }
 `
 
@@ -39,16 +35,16 @@ const MainColumn = styled.main`
 `
 
 interface Props {
-  full?: boolean
+  bgImage?: boolean
+  fullWidth?: boolean
   loading?: boolean
 }
 
-const Layout: FC<Props & SEOProps> = ({ full, loading, children, ...props }) => {
-  const { pathname } = useRouter()
+const Layout: FC<Props & SEOProps> = ({ bgImage, fullWidth, loading, children, ...props }) => {
   const { wait } = useUser()
 
-  const Container = pathname === "/" ? Background : Empty
-  const Main = full ? "main" : MainColumn
+  const Container = bgImage ? Background : Empty
+  const Main = fullWidth ? "main" : MainColumn
 
   return (
     <>
