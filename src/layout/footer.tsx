@@ -43,16 +43,16 @@ const Footer = () => {
     <Container>
       <div>
         <p>
-          <a href="https://www.leschouxdacote.fr/notre-charte">Notre charte</a>
+          <a href="https://info.leschouxdacote.fr/notre-charte">Notre charte</a>
         </p>
         <p>
-          <a href="https://www.leschouxdacote.fr/cgs">CGU</a>
+          <a href="https://info.leschouxdacote.fr/cgs">CGU</a>
         </p>
         <p>
-          <a href="https://www.leschouxdacote.fr/mentions-l%C3%A9gales">Mentions légales</a>
+          <a href="https://info.leschouxdacote.fr/mentions-l%C3%A9gales">Mentions légales</a>
         </p>
         <p>
-          <a href="https://www.leschouxdacote.fr/%C3%A0-propos">À propos</a>
+          <a href="https://info.leschouxdacote.fr/%C3%A0-propos">À propos</a>
         </p>
       </div>
       <div>
@@ -60,7 +60,7 @@ const Footer = () => {
           <a href="https://assistance.leschouxdacote.fr/">Assistance</a>
         </p>
         <p>
-          <a href="https://www.leschouxdacote.fr/actualit%C3%A9s">Actualité</a>
+          <a href="https://info.leschouxdacote.fr/actualit%C3%A9s">Actualité</a>
         </p>
         <p>
           Contact : <a href="mailto:contact@leschouxdacote.fr">contact@leschouxdacote.fr</a>
