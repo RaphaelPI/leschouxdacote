@@ -109,11 +109,11 @@ const Header = () => {
       </Desktop>
       <Mobile>
         <IconButton onClick={() => setOpen(!openMenu)}>
-          <MenuIcon />
+          <MenuIcon titleAccess="Menu" />
         </IconButton>
         <Link href="/">Les Choux d’à Côté</Link>
         <Link href="/">
-          <SearchIcon />
+          <SearchIcon titleAccess="Recherche" />
         </Link>
         <SwipeableDrawer open={openMenu} onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
           <Menu />

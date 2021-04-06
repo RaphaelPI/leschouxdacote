@@ -20,7 +20,7 @@ const Container = styled.footer`
     min-width: 200px;
   }
   p {
-    margin: 5px 0;
+    margin: 8px 0;
   }
   a {
     svg {
