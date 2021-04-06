@@ -73,7 +73,7 @@ const SearchPage = () => {
   }, [isReady, what, ll, type])
 
   return (
-    <Layout title="Recherche" full loading={!results}>
+    <Layout title="Recherche" fullWidth loading={!results}>
       <HoverProvider>
         {view !== "both" && (
           <MobileSwitches>

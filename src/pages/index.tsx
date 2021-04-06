@@ -25,9 +25,6 @@ const Title = styled.h2`
 const SearchGroup = styled(SearchBar)`
   margin: 5vh auto;
   text-align: center;
-  @media (max-width: ${LAYOUT.mobile}px) {
-    margin: 2vh auto;
-  }
 
   input {
     padding: 16px 32px;
@@ -64,23 +61,10 @@ const SearchGroup = styled(SearchBar)`
     }
   }
 `
-const Help = styled.div`
-  text-align: center;
-  ol {
-    padding-inline-start: 0;
-    list-style-position: inside;
-    li {
-      margin: 5px 0;
-    }
-  }
-  a {
-    text-decoration: underline;
-  }
-`
 
 const HomePage = () => {
   return (
-    <Layout>
+    <Layout bgImage>
       <Logo />
       <Title>
         <strong>
@@ -90,27 +74,6 @@ const HomePage = () => {
         VENTE DIRECTE entre producteurs et acheteurs
       </Title>
       <SearchGroup />
-      <Help>
-        <p>
-          Productrices, producteurs,
-          <br />
-          pour utiliser la plateforme, il suffit de :
-        </p>
-        <ol>
-          <li>
-            <a href="https://assistance.leschouxdacote.fr/assistance/cr%C3%A9er-son-compte">Créer son compte</a>
-          </li>
-          <li>
-            <a href="https://assistance.leschouxdacote.fr/assistance/se-connecter">Se connecter</a>
-          </li>
-          <li>
-            <a href="https://assistance.leschouxdacote.fr/assistance/publier-une-annonce">Publier des annonces</a>
-          </li>
-          <li>
-            <a href="https://assistance.leschouxdacote.fr/assistance/g%C3%A9rer-mes-annonces">Gérer ses annonces</a>
-          </li>
-        </ol>
-      </Help>
     </Layout>
   )
 }
