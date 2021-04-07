@@ -33,3 +33,9 @@ yarn-error.log*
 
 # lint
 .eslintcache
+
+# firebase
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules
