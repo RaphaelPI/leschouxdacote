@@ -27,9 +27,9 @@ const SEO = ({ title, description, noindex }: SEOProps) => {
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDesc} />
       <meta property="og:site_name" content={config.title} />
-      <meta property="og:image" content={process.env.NEXT_PUBLIC_URL + "/og.jpg"} />
-      <meta property="og:image:width" content="1342" />
-      <meta property="og:image:height" content="657" />
+      <meta property="og:image" content={process.env.NEXT_PUBLIC_URL + "/opengraph.jpg"} />
+      <meta property="og:image:width" content="1700" />
+      <meta property="og:image:height" content="1133" />
       <meta property="twitter:card" content="summary" />
       <meta property="twitter:creator" content={config.social.twitter} />
       <meta property="twitter:title" content={pageTitle} />
