@@ -1,9 +1,16 @@
 import { useRouter } from "next/router"
+import styled from "@emotion/styled"
 
 import Layout from "src/layout"
 import { Form, TextInput, SubmitButton } from "src/components/Form"
 import api from "src/helpers/api"
 import { validateSiret, validatePhoneNumber, validatePassword, MIN_PASSWORD_LENGTH } from "src/helpers/validators"
+
+const Paragraph = styled.p`
+  a {
+    text-decoration: underline;
+  }
+`
 
 const RegisterPage = () => {
   const { query, push } = useRouter()
@@ -34,6 +41,13 @@ const RegisterPage = () => {
           autoComplete="new-password"
           validate={validatePassword}
         />
+        <Paragraph>
+          En créant mon compte je reconnais avoir lu et accepté les{" "}
+          <a href="https://info.leschouxdacote.fr/cgs" target="_blank" rel="noopener">
+            Conditions Générales d’Utilisation
+          </a>
+          .
+        </Paragraph>
         <SubmitButton />
       </Form>
     </Layout>
