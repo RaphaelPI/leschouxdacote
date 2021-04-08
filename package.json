@@ -50,6 +50,7 @@
     "@types/standard-http-error": "^2.0.0",
     "algoliasearch": "^4.8.5",
     "aws-sdk": "^2.825.0",
+    "csv-stringify": "^5.6.2",
     "date-fns": "^2.16.1",
     "firebase": "^8.2.1",
     "firebase-admin": "^9.4.2",
