@@ -46,7 +46,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
         "Date d'inscription",
         "Nombre d'annonces",
       ])
+      const date = new Date().toISOString().substr(0, 10)
       res.setHeader("Content-Type", "text/csv")
+      res.setHeader("Content-Disposition", `attachment; filename="producers-${date}.csv"`)
       res.status(200).send(output)
     } catch (err) {
       console.error(err)
