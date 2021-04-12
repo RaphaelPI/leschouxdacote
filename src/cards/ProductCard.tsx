@@ -33,13 +33,14 @@ const Location = styled.h4`
 `
 const Price = styled.div`
   margin: 0.4em 0 0;
-  font-size: 1.7em;
-  font-weight: 500;
+  font-size: 1.2em;
 `
 const PPU = styled.div`
   position: absolute;
   right: 10px;
-  bottom: 9px;
+  bottom: 6px;
+  font-size: 1.2em;
+  font-weight: 400;
 `
 const Quantity = styled.div`
   position: absolute;
