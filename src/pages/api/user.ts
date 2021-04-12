@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import fetch from "node-fetch"
 
-import ALLOWED_CODES from "src/helpers-api/activityCodes"
 import { auth, firestore, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
@@ -25,19 +24,21 @@ const checkCompany = async (siret: string, nocheck = false) => {
     Si le problème persiste, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
   }
 
+  const snapshot = await firestore.collection("producers").where("siret", "==", siret).get()
+  if (snapshot.size > 0) {
+    return `Le compte de cet établissement est déjà créé`
+  }
+
   if (!nocheck) {
     const data = await response.json()
     const activityCode = data.etablissement.uniteLegale.activitePrincipaleUniteLegale.replace(".", "")
 
-    if (!ALLOWED_CODES.includes(activityCode)) {
+    const { exists } = await firestore.collection("activityCodes").doc(activityCode).get()
+
+    if (!exists) {
       return `Désolé, l'activité principale de votre société ne vous permet pas de publier des annonces sur notre plateforme.
     Si vous avez des questions, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
     }
-  }
-
-  const snapshot = await firestore.collection("producers").where("siret", "==", siret).get()
-  if (snapshot.size > 0) {
-    return `Le compte de cet établissement est déjà créé`
   }
 }
 
