@@ -7,7 +7,7 @@ import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
 import { Text } from "src/components/Text"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
-import { getMapsLink, formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
+import { getMapsLink, formatPricePerUnit, formatQuantity, formatPrice, formatPhone } from "src/helpers/text"
 import Link from "src/components/Link"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
@@ -149,7 +149,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
           <>
             <h2>Téléphone</h2>
             <p>
-              <a href={`tel:${product.phone}`}>{product.phone}</a>
+              <a href={`tel:${product.phone}`}>{formatPhone(product.phone)}</a>
             </p>
           </>
         )}
