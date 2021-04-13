@@ -3,7 +3,7 @@ import { stat } from "fs"
 
 import { storage } from "src/helpers-api/firebase"
 
-const MIN_SIZE = 75 // ko
+// const MIN_SIZE = 75 // ko
 const WIDTH = 600 // pixels
 const QUALITY = 75 // %
 
@@ -18,11 +18,11 @@ export const getSize = (path: string): Promise<number> =>
   })
 
 export const resize = async (source: string) => {
-  const size = await getSize(source)
-  if (size < MIN_SIZE * 1024) {
-    // TODO: check and show on front end
-    throw new Error(`Photo trop petite : minimum ${MIN_SIZE} ko`)
-  }
+  // const size = await getSize(source)
+  // if (size < MIN_SIZE * 1024) {
+  //   // TODO: check and show on front end
+  //   throw new Error(`Photo trop petite : minimum ${MIN_SIZE} ko`)
+  // }
 
   const image = sharp(source)
 
@@ -32,10 +32,10 @@ export const resize = async (source: string) => {
     throw new Error(`Photo invalide (format incorrect)`)
   }
 
-  if (width < WIDTH) {
-    // TODO: check and show on front end
-    throw new Error(`Photo trop petite : minimum ${WIDTH} pixels de large`)
-  }
+  // if (width < WIDTH) {
+  //   // TODO: check and show on front end
+  //   throw new Error(`Photo trop petite : minimum ${WIDTH} pixels de large`)
+  // }
 
   const destination = source + "-resized.jpg"
 
