@@ -16,6 +16,9 @@ const checkCompany = async (siret: string, nocheck = false) => {
   if (response.status === 404) {
     return "Numéro de SIRET introuvable"
   }
+  if (response.status === 403) {
+    return "Ce numéro de SIRET n'existe pas ou plus, ou ses données ne sont pas consultables"
+  }
 
   if (response.status >= 400) {
     console.warn("INSEE API HTTP Error", response.status, response.statusText)

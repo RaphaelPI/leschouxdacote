@@ -9,7 +9,7 @@ import {
   FC,
 } from "react"
 import styled from "@emotion/styled"
-import { useForm, useFormContext, FieldValues, FormProvider, FieldName, DefaultValues } from "react-hook-form"
+import { useForm, useFormContext, FieldValues, FormProvider, DefaultValues } from "react-hook-form"
 import HttpError from "standard-http-error"
 
 import { COLORS, LAYOUT } from "src/constants"
@@ -69,10 +69,7 @@ export function Form<T extends FieldValues>({
       await form.handleSubmit((data) => onSubmit(data, event.target as HTMLFormElement))(event)
     } catch (error) {
       if (error instanceof ValidationError) {
-        form.setError(error.field as FieldName<T>, {
-          message: error.message,
-          shouldFocus: true,
-        })
+        form.setError(error.field as any, { message: error.message }, { shouldFocus: true })
       } else if (error instanceof HttpError && error.code === 413) {
         alert(`Désolé, votre fichier image est trop gros.
 La limite est pour l'instant de 5 Mo par photo.
@@ -151,14 +148,16 @@ type CombinedAttributes = InputHTMLAttributes<HTMLInputElement> &
 type WithTag = { Tag: "input" | "select" | "textarea" }
 
 const BaseInput = forwardRef(
-  ({ Tag, label, suffix, validate, ...props }: InputProps & CombinedAttributes & WithTag, ref) => {
-    const { register, errors } = useFormContext()
-    const error = errors[props.name]
+  ({ Tag, label, suffix, validate, name, ...props }: InputProps & CombinedAttributes & WithTag, forwardedRef) => {
+    const { register, formState } = useFormContext()
+    const error = formState.errors[name]
+
+    const { ref, ...tagProps } = register(name, { validate })
 
     const handleRef = (el: any) => {
-      register({ validate })(el)
-      if (typeof ref === "function") {
-        ref(el)
+      ref(el)
+      if (typeof forwardedRef === "function") {
+        forwardedRef(el)
       }
     }
 
@@ -166,7 +165,7 @@ const BaseInput = forwardRef(
       <Label $error={Boolean(error)}>
         {label} {props.required && "*"}
         <Row>
-          <Tag ref={handleRef} {...props} />
+          <Tag ref={handleRef} {...tagProps} {...props} />
           {suffix && <Suffix>{suffix}</Suffix>}
         </Row>
         {error && <ErrorMessage>{error.message}</ErrorMessage>}
@@ -202,7 +201,11 @@ export const SubmitButton: FC = ({ children = "Valider" }) => {
   )
 }
 
-export const BasicInput = (props: InputHTMLAttributes<HTMLInputElement>) => {
+interface BasicInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  name: string
+}
+
+export const BasicInput = ({ name, ...props }: BasicInputProps) => {
   const { register } = useFormContext()
-  return <input ref={register} {...props} />
+  return <input {...register(name)} {...props} />
 }
