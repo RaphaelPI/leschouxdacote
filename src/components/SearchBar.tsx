@@ -82,25 +82,12 @@ const SearchBar = ({ className }: Props) => {
       }
       autocomplete.current = new google.maps.places.Autocomplete(el, {
         componentRestrictions: { country: "fr" },
-        fields: ["geometry", "name", "types", "address_components"],
+        fields: ["geometry", "name", "types"],
         types: ["(regions)"],
       })
       autocomplete.current.addListener("place_changed", () => {
         const place = autocomplete.current?.getPlace()
-        if (!place || !place.geometry || !place.address_components) {
-          return
-        }
-        const region = place.address_components.find(({ types }) => types.includes("administrative_area_level_1"))
-        if (!region) {
-          return
-        }
-        if (region.short_name !== "Occitanie") {
-          alert("Désolé, la recherche est actuellement limitée à la région Occitanie.")
-          setQuery((previous) => ({
-            ...previous,
-            where: "",
-            ll: "",
-          }))
+        if (!place || !place.geometry) {
           return
         }
         const { location } = place.geometry
