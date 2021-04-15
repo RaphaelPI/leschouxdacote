@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import { formatISO9075 } from "date-fns"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import getCsv from "src/helpers-api/csv"
@@ -29,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
         producer.email,
         producer.phone,
         producer.address,
-        producer.created,
+        producer.created && formatISO9075(producer.created),
         sums[producer.objectID] || 0,
       ]
     })
