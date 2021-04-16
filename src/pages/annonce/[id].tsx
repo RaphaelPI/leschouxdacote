@@ -109,17 +109,13 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             {product.quantity && product.unit && <Text $size={SIZES.small}>{formatQuantity(product)}</Text>}
             <PriceContainer>
               {pricePerUnit && (
-                <Text $weight={100} $size={SIZES.subtitle}>
+                <Text $weight={400} $size={SIZES.subtitle}>
                   {pricePerUnit}
                 </Text>
               )}
               <Price>
-                <Text $weight={600} $size={SIZES.price}>
-                  {priceParts[0]}
-                </Text>
-                <Text $weight={600} $size={SIZES.small}>
-                  .{priceParts[1]}
-                </Text>
+                <Text $size={SIZES.price}>{priceParts[0]}</Text>
+                <Text $size={SIZES.small}>.{priceParts[1]}</Text>
               </Price>
             </PriceContainer>
             <ProducerLink href={`/producteur/${producer.objectID}`}>{producer.name}</ProducerLink>
