@@ -7,7 +7,7 @@ import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
-import { getMapsLink } from "src/helpers/text"
+import { formatPhone, getMapsLink } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
 
@@ -63,7 +63,7 @@ const ProducerPage = ({ producer, products }: Props) => {
       </p>
       <h2>Téléphone</h2>
       <p>
-        <a href={`tel:${producer.phone}`}>{producer.phone}</a>
+        <a href={`tel:${producer.phone}`}>{formatPhone(producer.phone)}</a>
       </p>
       {products && (
         <>
