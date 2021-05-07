@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://leschouxdacote.fr
+
+# Sitemaps
+Sitemap: https://leschouxdacote.fr/sitemap.xml
