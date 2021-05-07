@@ -3,6 +3,7 @@ import { GetServerSideProps } from "next"
 import { ISitemapFiled } from "next-sitemap/dist/@types/interface"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
+import { SSR_CACHE_HEADER } from "src/constants"
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const producersSnapshot = await firestore.collection("producers").get()
@@ -52,6 +53,8 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       priority: "0.8",
     })
   })
+
+  ctx.res.setHeader("cache-control", SSR_CACHE_HEADER)
 
   return getServerSideSitemap(ctx, fields)
 }

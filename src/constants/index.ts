@@ -43,3 +43,5 @@ export const SEARCH_RADIUS = {
   dpt: 120_000,
   region: 300_000,
 }
+
+export const SSR_CACHE_HEADER = "max-age=3600, s-maxage=60, stale-while-revalidate=86400"
