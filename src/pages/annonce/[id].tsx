@@ -6,7 +6,7 @@ import styled from "@emotion/styled"
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
 import { Text } from "src/components/Text"
-import { COLORS, SIZES, LAYOUT } from "src/constants"
+import { COLORS, SIZES, LAYOUT, SSR_CACHE_HEADER } from "src/constants"
 import { getMapsLink, formatPricePerUnit, formatQuantity, formatPrice, formatPhone } from "src/helpers/text"
 import Link from "src/components/Link"
 import Products from "src/components/Products"
@@ -182,7 +182,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
     res.statusCode = 404
   }
 
-  res.setHeader("cache-control", "s-maxage=1, stale-while-revalidate")
+  res.setHeader("cache-control", SSR_CACHE_HEADER)
 
   return { props }
 }
