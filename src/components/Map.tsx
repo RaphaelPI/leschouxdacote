@@ -18,11 +18,9 @@ const ZOOM = {
   region: 7,
 }
 
-const TILES_URL = "https://api.maptiler.com/maps/bright/{z}/{x}/{y}.png?key=" + process.env.NEXT_PUBLIC_MAPTILER_KEY // TODO: use vector tiles
-const TILES_ATTR = [
-  '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener">MapTiler</a>',
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
-].join(" ")
+const TILES_URL = "https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png" // TODO: use vector tiles
+const TILES_ATTR =
+  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
 
 const ICON_INACTIVE = icon({
   iconUrl: "/marker-inactive.png",
