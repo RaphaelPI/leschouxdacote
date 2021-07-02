@@ -23,7 +23,7 @@ const RegisterPage = () => {
 
   return (
     <Layout title="Inscription">
-      <Form title="Création du profil vendeur" hasRequired onSubmit={handleSubmit}>
+      <Form title="Création du profil producteur" hasRequired onSubmit={handleSubmit}>
         <TextInput name="siret" label="SIRET" required validate={validateSiret} />
         <TextInput name="name" label="Nom commercial" required maxLength={180} />
         <TextInput name="address" label="Adresse" rows={3} required />

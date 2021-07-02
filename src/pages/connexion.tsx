@@ -53,7 +53,7 @@ const LoginPage = () => {
           <p>Désolé, vous devez être connecté pour accéder à cette page</p>
         </Warning>
       )}
-      <Form title="Connexion au compte vendeur" onSubmit={handleSubmit}>
+      <Form title="Connexion au compte producteur" onSubmit={handleSubmit}>
         <TextInput name="email" label="Adresse e-mail" type="email" required />
         <TextInput name="password" label="Mot de passe" type="password" required />
         <LostPassword>
@@ -61,7 +61,7 @@ const LoginPage = () => {
         </LostPassword>
         <SubmitButton />
         <Register>
-          <Link href="/inscription">Pas encore inscrit ? Créer un compte vendeur</Link>
+          <Link href="/inscription">Pas encore inscrit ? Créer un compte producteur</Link>
         </Register>
       </Form>
     </Layout>
