@@ -37,7 +37,7 @@ const LostPasswordPage = () => {
             <TextInput name="email" label="Adresse e-mail" type="email" required />
             <SubmitButton />
             <Register>
-              <Link href="/inscription">Pas encore inscrit ? Créer un compte vendeur</Link>
+              <Link href="/inscription">Pas encore inscrit ? Créer un compte producteur</Link>
             </Register>
           </>
         )}

@@ -96,7 +96,7 @@ const UserZone = () => {
 
   return (
     <ButtonGroup>
-      <ButtonLink href="/inscription">Devenir vendeur</ButtonLink>
+      <ButtonLink href="/inscription">Devenir producteur</ButtonLink>
       <ButtonLink href="/connexion">Se connecter</ButtonLink>
     </ButtonGroup>
   )

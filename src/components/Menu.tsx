@@ -95,7 +95,7 @@ const Menu = () => {
         {!user && (
           <ListItemLink href="/inscription">
             <PersonAddIcon />
-            <ListItemText>Devenir vendeur</ListItemText>
+            <ListItemText>Devenir producteur</ListItemText>
           </ListItemLink>
         )}
         <ListItemLink href="/compte/annonce">
