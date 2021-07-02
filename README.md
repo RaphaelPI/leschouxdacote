@@ -8,13 +8,9 @@ Classified food ads.
 - [Node](https://nodejs.org/) v10.13+
 - [Yarn](https://yarnpkg.com/)
 
-## Usage
+## Config
 
-    npx create-next-app [name] -e https://github.com/antoinerousseau/next-starter-antoine
-    cd [name]
     cp {example,}.env
-
-And configure your site infos in `package.json`, `pages/_app.tsx` and `public/site.webmanifest`.
 
 ## Commands
 
