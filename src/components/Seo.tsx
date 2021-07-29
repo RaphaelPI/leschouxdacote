@@ -3,7 +3,8 @@ import Head from "next/head"
 const config = {
   title: "Les choux d'à côté",
   tagline: "L'alimentaire sans intermédiaire",
-  description: "Producteurs et acheteurs, pratiquez le circuit court !",
+  description:
+    "1ère plateforme d’annonces alimentaire pour la vente directe. Achetez directement aux producteurs locaux. Vendez directement aux clients.",
   social: {
     twitter: "https://twitter.com/leschouxdacote",
   },
