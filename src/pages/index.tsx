@@ -15,8 +15,10 @@ const Logo = styled(LogoSvg)`
     width: 100%;
   }
 `
-const Title = styled.h2`
+const Title = styled.h1`
   text-align: center;
+  font-size: 1.2em;
+  font-weight: 400;
   @media (max-width: ${LAYOUT.mobile}px) {
     font-size: 14px;
     margin: 0.5em -16px;
@@ -67,11 +69,9 @@ const HomePage = () => {
     <Layout bgImage>
       <Logo />
       <Title>
-        <strong>
-          1<sup>ère</sup> plateforme d’annonces pour l’alimentaire
-        </strong>
+        <strong>Producteurs artisans</strong>, publiez des annonces de vos produits.
         <br />
-        VENTE DIRECTE entre producteurs et acheteurs
+        Acheteurs, jeter un oeil aux <strong> produits locaux</strong> en vente directe autour de vous.
       </Title>
       <SearchGroup />
     </Layout>
