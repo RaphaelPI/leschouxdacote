@@ -175,7 +175,7 @@ const Map = ({ products }: MapProps) => {
   })
 
   return (
-    <Container>
+    <Container tap={false}>
       <Centerer bounds={bounds} />
       <TileLayer url={TILES_URL} attribution={TILES_ATTR} crossOrigin />
       {Object.keys(places).map((placeId) => {
