@@ -7,8 +7,8 @@ import { Button } from "src/components/Button"
 import { useUser } from "src/helpers/auth"
 import { validatePhoneNumber } from "src/helpers/validators"
 import api from "src/helpers/api"
-import { UpdatingUser } from "../../types/model"
-import { USER_ROLE } from "../../constants"
+import { UpdatingUser } from "src/types/model"
+import { USER_ROLE } from "src/constants"
 
 const DangerZone = styled.div`
   margin-top: 4em;

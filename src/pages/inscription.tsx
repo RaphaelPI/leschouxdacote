@@ -5,8 +5,8 @@ import { Form, SubmitButton, TextInput } from "src/components/Form"
 import api from "src/helpers/api"
 import { MIN_PASSWORD_LENGTH, validatePassword, validatePhoneNumber, validateSiret } from "src/helpers/validators"
 import React, { useState } from "react"
-import { USER_ROLE } from "../constants"
-import { RegisteringUser } from "../types/model"
+import { USER_ROLE } from "src/constants"
+import { RegisteringUser } from "src/types/model"
 
 const Paragraph = styled.p`
   a {

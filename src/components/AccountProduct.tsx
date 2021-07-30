@@ -14,7 +14,7 @@ import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
-import { Product } from "../types/model"
+import { Product } from "src/types/model"
 
 const Container = styled.div<{ $odd?: boolean }>`
   position: relative;

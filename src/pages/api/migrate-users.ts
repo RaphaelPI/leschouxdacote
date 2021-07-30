@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { firestore, getObject } from "../../helpers/firebase"
-import { USER_ROLE } from "../../constants"
-import { respond } from "../../helpers-api"
-import { User, RegisteringUser } from "../../types/model"
+import { firestore, getObject } from "src/helpers/firebase"
+import { USER_ROLE } from "src/constants"
+import { respond } from "src/helpers-api"
+import { User, RegisteringUser } from "src/types/model"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringUser>>) => {
   try {

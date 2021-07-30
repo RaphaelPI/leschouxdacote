@@ -1,4 +1,4 @@
-import { USER_ROLE } from "../constants"
+import { USER_ROLE } from "src/constants"
 
 interface AuthUser {
   uid: string

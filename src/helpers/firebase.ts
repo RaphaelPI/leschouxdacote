@@ -6,7 +6,7 @@ import "firebase/analytics"
 import { useState, useEffect } from "react"
 
 import { handleError } from "src/helpers/errors"
-import { Geoloc, Identified } from "../types/model"
+import { Geoloc, Identified } from "src/types/model"
 
 const app = firebase.apps.length
   ? firebase.app()

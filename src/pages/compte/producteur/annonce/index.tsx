@@ -13,7 +13,7 @@ import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
 import { useObjectQuery } from "src/helpers/firebase"
 import { loadGmaps } from "src/helpers/scripts"
-import { AuthUser, Product, ProductPayload, Unit } from "../../../../types/model"
+import { AuthUser, Product, ProductPayload, Unit } from "src/types/model"
 
 // https://sharp.pixelplumbing.com/#formats
 const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]

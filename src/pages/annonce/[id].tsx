@@ -14,7 +14,7 @@ import ProductCard from "src/cards/ProductCard"
 
 import PinIcon from "src/assets/pin.svg"
 import { firestore, getObject } from "src/helpers-api/firebase"
-import { Product, User } from "../../types/model"
+import { Product, User } from "src/types/model"
 
 const Top = styled.div`
   @media (min-width: ${LAYOUT.mobile}px) {

@@ -12,7 +12,7 @@ import { firestore, getObject } from "src/helpers-api/firebase"
 import { COLORS, SIZES, LAYOUT, SSR_CACHE_HEADER } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
-import { Product, User } from "../../types/model"
+import { Product, User } from "src/types/model"
 
 const Title = styled.h1`
   a {
