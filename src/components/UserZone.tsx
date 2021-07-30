@@ -96,8 +96,7 @@ const UserZone = () => {
 
   return (
     <ButtonGroup>
-      {/* eslint-disable-next-line react/no-unescaped-entities */}
-      <ButtonLink href="/inscription">S'inscrire</ButtonLink>
+      <ButtonLink href="/inscription">S&apos;inscrire</ButtonLink>
       <ButtonLink href="/connexion">Se connecter</ButtonLink>
     </ButtonGroup>
   )
