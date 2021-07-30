@@ -6,6 +6,7 @@ import { useUser } from "src/helpers/auth"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
 import AccountProduct from "src/components/AccountProduct"
+import { Product } from "../../../types/model"
 
 type Tab = "all" | "online" | "disabled"
 
@@ -43,7 +44,7 @@ const TABS: { id: Tab; title: string }[] = [
 ]
 
 const MyAdsPage = () => {
-  const { producer } = useUser()
+  const { user: producer } = useUser()
   const [tab, setTab] = useState<Tab>("all")
 
   const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.objectID] : false, true)

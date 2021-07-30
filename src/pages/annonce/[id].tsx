@@ -14,6 +14,7 @@ import ProductCard from "src/cards/ProductCard"
 
 import PinIcon from "src/assets/pin.svg"
 import { firestore, getObject } from "src/helpers-api/firebase"
+import { Product, User } from "../../types/model"
 
 const Top = styled.div`
   @media (min-width: ${LAYOUT.mobile}px) {
@@ -79,7 +80,7 @@ interface Params extends ParsedUrlQuery {
 
 interface Props {
   product: Product | null
-  producer: Producer | null
+  producer: User | null
   otherProducts?: Product[]
 }
 
@@ -168,7 +169,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
   const { id } = params as Params
   const product = getObject<Product>(await firestore.collection("products").doc(id).get())
-  const producer = product && getObject<Producer>(await firestore.collection("producers").doc(product.uid).get())
+  const producer = product && getObject<User>(await firestore.collection("users").doc(product.uid).get())
 
   const props: Props = { product, producer }
 

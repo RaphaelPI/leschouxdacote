@@ -14,6 +14,7 @@ import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
+import { Product } from "../types/model"
 
 const Container = styled.div<{ $odd?: boolean }>`
   position: relative;
@@ -186,7 +187,7 @@ const AccountProduct = ({ product, odd }: Props) => {
         </Infos>
       </Ad>
       <Actions>
-        <Link href={`/compte/annonce/${product.objectID}`}>
+        <Link href={`/compte/producteur/annonce/${product.objectID}`}>
           <EditIcon />
         </Link>
         <IconButton onClick={() => setModal("delete")}>

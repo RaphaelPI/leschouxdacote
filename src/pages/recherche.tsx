@@ -14,6 +14,7 @@ import algolia from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
 import { HoverProvider } from "src/helpers/hover"
 import { SEARCH_RADIUS, COLORS } from "src/constants"
+import { Product } from "../types/model"
 
 const Row = styled.div`
   display: flex;

@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import dynamic from "next/dynamic"
 
 import { COLORS } from "src/constants"
+import { Product } from "../types/model"
 
 const Map = dynamic(import("src/components/Map"), {
   ssr: false,

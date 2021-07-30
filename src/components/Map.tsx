@@ -11,6 +11,7 @@ import { COLORS, LAYOUT } from "src/constants"
 
 import PrevIcon from "@material-ui/icons/NavigateBefore"
 import NextIcon from "@material-ui/icons/NavigateNext"
+import { Product } from "../types/model"
 
 const ZOOM = {
   city: 12,

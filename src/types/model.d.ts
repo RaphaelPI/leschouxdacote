@@ -1,4 +1,6 @@
-interface User {
+import { USER_ROLE } from "../constants"
+
+interface AuthUser {
   uid: string
   email: string
   name: string
@@ -20,26 +22,27 @@ interface Geoloc {
   lng: number
 }
 
-interface Producer extends Identified {
-  siret: string
-  name: string // company name
+interface User extends Identified {
+  siret?: string
+  name?: string // company name
   firstname: string
   lastname: string
-  address: string
+  address?: string
   // _geoloc: Geoloc
-  description: string
-  email: string
+  description?: string
+  email?: string
   phone: string
   earlyAdopter?: boolean
+  role: USER_ROLE
 }
 
-interface RegisteringProducer extends Registering<Producer> {
+interface RegisteringUser extends Registering<User> {
   created: Date
   password?: string
   nocheck?: boolean
 }
 
-interface UpdatingProducer extends Omit<Updating<Producer>, "siret"> {
+interface UpdatingUser extends Omit<Updating<User>, "siret"> {
   updated: Date
 }
 

@@ -7,6 +7,8 @@ import { Button } from "src/components/Button"
 import { useUser } from "src/helpers/auth"
 import { validatePhoneNumber } from "src/helpers/validators"
 import api from "src/helpers/api"
+import { UpdatingUser } from "../../types/model"
+import { USER_ROLE } from "../../constants"
 
 const DangerZone = styled.div`
   margin-top: 4em;
@@ -14,11 +16,11 @@ const DangerZone = styled.div`
 `
 
 const MyAccountPage = () => {
-  const { producer, update, signout } = useUser()
+  const { user, update, signout } = useUser()
 
-  const defaultValues: DefaultValues<UpdatingProducer> | undefined = producer || undefined
+  const defaultValues: DefaultValues<UpdatingUser> | undefined = user || undefined
 
-  const handleSubmit: Submit<UpdatingProducer> = async (values) => {
+  const handleSubmit: Submit<UpdatingUser> = async (values) => {
     await api.put("user", values)
     update(values)
     alert("Modifications effectuées")
@@ -35,12 +37,16 @@ const MyAccountPage = () => {
   return (
     <Layout title="Mon compte" noindex>
       <Form title="Mon profil" hasRequired onSubmit={handleSubmit} defaultValues={defaultValues}>
-        <TextInput name="name" label="Nom commercial" required maxLength={180} />
-        <TextInput name="address" label="Adresse" rows={3} required />
+        {user?.role === USER_ROLE.PRODUCER && (
+          <>
+            <TextInput name="name" label="Nom commercial" required maxLength={180} />
+            <TextInput name="address" label="Adresse" rows={3} required />
+            <TextInput name="description" label="Description" rows={6} required minLength={15} maxLength={4000} />
+            <TextInput name="phone" label="Téléphone" type="tel" required validate={validatePhoneNumber} />
+          </>
+        )}
         <TextInput name="firstname" label="Prénom" required maxLength={50} />
         <TextInput name="lastname" label="Nom" required maxLength={50} />
-        <TextInput name="description" label="Description" rows={6} required minLength={15} maxLength={4000} />
-        <TextInput name="phone" label="Téléphone" type="tel" required validate={validatePhoneNumber} />
         <TextInput name="email" label="E-mail" type="email" disabled />
         <SubmitButton />
         <DangerZone>

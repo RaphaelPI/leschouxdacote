@@ -2,15 +2,17 @@ import { useRouter } from "next/router"
 import { createContext, FC, useContext, useEffect, useState } from "react"
 
 import { auth, firestore, getObject } from "src/helpers/firebase"
+import { AuthUser, UpdatingUser, User } from "../types/model"
+import { USER_ROLE } from "../constants"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
 export interface IUserContext {
   loading: boolean
   wait: boolean
+  authUser: AuthUser | null
   user: User | null
-  producer: Producer | null
-  update: (values: UpdatingProducer) => void
+  update: (values: UpdatingUser) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
 }
@@ -18,43 +20,44 @@ export interface IUserContext {
 const UserContext = createContext<IUserContext>({} as IUserContext)
 
 export const UserProvider: FC = ({ children }) => {
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null)
   const [user, setUser] = useState<User | null>(null)
-  const [producer, setProducer] = useState<Producer | null>(null)
   const [loading, setLoading] = useState(true)
   const { pathname, asPath, query, replace } = useRouter()
 
   useEffect(() => {
     return auth.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
-        setUser({
+        setAuthUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email as string,
           name: firebaseUser.displayName as string,
         })
       } else {
-        setUser(null)
+        setAuthUser(null)
       }
       setLoading(false)
     })
   }, [])
 
   useEffect(() => {
-    if (user) {
+    if (authUser) {
       firestore
-        .collection("producers")
-        .doc(user.uid)
+        .collection("users")
+        .doc(authUser.uid)
         .get()
         .then((doc) => {
-          setProducer(getObject(doc) as Producer)
+          setUser(getObject(doc) as User)
         })
     } else {
-      setProducer(null)
+      setUser(null)
     }
-  }, [user])
+  }, [authUser])
 
   const signin = (email: string, password: string) => auth.signInWithEmailAndPassword(email, password)
 
   const isPrivateRoute = pathname.startsWith("/compte")
+  const isProducerRoute = pathname.startsWith("/compte/producteur")
 
   const signout = () => {
     if (isPrivateRoute) {
@@ -69,10 +72,16 @@ export const UserProvider: FC = ({ children }) => {
       return null
     }
     const destination = query.next as string
-    if (user && ANONYMOUS_ROUTES.includes(pathname)) {
-      return destination || "/compte/annonces"
+    if (user && user.role !== USER_ROLE.PRODUCER && isProducerRoute) {
+      return "/"
     }
-    if (!user && isPrivateRoute) {
+    if (authUser && user?.role === USER_ROLE.PRODUCER && ANONYMOUS_ROUTES.includes(pathname)) {
+      return destination || "/compte/producteur/annonces"
+    }
+    if (authUser && user?.role === USER_ROLE.BUYER && ANONYMOUS_ROUTES.includes(pathname)) {
+      return destination || "/"
+    }
+    if (!authUser && isPrivateRoute) {
       return "/connexion?next=" + asPath
     }
   })()
@@ -83,18 +92,18 @@ export const UserProvider: FC = ({ children }) => {
     }
   }, [redirectUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const wait = Boolean(redirectUrl) || (isPrivateRoute && !producer)
+  const wait = Boolean(redirectUrl) || (isPrivateRoute && !user)
 
-  const update = (values: UpdatingProducer) => {
-    setProducer({
-      ...(producer as Producer),
+  const update = (values: UpdatingUser) => {
+    setUser({
+      ...(user as User),
       ...values,
       updated: Date.now(),
     })
   }
 
   return (
-    <UserContext.Provider value={{ loading, wait, user, producer, update, signin, signout }}>
+    <UserContext.Provider value={{ loading, wait, authUser, user, update, signin, signout }}>
       {children}
     </UserContext.Provider>
   )

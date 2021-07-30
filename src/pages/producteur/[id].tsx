@@ -12,6 +12,7 @@ import { firestore, getObject } from "src/helpers-api/firebase"
 import { COLORS, SIZES, LAYOUT, SSR_CACHE_HEADER } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
+import { Product, User } from "../../types/model"
 
 const Title = styled.h1`
   a {
@@ -37,7 +38,7 @@ interface Params extends ParsedUrlQuery {
 }
 
 interface Props {
-  producer: Producer | null
+  producer: User | null
   products?: Product[]
 }
 
@@ -81,7 +82,7 @@ const ProducerPage = ({ producer, products }: Props) => {
 
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
   const { id } = params as Params
-  const producer = getObject<Producer>(await firestore.collection("producers").doc(id).get())
+  const producer = getObject<User>(await firestore.collection("users").doc(id).get())
 
   const props: Props = { producer }
 

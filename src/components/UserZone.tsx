@@ -7,7 +7,7 @@ import { Button, ButtonGroup } from "src/components/Button"
 import Link, { ButtonLink } from "src/components/Link"
 import { useMenu } from "src/helpers/menu"
 import { ellipsis } from "src/helpers/text"
-import { COLORS } from "src/constants"
+import { COLORS, USER_ROLE } from "src/constants"
 
 import DownIcon from "src/assets/down.svg"
 
@@ -63,20 +63,20 @@ const Logout = styled.a`
 `
 
 const UserZone = () => {
-  const { loading, user, producer, signout } = useUser()
+  const { loading, authUser, user, signout } = useUser()
   const { ref, open, setOpen } = useMenu()
 
-  if (loading || (user && !producer)) {
+  if (loading || (authUser && !user)) {
     return <Loader />
   }
 
   const title = (
     <Name>
-      {ellipsis(producer?.name)} <DownIcon />
+      {ellipsis(user?.role === USER_ROLE.PRODUCER ? user?.name : `${user?.firstname} ${user?.lastname}`)} <DownIcon />
     </Name>
   )
 
-  if (user) {
+  if (authUser) {
     return (
       <Dropdown ref={ref}>
         <Placeholder>{title}</Placeholder>
@@ -84,7 +84,7 @@ const UserZone = () => {
           {title}
           {open && (
             <Menu>
-              <Entry href="/compte/annonces">Mes annonces</Entry>
+              {user?.role === USER_ROLE.PRODUCER && <Entry href="/compte/producteur/annonces">Mes annonces</Entry>}
               <Entry href="/compte/profil">Mon profil</Entry>
               <Logout onClick={signout}>Se déconnecter</Logout>
             </Menu>
@@ -96,7 +96,8 @@ const UserZone = () => {
 
   return (
     <ButtonGroup>
-      <ButtonLink href="/inscription">Devenir producteur</ButtonLink>
+      {/* eslint-disable-next-line react/no-unescaped-entities */}
+      <ButtonLink href="/inscription">S'inscrire</ButtonLink>
       <ButtonLink href="/connexion">Se connecter</ButtonLink>
     </ButtonGroup>
   )
