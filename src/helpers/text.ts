@@ -1,3 +1,5 @@
+import { Product, Unit, User } from "../types/model"
+
 interface FormattedUnit {
   singular: string
   plural: string
@@ -47,8 +49,8 @@ export const formatPrice = ({ price }: Product) => formatAmount(price)
 
 export const formatPhone = (num: string) => num.replace(/^\+33(\d)(\d{2})(\d{2})(\d{2})(\d{2})$/, "0$1 $2 $3 $4 $5") // French numbers
 
-export const getMapsLink = ({ address }: Producer | Product) =>
-  `https://www.google.com/maps/search/${encodeURIComponent(address)}`
+export const getMapsLink = ({ address }: User | Product) =>
+  `https://www.google.com/maps/search/${encodeURIComponent(address ?? "")}`
 
 export const getAbsoluteUrl = (path: string) => `${location.protocol}//${location.host}/${path}`
 

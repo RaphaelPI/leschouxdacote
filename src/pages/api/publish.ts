@@ -4,6 +4,7 @@ import { addDays } from "date-fns"
 import { firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
+import { Product, RegisteringProduct } from "../../types/model"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProduct>>) => {
   const { id, days } = req.body as Publish
