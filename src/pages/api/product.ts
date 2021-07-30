@@ -7,7 +7,7 @@ import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
 import { normalizeNumber } from "src/helpers/validators"
 import algolia from "src/helpers-api/algolia"
-import { User, ProductPayload, RegisteringProduct, Product } from "../../types/model"
+import { User, ProductPayload, RegisteringProduct, Product } from "src/types/model"
 
 const checkRequired = (data: Record<string, any>, fields: string[]) => {
   const found = fields.find((field) => !data[field])

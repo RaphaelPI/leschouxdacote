@@ -14,7 +14,7 @@ import Menu from "src/components/Menu"
 import { COLORS, LAYOUT, USER_ROLE } from "src/constants"
 
 import LogoSvg from "src/assets/logo.svg"
-import { useUser } from "../helpers/auth"
+import { useUser } from "src/helpers/auth"
 
 const Content = styled.div`
   display: flex;

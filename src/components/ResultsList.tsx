@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
 import { LAYOUT } from "src/constants"
-import { Product } from "../types/model"
+import { Product } from "src/types/model"
 
 const Container = styled.div`
   padding: 32px;

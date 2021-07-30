@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin"
 import { NextApiRequest } from "next"
-import { Geoloc } from "../types/model"
+import { Geoloc } from "src/types/model"
 
 const app = admin.apps.length
   ? admin.app()

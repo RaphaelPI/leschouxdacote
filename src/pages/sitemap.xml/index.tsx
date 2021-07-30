@@ -4,7 +4,7 @@ import { ISitemapFiled } from "next-sitemap/dist/@types/interface"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { SSR_CACHE_HEADER } from "src/constants"
-import { Product, User } from "../../types/model"
+import { Product, User } from "src/types/model"
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const producersSnapshot = await firestore.collection("users").get()

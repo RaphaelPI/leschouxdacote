@@ -1,4 +1,4 @@
-import { Product, Unit, User } from "../types/model"
+import { Product, Unit, User } from "src/types/model"
 
 interface FormattedUnit {
   singular: string
