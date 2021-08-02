@@ -48,23 +48,23 @@ const RegisterPage = () => {
 
   const onSubmit: SubmitHandler<RegisteringUser> = async (values) => {
     values.nocheck = Boolean(query.nocheck)
-    api
-      .post("user", { ...values, role })
-      .then(() => push("/confirmation"))
-      .catch((err) => {
-        if (err.message === "Le compte de cet établissement est déjà créé") {
-          setError("siret", { type: "manual", message: err.message })
-        }
-        if (err.message === "Cette adresse e-mail est déjà utilisée") {
-          setError("email", { type: "manual", message: err.message })
-        }
-        if (
-          err.message === "Numéro de SIRET introuvable" ||
-          err.message === "Ce numéro de SIRET n'existe pas ou plus, ou ses données ne sont pas consultables"
-        ) {
-          setError("siret", { type: "manual", message: err.message })
-        }
-      })
+    try {
+      await api.post("user", { ...values, role })
+      await push("/confirmation")
+    } catch (err) {
+      if (err.message === "Le compte de cet établissement est déjà créé") {
+        setError("siret", { type: "manual", message: err.message })
+      }
+      if (err.message === "Cette adresse e-mail est déjà utilisée") {
+        setError("email", { type: "manual", message: err.message })
+      }
+      if (
+        err.message === "Numéro de SIRET introuvable" ||
+        err.message === "Ce numéro de SIRET n'existe pas ou plus, ou ses données ne sont pas consultables"
+      ) {
+        setError("siret", { type: "manual", message: err.message })
+      }
+    }
   }
 
   return (
