@@ -79,7 +79,7 @@ export const UserProvider: FC = ({ children }) => {
       return destination || "/compte/producteur/annonces"
     }
     if (authUser && user?.role === USER_ROLE.BUYER && ANONYMOUS_ROUTES.includes(pathname)) {
-      return destination || "/recherche"
+      return destination || "/"
     }
     if (!authUser && isPrivateRoute) {
       return "/connexion?next=" + asPath
