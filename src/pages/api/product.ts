@@ -7,6 +7,7 @@ import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
 import { normalizeNumber } from "src/helpers/validators"
 import algolia from "src/helpers-api/algolia"
+import { User, ProductPayload, RegisteringProduct, Product } from "src/types/model"
 
 const checkRequired = (data: Record<string, any>, fields: string[]) => {
   const found = fields.find((field) => !data[field])
@@ -47,11 +48,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       })
     }
 
-    const producerDoc = await firestore.collection("producers").doc(fields.uid).get()
+    const producerDoc = await firestore.collection("users").doc(fields.uid).get()
     if (!producerDoc.exists) {
       throw new Error("Producer not found: " + fields.uid)
     }
-    const producer = getObject(producerDoc) as Producer
+    const producer = getObject(producerDoc) as User
 
     let ref: FirebaseFirestore.DocumentReference
     let existing: Product | null
@@ -107,7 +108,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       phone: fields.phone ? normalizeNumber(fields.phone) : null,
       expires: addDays(new Date(), Number(fields.days)),
       // data fan-out:
-      producer: producer.name,
+      producer: producer.name ?? "",
     }
 
     if (existing) {

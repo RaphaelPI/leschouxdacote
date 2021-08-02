@@ -10,14 +10,14 @@ import Divider from "@material-ui/core/Divider"
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
 import AddCircleIcon from "@material-ui/icons/AddCircle"
-import CollectionsIcon from "@material-ui/icons/Collections"
 import PersonIcon from "@material-ui/icons/Person"
 import LoginIcon from "@material-ui/icons/Login"
 import LogoutIcon from "@material-ui/icons/Logout"
 
 import Loader from "src/components/Loader"
 import { useUser } from "src/helpers/auth"
-import { COLORS } from "src/constants"
+import { COLORS, USER_ROLE } from "src/constants"
+import CollectionsIcon from "@material-ui/icons/Collections"
 
 const Container = styled.nav`
   width: 300px;
@@ -74,9 +74,9 @@ const ListItemLink: FC<LinkProps> = ({ href, children }) => {
 }
 
 const Menu = () => {
-  const { loading, user, producer, signout } = useUser()
+  const { loading, authUser, user, signout } = useUser()
 
-  if (loading || (user && !producer)) {
+  if (loading || (authUser && !user)) {
     return (
       <Container>
         <Center>
@@ -89,25 +89,30 @@ const Menu = () => {
   return (
     <Container>
       <h1>Les Choux d’à Côté</h1>
-      {producer && <h2>{producer.name}</h2>}
+      {user && <h2>{user.role === USER_ROLE.PRODUCER ? user.name : `${user.firstname} ${user.lastname}`}</h2>}
       <Divider />
       <List>
-        {!user && (
+        {!authUser && (
           <ListItemLink href="/inscription">
             <PersonAddIcon />
-            <ListItemText>Devenir producteur</ListItemText>
+            <ListItemText>{`${"S'inscire"}`}</ListItemText>
           </ListItemLink>
         )}
-        <ListItemLink href="/compte/annonce">
-          <AddCircleIcon />
-          <ListItemText>Créer une annonce</ListItemText>
-        </ListItemLink>
-        {user && (
+        {user?.role === USER_ROLE.PRODUCER && (
+          <ListItemLink href="/compte/producteur/annonce">
+            <AddCircleIcon />
+            <ListItemText>Créer une annonce</ListItemText>
+          </ListItemLink>
+        )}
+
+        {authUser && (
           <>
-            <ListItemLink href="/compte/annonces">
-              <CollectionsIcon />
-              <ListItemText>Mes annonces</ListItemText>
-            </ListItemLink>
+            {user?.role === USER_ROLE.PRODUCER && (
+              <ListItemLink href="/compte/producteur/annonces">
+                <CollectionsIcon />
+                <ListItemText>Mes annonces</ListItemText>
+              </ListItemLink>
+            )}
             <ListItemLink href="/compte/profil">
               <PersonIcon />
               <ListItemText>Mon profil</ListItemText>
@@ -117,7 +122,7 @@ const Menu = () => {
       </List>
       <Divider />
       <List>
-        {user ? (
+        {authUser ? (
           <ListItem button onClick={signout}>
             <LogoutIcon />
             <ListItemText>Se déconnecter</ListItemText>

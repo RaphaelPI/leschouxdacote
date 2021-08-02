@@ -2,10 +2,11 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import fetch from "node-fetch"
 
 import { auth, firestore, getToken } from "src/helpers-api/firebase"
-import { respond, badRequest } from "src/helpers-api"
+import { badRequest, respond } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
-import { CONTACT_EMAIL } from "src/constants"
+import { CONTACT_EMAIL, USER_ROLE } from "src/constants"
+import { RegisteringUser, UpdatingUser } from "src/types/model"
 
 const checkCompany = async (siret: string, nocheck = false) => {
   const response = await fetch("https://api.insee.fr/entreprises/sirene/V3/siret/" + siret, {
@@ -27,7 +28,7 @@ const checkCompany = async (siret: string, nocheck = false) => {
     Si le problème persiste, contactez-nous à cette adresse : ${CONTACT_EMAIL}`
   }
 
-  const snapshot = await firestore.collection("producers").where("siret", "==", siret).get()
+  const snapshot = await firestore.collection("users").where("siret", "==", siret).get()
   if (snapshot.size > 0) {
     return `Le compte de cet établissement est déjà créé`
   }
@@ -45,31 +46,48 @@ const checkCompany = async (siret: string, nocheck = false) => {
   }
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProducer>>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringUser>>) => {
   if (req.method === "POST") {
     // user registration
-    const producer = req.body as RegisteringProducer // TODO: validate fields
-    producer.siret = producer.siret.replace(/\s+/g, "") // remove spaces
-    const checkError = await checkCompany(producer.siret, producer.nocheck)
-    if (checkError) {
-      return respond(res, {
-        siret: checkError,
-      })
+    const user = req.body as RegisteringUser // TODO: validate fields
+    const isProducer = user.role === USER_ROLE.PRODUCER
+    if (isProducer && user.siret) {
+      user.siret = user.siret.replace(/\s+/g, "") // remove spaces
+      const checkError = await checkCompany(user.siret, user.nocheck)
+      if (checkError) {
+        return respond(res, {
+          siret: checkError,
+        })
+      }
+      user.phone = normalizeNumber(user.phone)
     }
 
-    producer.created = new Date()
-    producer.phone = normalizeNumber(producer.phone)
+    user.created = new Date()
 
     try {
-      const user = await auth.createUser({
-        email: producer.email,
-        password: producer.password,
-        displayName: producer.name,
+      const createdUser = await auth.createUser({
+        email: user.email,
+        password: user.password,
+        displayName: user.name,
         // phoneNumber: producer.phone.replace(/\s+/g, "").replace(/^0/, "+33"),
       })
 
-      delete producer.password
-      await firestore.collection("producers").doc(user.uid).set(producer)
+      delete user.password
+      await firestore
+        .collection("users")
+        .doc(createdUser.uid)
+        .set(
+          isProducer
+            ? user
+            : {
+                created: user.created,
+                email: user.email,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                nocheck: user.nocheck,
+                role: USER_ROLE.BUYER,
+              }
+        )
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         return respond(res, {
@@ -99,18 +117,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       return badRequest(res, 403)
     }
 
-    const producer = req.body as UpdatingProducer // TODO: validate fields
-    producer.updated = new Date()
-    producer.phone = normalizeNumber(producer.phone)
+    const user = req.body as UpdatingUser // TODO: validate fields
+    user.updated = new Date()
+    if (user.role === USER_ROLE.PRODUCER) {
+      user.phone = normalizeNumber(user.phone)
+    }
 
     const snapshot = await firestore.collection("products").where("uid", "==", token.uid).get()
     const updates: Readonly<Promise<any>>[] = []
     snapshot.forEach((doc) => {
-      updates.push(doc.ref.update({ producer: producer.name }))
-      updates.push(algolia.partialUpdateObject({ objectID: doc.id, producer: producer.name }))
+      updates.push(doc.ref.update({ producer: user.name }))
+      updates.push(algolia.partialUpdateObject({ objectID: doc.id, producer: user.name }))
     })
     await Promise.all(updates)
-    await firestore.collection("producers").doc(token.uid).update(producer)
+    await firestore.collection("users").doc(token.uid).update(user)
 
     return respond(res)
   }
@@ -128,7 +148,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       deletions.push(algolia.deleteObject(doc.id))
     })
     await Promise.all(deletions)
-    await firestore.collection("producers").doc(token.uid).delete()
+    await firestore.collection("users").doc(token.uid).delete()
     await auth.deleteUser(token.uid)
 
     return respond(res)

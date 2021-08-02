@@ -4,9 +4,10 @@ import { ISitemapFiled } from "next-sitemap/dist/@types/interface"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { SSR_CACHE_HEADER } from "src/constants"
+import { Product, User } from "src/types/model"
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const producersSnapshot = await firestore.collection("producers").get()
+  const producersSnapshot = await firestore.collection("users").get()
   const productsSnapshot = await firestore.collection("products").get()
 
   const URL = process.env.NEXT_PUBLIC_URL
@@ -45,7 +46,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   })
 
   producersSnapshot.forEach((doc) => {
-    const producer = getObject(doc) as Producer
+    const producer = getObject(doc) as User
     fields.push({
       loc: URL + "/producteur/" + doc.id,
       changefreq: "daily",

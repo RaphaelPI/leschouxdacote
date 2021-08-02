@@ -129,7 +129,7 @@ export const Label = styled.label<{ $error: boolean }>`
 export const ErrorMessage = styled.span`
   color: ${COLORS.red};
 `
-const Suffix = styled.div`
+export const Suffix = styled.div`
   margin-left: 10px;
 `
 
