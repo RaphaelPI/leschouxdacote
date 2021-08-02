@@ -19,8 +19,29 @@ export const Required = styled.p`
   margin: -1em 0 1em;
 `
 
-const RadioLabel = styled.label`
-  margin-left: 5px;
+const RadioSpan = styled.span`
+  color: #0077cf;
+  padding: 0.7rem 3rem;
+  font-size: 14px;
+  border-radius: 5px;
+  background-color: white;
+  border: 0.1px solid rgb(0, 119, 207, 10%);
+  cursor: pointer;
+  display: inline-block;
+
+  &:hover {
+    background-color: rgb(0, 119, 207, 10%);
+  }
+`
+
+const RadioInput = styled.input`
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+
+  &:checked + ${RadioSpan} {
+    background-color: rgb(0, 119, 207, 10%);
+  }
 `
 
 interface InputProps {
@@ -71,9 +92,9 @@ export const YupRadioInput: React.FC<InputProps & Record<string, any>> = ({
   ...rest
 }) => {
   return (
-    <>
-      <input id={id} type="radio" name="role" {...register(name)} value={value} {...rest} />
-      <RadioLabel htmlFor={id}>{label}</RadioLabel>
-    </>
+    <label>
+      <RadioInput id={id} type="radio" name="role" {...register(name)} value={value} {...rest} />
+      <RadioSpan>{label}</RadioSpan>
+    </label>
   )
 }

@@ -5,7 +5,7 @@ import { StyledButton } from "src/components/Form"
 import api from "src/helpers/api"
 import { MIN_PASSWORD_LENGTH } from "src/helpers/validators"
 import React from "react"
-import { USER_ROLE } from "src/constants"
+import { LAYOUT, USER_ROLE } from "src/constants"
 import { RegisteringUser } from "src/types/model"
 import { StyledForm, Title, Required, YupInput as Input, YupRadioInput as RadioInput } from "src/components/YupForm"
 import { SubmitHandler, useForm, useWatch } from "react-hook-form"
@@ -18,13 +18,15 @@ const Paragraph = styled.p`
   }
 `
 
-const MarginY = styled.div`
-  margin: 30px 0;
-`
+const Flex = styled.div`
+  margin: 50px 0;
+  display: flex;
+  gap: 5px;
 
-const MarginLeft = styled.div`
-  margin-left: 10px;
-  display: inline-block;
+  @media (max-width: ${LAYOUT.mobile}px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `
 
 const RegisterPage = () => {
@@ -72,28 +74,26 @@ const RegisterPage = () => {
       <StyledForm method="POST" onSubmit={handleSubmit(onSubmit)}>
         <Title>Création du compte </Title>
         <Required>* champs obligatoires</Required>
-        <MarginY>
+        <Flex>
           <RadioInput
             value={USER_ROLE.PRODUCER}
             id="producteur"
-            label="Producteur"
+            label="Je suis un producteur"
             error={errors.role}
             name="role"
             register={register}
             required
           />
-          <MarginLeft>
-            <RadioInput
-              value={USER_ROLE.BUYER}
-              id="buyer"
-              label="Acheteur"
-              error={errors.role}
-              name="role"
-              register={register}
-              required
-            />
-          </MarginLeft>
-        </MarginY>
+          <RadioInput
+            value={USER_ROLE.BUYER}
+            id="buyer"
+            label="Je suis un acheteur"
+            error={errors.role}
+            name="role"
+            register={register}
+            required
+          />
+        </Flex>
         {role === USER_ROLE.PRODUCER && (
           <>
             <Input label="SIRET" error={errors.siret} required name="siret" register={register} />
