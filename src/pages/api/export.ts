@@ -3,6 +3,7 @@ import { formatISO9075 } from "date-fns"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import getCsv from "src/helpers-api/csv"
+import { Product, User } from "src/types/model"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
   const query = req.query.q
@@ -19,9 +20,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
       }
     })
 
-    const producersSnapshot = await firestore.collection("producers").get()
+    const producersSnapshot = await firestore.collection("users").get()
     const producers = producersSnapshot.docs.map((doc) => {
-      const producer = getObject(doc) as Producer
+      const producer = getObject(doc) as User
       return [
         producer.siret,
         producer.name,

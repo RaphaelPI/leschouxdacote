@@ -4,6 +4,7 @@ import { COLORS } from "src/constants"
 import Link from "src/components/Link"
 import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import { useHover } from "src/helpers/hover"
+import { Product } from "src/types/model"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};

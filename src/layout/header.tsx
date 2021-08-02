@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
@@ -11,9 +11,10 @@ import Link, { ButtonLink } from "src/components/Link"
 import SearchBar from "src/components/SearchBar"
 import UserZone from "src/components/UserZone"
 import Menu from "src/components/Menu"
-import { COLORS, LAYOUT } from "src/constants"
+import { COLORS, LAYOUT, USER_ROLE } from "src/constants"
 
 import LogoSvg from "src/assets/logo.svg"
+import { useUser } from "src/helpers/auth"
 
 const Content = styled.div`
   display: flex;
@@ -80,6 +81,7 @@ const Actions = styled.div`
 const Header = () => {
   const { pathname, events } = useRouter()
   const [openMenu, setOpen] = useState(false)
+  const { user } = useUser()
 
   const isHome = pathname === "/"
 
@@ -101,9 +103,11 @@ const Header = () => {
         )}
         <Actions>
           {!isHome && <SearchBar />}
-          <ButtonLink href="/compte/annonce" $variant="green">
-            Créer une annonce
-          </ButtonLink>
+          {user?.role === USER_ROLE.PRODUCER && (
+            <ButtonLink href="/compte/producteur/annonce" $variant="green">
+              Créer une annonce
+            </ButtonLink>
+          )}
           <UserZone />
         </Actions>
       </Desktop>

@@ -13,6 +13,7 @@ import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
 import { useObjectQuery } from "src/helpers/firebase"
 import { loadGmaps } from "src/helpers/scripts"
+import { AuthUser, Product, ProductPayload, Unit } from "src/types/model"
 
 // https://sharp.pixelplumbing.com/#formats
 const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]
@@ -33,7 +34,7 @@ const PriceInfos = () => {
 }
 
 const EditProductPage = () => {
-  const { user, producer } = useUser()
+  const { authUser, user } = useUser()
   const { query, push } = useRouter()
 
   const productId = Array.isArray(query.id) ? undefined : query.id
@@ -72,7 +73,7 @@ const EditProductPage = () => {
     payload.append("lat", String(place.lat))
     payload.append("lng", String(place.lng))
     payload.append("city", place.city)
-    payload.append("uid", (user as User).uid)
+    payload.append("uid", (authUser as AuthUser).uid)
 
     if (productId) {
       payload.append("id", productId)
@@ -81,7 +82,7 @@ const EditProductPage = () => {
       await api.post("product", payload)
     }
 
-    push("/compte/annonces") // TODO: confirmation message
+    push("/compte/producteur/annonces") // TODO: confirmation message
   }
 
   const autocomplete = useRef<google.maps.places.Autocomplete>()
@@ -152,13 +153,13 @@ const EditProductPage = () => {
           required={productId ? false : true}
           accept={ACCEPTED_MIMETYPES.join(",")}
         />
-        <TextInput type="email" name="email" label="Adresse e-mail" defaultValue={user?.email} />
+        <TextInput type="email" name="email" label="Adresse e-mail" defaultValue={authUser?.email} />
         <TextInput
           type="tel"
           name="phone"
           label="Téléphone"
           validate={validatePhoneNumber}
-          defaultValue={producer?.phone}
+          defaultValue={user?.phone}
         />
         <TextInput
           name="days"
