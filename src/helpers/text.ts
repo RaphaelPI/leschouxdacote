@@ -35,7 +35,10 @@ export const formatPricePerUnit = ({ price, quantity, unit }: Pick<Product, "pri
   if (price == null || !quantity) {
     return ""
   }
-  return `${formatAmount(price / quantity)} / ${getUnit(unit || "u")}`
+  if (unit === "g") {
+    price = price * 1000
+  }
+  return `${formatAmount(price / quantity)} / ${unit === "g" ? "kg" : getUnit(unit || "u")}`
 }
 
 export const formatQuantity = ({ unit, quantity }: Product) => {
