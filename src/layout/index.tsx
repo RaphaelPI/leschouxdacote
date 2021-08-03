@@ -11,6 +11,7 @@ import { LAYOUT } from "src/constants"
 const Empty = styled.div`
   min-height: 100vh;
   padding-top: var(--header-height);
+  position: relative;
 `
 const Background = styled(Empty)`
   background-image: url("/background.svg");

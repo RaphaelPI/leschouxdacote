@@ -3,9 +3,10 @@ import { useRouter } from "next/router"
 
 import { Form, SubmitButton, TextInput, ValidationError } from "src/components/Form"
 import Link from "src/components/Link"
-import { COLORS } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import Layout from "src/layout"
+import Success from "../components/Success"
 
 const Warning = styled.div`
   color: ${COLORS.red};
@@ -20,6 +21,40 @@ const LostPassword = styled.div`
 `
 export const Register = styled.div`
   text-align: center;
+`
+const Card = styled.div`
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background: #fff;
+  display: inline-block;
+  padding: 2rem 4rem;
+  min-width: 30vw;
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-55%, -50%);
+  border-radius: 4px;
+
+  @media (max-width: ${LAYOUT.tablet}px) {
+    position: relative;
+    display: block;
+    top: initial;
+    left: initial;
+    transform: none;
+    width: 70vw;
+    margin: 40px auto;
+    padding: 20px 40px;
+  }
+
+  @media (max-width: ${LAYOUT.mobile}px) {
+    width: 100%;
+    padding: 10px 20px;
+  }
+`
+
+const Span = styled.span`
+  font-weight: 700;
+  display: inline;
+  text-decoration: underline;
 `
 
 const LoginPage = () => {
@@ -53,17 +88,26 @@ const LoginPage = () => {
           <p>Désolé, vous devez être connecté pour accéder à cette page</p>
         </Warning>
       )}
-      <Form title="Connexion au compte producteur" onSubmit={handleSubmit}>
-        <TextInput name="email" label="Adresse e-mail" type="email" required />
-        <TextInput name="password" label="Mot de passe" type="password" required />
-        <LostPassword>
-          <Link href="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
-        </LostPassword>
-        <SubmitButton />
-        <Register>
-          <Link href="/inscription">Pas encore inscrit ? Créer un compte producteur</Link>
-        </Register>
-      </Form>
+      {query.success && (
+        <Success title="Inscription effectuée">
+          Vous pouvez vous connecter dès à présent et utiliser les fonctionnalités de la plateforme
+        </Success>
+      )}
+      <Card>
+        <Form title="Connexion" onSubmit={handleSubmit}>
+          <TextInput name="email" label="Email" type="email" required />
+          <TextInput name="password" label="Mot de passe" type="password" required />
+          <LostPassword>
+            <Link href="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
+          </LostPassword>
+          <SubmitButton fullWidth={true}>Se connecter</SubmitButton>
+          <Register>
+            <Link href="/inscription">
+              Pas encore inscrit ? <Span>Créer un compte </Span>{" "}
+            </Link>
+          </Register>
+        </Form>
+      </Card>
     </Layout>
   )
 }
