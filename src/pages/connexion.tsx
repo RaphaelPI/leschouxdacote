@@ -22,24 +22,23 @@ const LostPassword = styled.div`
 export const Register = styled.div`
   text-align: center;
 `
+
+export const Wrapper = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+`
 const Card = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   background: #fff;
   display: inline-block;
-  padding: 2rem 4rem;
-  min-width: 30vw;
-  position: absolute;
-  top: 55%;
-  left: 50%;
-  transform: translate(-55%, -50%);
+  padding: 2rem 3rem;
+  min-width: 40vw;
   border-radius: 4px;
+  margin-top: 50px;
 
   @media (max-width: ${LAYOUT.tablet}px) {
-    position: relative;
-    display: block;
-    top: initial;
-    left: initial;
-    transform: none;
     width: 70vw;
     margin: 40px auto;
     padding: 20px 40px;
@@ -47,7 +46,7 @@ const Card = styled.div`
 
   @media (max-width: ${LAYOUT.mobile}px) {
     width: 100%;
-    padding: 10px 20px;
+    padding: 20px;
   }
 `
 
@@ -93,21 +92,23 @@ const LoginPage = () => {
           Vous pouvez vous connecter dès à présent et utiliser les fonctionnalités de la plateforme
         </Success>
       )}
-      <Card>
-        <Form title="Connexion" onSubmit={handleSubmit}>
-          <TextInput name="email" label="Email" type="email" required />
-          <TextInput name="password" label="Mot de passe" type="password" required />
-          <LostPassword>
-            <Link href="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
-          </LostPassword>
-          <SubmitButton fullWidth={true}>Se connecter</SubmitButton>
-          <Register>
-            <Link href="/inscription">
-              Pas encore inscrit ? <Span>Créer un compte </Span>{" "}
-            </Link>
-          </Register>
-        </Form>
-      </Card>
+      <Wrapper>
+        <Card>
+          <Form title="Connexion" onSubmit={handleSubmit}>
+            <TextInput name="email" label="Email" type="email" required />
+            <TextInput name="password" label="Mot de passe" type="password" required />
+            <LostPassword>
+              <Link href="/mot-de-passe-oublie">Mot de passe oublié ?</Link>
+            </LostPassword>
+            <SubmitButton fullWidth={true}>Se connecter</SubmitButton>
+            <Register>
+              <Link href="/inscription">
+                Pas encore inscrit ? <Span>Créer un compte </Span>{" "}
+              </Link>
+            </Register>
+          </Form>
+        </Card>
+      </Wrapper>
     </Layout>
   )
 }
