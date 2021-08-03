@@ -1,16 +1,18 @@
 import { useRouter } from "next/router"
 import styled from "@emotion/styled"
 import Layout from "src/layout"
-import { StyledButton } from "src/components/Form"
+import { StyledButton, ValidationError } from "src/components/Form"
 import api from "src/helpers/api"
 import { MIN_PASSWORD_LENGTH } from "src/helpers/validators"
 import React from "react"
 import { LAYOUT, USER_ROLE } from "src/constants"
 import { RegisteringUser } from "src/types/model"
 import { StyledForm, Title, Required, YupInput as Input, YupRadioInput as RadioInput } from "src/components/YupForm"
-import { SubmitHandler, useForm, useWatch } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { schemaSignUp } from "src/schemas/form.schemas"
+import HttpError from "standard-http-error"
+import { handleError } from "../helpers/errors"
 
 const Paragraph = styled.p`
   a {
@@ -35,36 +37,31 @@ const RegisterPage = () => {
   const {
     register,
     handleSubmit,
-    control,
     setError,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schemaSignUp),
     defaultValues: { role: USER_ROLE.PRODUCER } as RegisteringUser,
   })
 
-  const role = useWatch({
-    control,
-    name: "role",
-  })
+  const role = watch("role")
 
   const onSubmit: SubmitHandler<RegisteringUser> = async (values) => {
     values.nocheck = Boolean(query.nocheck)
     try {
       await api.post("user", { ...values, role })
       await push("/confirmation")
-    } catch (err) {
-      if (err.message === "Le compte de cet établissement est déjà créé") {
-        setError("siret", { type: "manual", message: err.message })
-      }
-      if (err.message === "Cette adresse e-mail est déjà utilisée") {
-        setError("email", { type: "manual", message: err.message })
-      }
-      if (
-        err.message === "Numéro de SIRET introuvable" ||
-        err.message === "Ce numéro de SIRET n'existe pas ou plus, ou ses données ne sont pas consultables"
-      ) {
-        setError("siret", { type: "manual", message: err.message })
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        setError(error.field as any, { message: error.message }, { shouldFocus: true })
+      } else if (error instanceof HttpError && error.code === 413) {
+        alert(`Désolé, votre fichier image est trop gros.
+La limite est pour l'instant de 5 Mo par photo.
+
+Nous espérons lever cette limitation dans les semaines à venir.`)
+      } else {
+        handleError(error)
       }
     }
   }
