@@ -51,7 +51,7 @@ const RegisterPage = () => {
     values.nocheck = Boolean(query.nocheck)
     try {
       await api.post("user", { ...values, role })
-      await push("/confirmation")
+      await push("/connexion?success=1")
     } catch (error) {
       if (error instanceof ValidationError) {
         setError(error.field as any, { message: error.message }, { shouldFocus: true })

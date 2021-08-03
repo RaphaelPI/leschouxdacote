@@ -95,9 +95,11 @@ Nous espérons lever cette limitation dans les semaines à venir.`)
 export const Row = styled.div`
   display: flex;
   align-items: center;
+
   label {
     margin: 0;
     flex: 1;
+
     &:not(:first-of-type) {
       margin-left: 20px;
     }
@@ -108,6 +110,7 @@ export const Label = styled.label<{ $error: boolean }>`
   display: block;
   margin: 20px 0;
   color: ${({ $error }) => ($error ? COLORS.red : COLORS.dark)};
+
   input,
   textarea,
   select {
@@ -119,9 +122,11 @@ export const Label = styled.label<{ $error: boolean }>`
     padding: 8px;
     font-size: 1em;
   }
+
   input,
   textarea {
   }
+
   select {
     padding: 7px 4px;
   }
@@ -185,17 +190,22 @@ export const SelectInput = forwardRef((props: InputProps & CombinedAttributes, r
 ))
 SelectInput.displayName = "SelectInput"
 
-export const StyledButton = styled(Button)`
+export const StyledButton = styled(Button)<{ $fullWidth?: boolean }>`
   display: block;
   margin: 30px auto;
   min-width: 150px;
+  width: ${({ $fullWidth }) => ($fullWidth ? "100%" : "auto")};
 `
 
-export const SubmitButton: FC = ({ children = "Valider" }) => {
+interface SubmitButtonProps {
+  fullWidth?: boolean
+}
+
+export const SubmitButton: FC<SubmitButtonProps> = ({ fullWidth = false, children = "Valider" }) => {
   const { formState } = useFormContext()
 
   return (
-    <StyledButton type="submit" $variant="green" disabled={formState.isSubmitting}>
+    <StyledButton type="submit" $variant="green" disabled={formState.isSubmitting} $fullWidth={fullWidth}>
       {formState.isSubmitting ? "Chargement…" : children}
     </StyledButton>
   )
