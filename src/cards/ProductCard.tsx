@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import React, { useState } from "react"
+import React from "react"
 import { useRouter } from "next/router"
 
 import { useUser } from "src/helpers/auth"
@@ -10,7 +10,7 @@ import { useHover } from "src/helpers/hover"
 import { Product, RegisteringFollowsFields } from "src/types/model"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import { getIsProductFollowed } from "src/helpers/follows"
+import { getIsProducerFollowed } from "src/helpers/follows"
 import api from "src/helpers/api"
 
 const Container = styled.div<{ $hover: boolean }>`
@@ -76,8 +76,9 @@ interface Props {
 
 export const ProductInfos = ({ product }: Props) => {
   const { asPath, replace } = useRouter()
-  const { authUser, user } = useUser()
-  const [isFollowed, setIsFollowed] = useState(getIsProductFollowed(product.uid, user))
+  const { authUser, user, setUserFollows } = useUser()
+
+  const isFollowed = getIsProducerFollowed(product.uid, user)
 
   const handleFollow = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
@@ -90,7 +91,7 @@ export const ProductInfos = ({ product }: Props) => {
         producerId: product.uid,
         authUserId: authUser.uid,
       } as RegisteringFollowsFields)
-      setIsFollowed(!isFollowed)
+      setUserFollows(product.uid)
     } catch (error) {
       console.log(error)
     }

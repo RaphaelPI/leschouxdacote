@@ -4,6 +4,7 @@ import { createContext, FC, useContext, useEffect, useState } from "react"
 import { auth, firestore, getObject } from "src/helpers/firebase"
 import { AuthUser, UpdatingUser, User } from "src/types/model"
 import { USER_ROLE } from "src/constants"
+import { getIsProducerFollowed } from "src/helpers/follows"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
@@ -15,6 +16,7 @@ export interface IUserContext {
   update: (values: UpdatingUser) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
+  setUserFollows: (producerId: string) => void
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
@@ -102,8 +104,24 @@ export const UserProvider: FC = ({ children }) => {
     })
   }
 
+  const setUserFollows = (producerId: string) => {
+    const hasFollowed = getIsProducerFollowed(producerId, user)
+    if (!user) return
+    if (!user.follows) {
+      setUser({
+        ...(user as User),
+        follows: [],
+      })
+      return
+    }
+    setUser({
+      ...(user as User),
+      follows: !hasFollowed ? [producerId, ...user.follows] : user.follows?.filter((follow) => follow !== producerId),
+    })
+  }
+
   return (
-    <UserContext.Provider value={{ loading, wait, authUser, user, update, signin, signout }}>
+    <UserContext.Provider value={{ loading, wait, authUser, user, update, signin, signout, setUserFollows }}>
       {children}
     </UserContext.Provider>
   )
