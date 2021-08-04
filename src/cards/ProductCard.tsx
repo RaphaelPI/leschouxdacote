@@ -93,7 +93,7 @@ export const ProductInfos = ({ product }: Props) => {
       } as RegisteringFollowsFields)
       setUserFollows(product.uid)
     } catch (error) {
-      console.log(error)
+      return
     }
   }
   return (
