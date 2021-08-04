@@ -6,7 +6,7 @@ import Link from "src/components/Link"
 import { COLORS, LAYOUT } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import Layout from "src/layout"
-import Success from "../components/Success"
+import Success from "src/components/Success"
 
 const Warning = styled.div`
   color: ${COLORS.red};
