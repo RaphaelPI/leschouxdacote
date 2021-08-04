@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { badRequest, respond } from "src/helpers-api"
 import { RegisteringFollows, RegisteringFollowsFields, User } from "src/types/model"
 import { firestore, getObject, getToken } from "src/helpers-api/firebase"
-import { getIsProductFollowed } from "src/helpers/follows"
+import { getIsProducerFollowed } from "src/helpers/follows"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringFollows>>) => {
   if (req.method === "POST") {
@@ -23,7 +23,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     const userDoc = await userDocRef.get()
     const user = getObject(userDoc) as User
 
-    const hasFollowThisProducer = getIsProductFollowed(fields.producerId, user)
+    const hasFollowThisProducer = getIsProducerFollowed(fields.producerId, user)
 
     if (!user.follows) {
       await userDocRef.set({ ...user, follows: [fields.producerId] })
