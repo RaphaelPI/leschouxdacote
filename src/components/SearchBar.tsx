@@ -75,14 +75,12 @@ const SearchBar = ({ className }: Props) => {
   }, [router.query])
 
   const autocomplete = useRef<google.maps.places.Autocomplete>()
-  const input = useRef<HTMLInputElement>()
 
   const handleRef = (el: HTMLInputElement | null) => {
     loadGmaps().then(() => {
-      if (!el || autocomplete.current || input.current) {
+      if (!el || autocomplete.current) {
         return
       }
-      input.current = el
       autocomplete.current = new google.maps.places.Autocomplete(el, {
         componentRestrictions: { country: "fr" },
         fields: ["geometry", "name", "types"],
@@ -116,13 +114,6 @@ const SearchBar = ({ className }: Props) => {
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!input.current) {
-      return
-    }
-    if (!query.ll?.length) {
-      input.current.value = ""
-      return
-    }
     router.push({
       pathname: "/recherche",
       query,
