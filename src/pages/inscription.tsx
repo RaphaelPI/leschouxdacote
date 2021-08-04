@@ -12,7 +12,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { schemaSignUp } from "src/schemas/form.schemas"
 import HttpError from "standard-http-error"
-import { handleError } from "../helpers/errors"
+import { handleError } from "src/helpers/errors"
 
 const Paragraph = styled.p`
   a {

@@ -2,8 +2,8 @@ import { useRouter } from "next/router"
 import { createContext, FC, useContext, useEffect, useState } from "react"
 
 import { auth, firestore, getObject } from "src/helpers/firebase"
-import { AuthUser, UpdatingUser, User } from "../types/model"
-import { USER_ROLE } from "../constants"
+import { AuthUser, UpdatingUser, User } from "src/types/model"
+import { USER_ROLE } from "src/constants"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
