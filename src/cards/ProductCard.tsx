@@ -1,10 +1,17 @@
 import styled from "@emotion/styled"
+import React, { useState } from "react"
+import { useRouter } from "next/router"
 
+import { useUser } from "src/helpers/auth"
 import { COLORS } from "src/constants"
 import Link from "src/components/Link"
 import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import { useHover } from "src/helpers/hover"
-import { Product } from "src/types/model"
+import { Product, RegisteringFollowsFields } from "src/types/model"
+import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
+import IconHeart from "src/assets/icon-heart.svg"
+import { getIsProductFollowed } from "src/helpers/follows"
+import api from "src/helpers/api"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
@@ -18,6 +25,18 @@ const Image = styled.img`
 const Content = styled.div`
   padding: 8px 10px 6px;
   position: relative;
+`
+const Follow = styled.div`
+  position: absolute;
+  top: -15px;
+  right: 10px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0px 3px 6px #00000029;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 const Title = styled.h2`
   margin: 0;
@@ -56,10 +75,31 @@ interface Props {
 }
 
 export const ProductInfos = ({ product }: Props) => {
+  const { asPath, replace } = useRouter()
+  const { authUser, user } = useUser()
+  const [isFollowed, setIsFollowed] = useState(getIsProductFollowed(product.uid, user))
+
+  const handleFollow = async (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    if (!authUser || !user) {
+      return replace("/connexion?next=" + asPath)
+    }
+    try {
+      await api.post("follows", {
+        userId: user.objectID,
+        producerId: product.uid,
+        authUserId: authUser.uid,
+      } as RegisteringFollowsFields)
+      setIsFollowed(!isFollowed)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
       <Content>
+        <Follow onClick={handleFollow}>{isFollowed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
         <Title>{product.title}</Title>
         <Producer>{product.producer}</Producer>
         <Location>{product.city}</Location>
