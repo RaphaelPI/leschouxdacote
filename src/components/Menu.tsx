@@ -95,7 +95,7 @@ const Menu = () => {
         {!authUser && (
           <ListItemLink href="/inscription">
             <PersonAddIcon />
-            <ListItemText>{`${"S'inscire"}`}</ListItemText>
+            <ListItemText>S’inscire</ListItemText>
           </ListItemLink>
         )}
         {user?.role === USER_ROLE.PRODUCER && (

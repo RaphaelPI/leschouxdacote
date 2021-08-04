@@ -88,8 +88,8 @@ const LoginPage = () => {
         </Warning>
       )}
       {query.success && (
-        <Message type="error">
-          Vous pouvez vous connecter dès à présent et utiliser les fonctionnalités de la plateforme
+        <Message title="Inscription effectuée" type="success">
+          Vous pouvez vous connecter dès à présent et utiliser les fonctionnalités de la plateforme.
         </Message>
       )}
       <Wrapper>
