@@ -6,7 +6,7 @@ import Link from "src/components/Link"
 import { COLORS, LAYOUT } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import Layout from "src/layout"
-import Success from "src/components/Success"
+import Message from "src/components/Message"
 
 const Warning = styled.div`
   color: ${COLORS.red};
@@ -88,9 +88,9 @@ const LoginPage = () => {
         </Warning>
       )}
       {query.success && (
-        <Success title="Inscription effectuée">
+        <Message type="error">
           Vous pouvez vous connecter dès à présent et utiliser les fonctionnalités de la plateforme
-        </Success>
+        </Message>
       )}
       <Wrapper>
         <Card>

@@ -1,17 +1,21 @@
 import React, { MutableRefObject, useRef } from "react"
 import styled from "@emotion/styled"
+
 import { COLORS, LAYOUT, SIZES } from "src/constants"
 import CheckCircle from "src/assets/icon-feather-check-circle.svg"
 import CloseCirce from "src/assets/icon-lose-circle-outline.svg"
+import InfoIcon from "src/assets/icon-feather-info.svg"
 
-const Box = styled.div`
+type MessageType = "success" | "error"
+
+const Box = styled.div<{ $type: MessageType }>`
   display: flex;
   align-items: center;
   margin: 0 auto;
   width: 70%;
-  padding: 30px;
+  padding: 20px 30px;
   border-radius: 10px;
-  background-color: rgb(71, 210, 91, 10%);
+  background-color: ${({ $type }) => ($type === "success" ? "rgb(71, 210, 91, 10%)" : "rgb(0, 119, 207, 10%)")};
   position: relative;
 
   @media (max-width: ${LAYOUT.mobile}px) {
@@ -48,10 +52,11 @@ const CloseIconWrapper = styled.div`
 `
 
 interface SuccessProps {
-  title: string
+  title?: string
+  type: MessageType
 }
 
-const Success: React.FC<SuccessProps> = ({ title, children }) => {
+const Message: React.FC<SuccessProps> = ({ title, type, children }) => {
   const ref = useRef<HTMLDivElement>(null) as MutableRefObject<HTMLDivElement>
 
   const handleClick = () => {
@@ -61,17 +66,18 @@ const Success: React.FC<SuccessProps> = ({ title, children }) => {
   }
 
   return (
-    <Box ref={ref}>
+    <Box ref={ref} $type={type}>
       <CloseIconWrapper onClick={handleClick}>
         <CloseCirce />
       </CloseIconWrapper>
-      <CheckCircle style={{ flex: "0 0 20%" }} />
+      {type === "success" && <CheckCircle style={{ flex: "0 0 20%" }} />}
+      {type === "error" && <InfoIcon style={{ flex: "0 0 20%" }} />}
       <div>
-        <Title>{title}</Title>
+        {type === "success" && <Title>{title}</Title>}
         <Content>{children}</Content>
       </div>
     </Box>
   )
 }
 
-export default Success
+export default Message

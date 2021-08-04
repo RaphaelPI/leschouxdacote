@@ -15,6 +15,7 @@ export const COLORS = {
     light: "#0000001A",
     regular: "#0000004A",
   },
+  blue: "#0077CF",
 }
 
 // eslint-disable-next-line no-shadow
