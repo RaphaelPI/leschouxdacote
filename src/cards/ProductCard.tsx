@@ -26,10 +26,22 @@ const Content = styled.div`
   padding: 8px 10px 6px;
   position: relative;
 `
+
+const FollowHover = styled.div`
+  display: none;
+  position: absolute;
+  top: -40px;
+  right: -5px;
+  padding: 5px 10px;
+  background-color: #101010;
+  color: white;
+  font-size: 10px;
+`
+
 const Follow = styled.div`
   position: absolute;
   top: -15px;
-  right: 10px;
+  right: 30px;
   padding: 10px;
   background-color: white;
   border-radius: 50%;
@@ -37,7 +49,11 @@ const Follow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  &:hover + ${FollowHover} {
+    display: block;
+  }
 `
+
 const Title = styled.h2`
   margin: 0;
   font-size: 1.4em;
@@ -101,6 +117,7 @@ export const ProductInfos = ({ product }: Props) => {
       <Image src={product.photo} alt="" />
       <Content>
         <Follow onClick={handleFollow}>{isFollowed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
+        <FollowHover>{isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
         <Title>{product.title}</Title>
         <Producer>{product.producer}</Producer>
         <Location>{product.city}</Location>
