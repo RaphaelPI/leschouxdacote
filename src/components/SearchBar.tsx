@@ -120,6 +120,7 @@ const SearchBar = ({ className }: Props) => {
     }
     if (!query.ll && input.current.value.length > 0) {
       input.current.value = ""
+      query.where = ""
       return
     }
 
