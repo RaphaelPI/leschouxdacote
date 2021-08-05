@@ -22,6 +22,17 @@ interface Geoloc {
   lng: number
 }
 
+interface RegisteringFollowsFields {
+  userId: string
+  authUserId: string
+  producerId: string
+}
+
+interface RegisteringFollows {
+  userId: string
+  producerId: string
+}
+
 interface User extends Identified {
   siret?: string
   name?: string // company name
@@ -32,6 +43,7 @@ interface User extends Identified {
   description?: string
   email?: string
   phone: string
+  follows?: string[]
   earlyAdopter?: boolean
   role: USER_ROLE
 }

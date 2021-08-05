@@ -8,12 +8,6 @@ import { useUser } from "src/helpers/auth"
 import Layout from "src/layout"
 import Message from "src/components/Message"
 
-const Warning = styled.div`
-  color: ${COLORS.red};
-  text-align: center;
-  border-bottom: 1px solid ${COLORS.border};
-  margin-bottom: 40px;
-`
 const LostPassword = styled.div`
   font-size: 0.8em;
   color: ${COLORS.grey};
@@ -83,9 +77,9 @@ const LoginPage = () => {
   return (
     <Layout title="Connexion">
       {query.next && (
-        <Warning>
-          <p>Désolé, vous devez être connecté pour accéder à cette page</p>
-        </Warning>
+        <Message type="error">
+          <p>Vous devez vous connecter pour accéder à cette fonctionnalité</p>
+        </Message>
       )}
       {query.success && (
         <Message title="Inscription effectuée" type="success">

@@ -115,14 +115,15 @@ const SearchBar = ({ className }: Props) => {
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-
     if (!input.current) {
       return
     }
-    if (!query.ll?.length) {
+    if (!query.ll && input.current.value.length > 0) {
       input.current.value = ""
+      query.where = ""
       return
     }
+
     router.push({
       pathname: "/recherche",
       query,

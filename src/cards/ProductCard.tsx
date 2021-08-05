@@ -1,10 +1,17 @@
 import styled from "@emotion/styled"
+import React from "react"
+import { useRouter } from "next/router"
 
+import { useUser } from "src/helpers/auth"
 import { COLORS } from "src/constants"
 import Link from "src/components/Link"
 import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import { useHover } from "src/helpers/hover"
-import { Product } from "src/types/model"
+import { Product, RegisteringFollowsFields } from "src/types/model"
+import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
+import IconHeart from "src/assets/icon-heart.svg"
+import { getIsProducerFollowed } from "src/helpers/follows"
+import api from "src/helpers/api"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
@@ -19,6 +26,34 @@ const Content = styled.div`
   padding: 8px 10px 6px;
   position: relative;
 `
+
+const FollowHover = styled.div`
+  display: none;
+  position: absolute;
+  top: -40px;
+  right: -5px;
+  padding: 5px 10px;
+  background-color: #101010;
+  color: white;
+  font-size: 10px;
+`
+
+const Follow = styled.div`
+  position: absolute;
+  top: -15px;
+  right: 30px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0px 3px 6px #00000029;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover + ${FollowHover} {
+    display: block;
+  }
+`
+
 const Title = styled.h2`
   margin: 0;
   font-size: 1.4em;
@@ -56,10 +91,33 @@ interface Props {
 }
 
 export const ProductInfos = ({ product }: Props) => {
+  const { asPath, replace } = useRouter()
+  const { authUser, user, setUserFollows } = useUser()
+
+  const isFollowed = getIsProducerFollowed(product.uid, user)
+
+  const handleFollow = async (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    if (!authUser || !user) {
+      return replace("/connexion?next=" + asPath)
+    }
+    try {
+      await api.post("follows", {
+        userId: user.objectID,
+        producerId: product.uid,
+        authUserId: authUser.uid,
+      } as RegisteringFollowsFields)
+      setUserFollows(product.uid)
+    } catch (error) {
+      return
+    }
+  }
   return (
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
       <Content>
+        <Follow onClick={handleFollow}>{isFollowed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
+        <FollowHover>{isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
         <Title>{product.title}</Title>
         <Producer>{product.producer}</Producer>
         <Location>{product.city}</Location>
