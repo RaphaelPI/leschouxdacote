@@ -25,7 +25,7 @@ interface Geoloc {
 interface RegisteringFollowsFields {
   userId: string
   authUserId: string
-  producerId: string
+  product: Product
 }
 
 interface RegisteringFollows {

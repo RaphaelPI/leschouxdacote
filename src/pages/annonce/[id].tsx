@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
-
+import { Button } from "@material-ui/core"
 import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
@@ -9,11 +9,13 @@ import { COLORS, LAYOUT, SIZES, SSR_CACHE_HEADER } from "src/constants"
 import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { Product, User } from "src/types/model"
-import { ButtonLink } from "src/components/Link"
 import { Text } from "src/components/Text"
 import PinIcon from "src/assets/pin.svg"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
+import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
+import IconHeart from "src/assets/icon-heart.svg"
+import useFollow from "src/hooks/useFollow"
 
 const Wrapper = styled.div`
   display: flex;
@@ -59,6 +61,14 @@ const PriceContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 80px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+
+  @media (max-width: ${LAYOUT.mobile}px) {
+    border-top: none;
+    border-bottom: none;
+  }
 `
 
 const Price = styled.div`
@@ -154,6 +164,7 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
+  const { isFollowed, handleFollow } = useFollow(product)
   if (!product) {
     return <ErrorPage statusCode={404} title="Produit introuvable" />
   }
@@ -164,7 +175,6 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const price = formatPrice(product)
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
-
   const priceParts = price.split(",")
 
   return (
@@ -238,9 +248,14 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             <Label>Téléphone</Label>
             <Info>{producer.phone}</Info>
             <ProducerFollow>
-              <ButtonLink href="/compte/producteur/annonce" $variant="green">
-                Créer une annonce
-              </ButtonLink>
+              <Button
+                onClick={handleFollow}
+                variant="contained"
+                style={{ backgroundColor: "white", color: "#F21414", textTransform: "none", fontWeight: 300 }}
+                startIcon={isFollowed ? <IconHeart /> : <IconHeartEmpty />}
+              >
+                {isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
+              </Button>
             </ProducerFollow>
           </ProducerInfo>
         </ProducerSection>
