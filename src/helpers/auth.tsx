@@ -2,7 +2,7 @@ import { useRouter } from "next/router"
 import { createContext, FC, useContext, useEffect, useState } from "react"
 
 import { auth, firestore, getObject } from "src/helpers/firebase"
-import { AuthUser, UpdatingUser, User } from "src/types/model"
+import { AuthUser, Product, UpdatingUser, User } from "src/types/model"
 import { USER_ROLE } from "src/constants"
 import { getIsProducerFollowed } from "src/helpers/follows"
 
@@ -16,7 +16,7 @@ export interface IUserContext {
   update: (values: UpdatingUser) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
-  setUserFollows: (producerId: string) => void
+  setUserFollows: (product: Product) => void
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
@@ -104,8 +104,8 @@ export const UserProvider: FC = ({ children }) => {
     })
   }
 
-  const setUserFollows = (producerId: string) => {
-    const hasFollowed = getIsProducerFollowed(producerId, user)
+  const setUserFollows = (product: Product) => {
+    const hasFollowed = getIsProducerFollowed(product, user)
     if (!user) return
     if (!user.follows) {
       setUser({
@@ -116,7 +116,7 @@ export const UserProvider: FC = ({ children }) => {
     }
     setUser({
       ...(user as User),
-      follows: !hasFollowed ? [producerId, ...user.follows] : user.follows?.filter((follow) => follow !== producerId),
+      follows: !hasFollowed ? [product.uid, ...user.follows] : user.follows?.filter((follow) => follow !== product.uid),
     })
   }
 

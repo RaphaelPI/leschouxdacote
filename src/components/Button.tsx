@@ -1,3 +1,4 @@
+import React from "react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/react"
 import { darken, lighten } from "polished"
@@ -66,3 +67,22 @@ export const ButtonGroup = styled.div`
     border-bottom-left-radius: 0;
   }
 `
+
+const IconButtonStyle = styled.button`
+  border-radius: 5px;
+  box-shadow: 0px 3px 6px #00000029;
+  padding: 10px 30px;
+`
+
+interface IconButtonProps {
+  iconUrl: string
+}
+
+export const IconButton: React.FC<IconButtonProps> = ({ iconUrl, children }) => {
+  return (
+    <IconButtonStyle>
+      <img src={iconUrl} alt="button icon description" />
+      <span>{children}</span>
+    </IconButtonStyle>
+  )
+}
