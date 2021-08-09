@@ -1,11 +1,11 @@
-import { User } from "src/types/model"
+import { Product, User } from "src/types/model"
 
-export const getIsProducerFollowed = (producerId: string, currentUser: User | null) => {
-  if (!currentUser) {
+export const getIsProducerFollowed = (product: Product | null, currentUser: User | null) => {
+  if (!currentUser || !product) {
     return false
   }
   if (!currentUser.follows) {
     return false
   }
-  return currentUser.follows.some((follow) => follow === producerId)
+  return currentUser.follows.some((follow) => follow === product.uid)
 }
