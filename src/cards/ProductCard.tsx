@@ -1,17 +1,14 @@
 import styled from "@emotion/styled"
 import React from "react"
-import { useRouter } from "next/router"
 
-import { useUser } from "src/helpers/auth"
 import { COLORS } from "src/constants"
 import Link from "src/components/Link"
 import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import { useHover } from "src/helpers/hover"
-import { Product, RegisteringFollowsFields } from "src/types/model"
+import { Product } from "src/types/model"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import { getIsProducerFollowed } from "src/helpers/follows"
-import api from "src/helpers/api"
+import useFollow from "src/hooks/useFollow"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
@@ -91,27 +88,8 @@ interface Props {
 }
 
 export const ProductInfos = ({ product }: Props) => {
-  const { asPath, replace } = useRouter()
-  const { authUser, user, setUserFollows } = useUser()
+  const { isFollowed, handleFollow } = useFollow(product)
 
-  const isFollowed = getIsProducerFollowed(product.uid, user)
-
-  const handleFollow = async (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault()
-    if (!authUser || !user) {
-      return replace("/connexion?next=" + asPath)
-    }
-    try {
-      await api.post("follows", {
-        userId: user.objectID,
-        producerId: product.uid,
-        authUserId: authUser.uid,
-      } as RegisteringFollowsFields)
-      setUserFollows(product.uid)
-    } catch (error) {
-      return
-    }
-  }
   return (
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
