@@ -7,5 +7,5 @@ export const getIsProducerFollowed = (product: Product | null, currentUser: User
   if (!currentUser.follows) {
     return false
   }
-  return currentUser.follows.some((follow) => follow === product.uid)
+  return currentUser.follows.some((follow) => follow.producerUID === product.uid)
 }

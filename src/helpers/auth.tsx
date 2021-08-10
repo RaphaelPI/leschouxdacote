@@ -104,7 +104,7 @@ export const UserProvider: FC = ({ children }) => {
     })
   }
 
-  const setUserFollows = (product: Product) => {
+  const setUserFollows = async (product: Product) => {
     const hasFollowed = getIsProducerFollowed(product, user)
     if (!user) return
     if (!user.follows) {
@@ -114,9 +114,19 @@ export const UserProvider: FC = ({ children }) => {
       })
       return
     }
+    const producerDoc = await firestore.collection("users").doc(product.uid).get()
+    const producer = getObject(producerDoc) as User
+    const newFollow = {
+      producerName: producer.name,
+      producerUID: producer.objectID,
+      address: producer.address,
+      isActive: true,
+    }
     setUser({
       ...(user as User),
-      follows: !hasFollowed ? [product.uid, ...user.follows] : user.follows?.filter((follow) => follow !== product.uid),
+      follows: !hasFollowed
+        ? [newFollow, ...user.follows]
+        : user.follows.filter((follow) => follow.producerUID !== product.uid),
     })
   }
 
