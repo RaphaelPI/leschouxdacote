@@ -20,6 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     if (!producerDoc.exists) {
       throw new Error("Producer not found: " + producerId)
     }
+    const producer = getObject(producerDoc) as User
 
     const userDocRef = await firestore.collection("users").doc(fields.userId)
     const userDoc = await userDocRef.get()
@@ -27,15 +28,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
 
     const hasFollowThisProducer = getIsProducerFollowed(fields.product, user)
 
+    const newFollow = {
+      producerName: producer.name,
+      producerUID: producer.objectID,
+      address: producer.address,
+      isActive: true,
+    }
+
     if (!user.follows) {
-      await userDocRef.set({ ...user, follows: [producerId] })
+      await userDocRef.set({ ...user, follows: [newFollow] })
       return respond(res)
     }
 
+    if (user.hasAcceptedFollowsEmail === undefined) {
+      await userDocRef.set({ ...user, hasAcceptedFollowsEmail: true })
+    }
+
     if (!hasFollowThisProducer) {
-      await userDocRef.set({ ...user, follows: [producerId, ...user.follows] })
+      await userDocRef.set({ ...user, follows: [newFollow, ...user.follows] })
     } else {
-      await userDocRef.set({ ...user, follows: user.follows.filter((follow) => follow !== producerId) })
+      await userDocRef.set({ ...user, follows: user.follows.filter((follow) => follow.producerUID !== producerId) })
     }
 
     return respond(res)
