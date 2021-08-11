@@ -7,7 +7,7 @@ import { getIsProducerFollowed } from "src/helpers/follows"
 import { useUser } from "src/helpers/auth"
 
 const useFollow = (product: Product | null) => {
-  const { authUser, user, setUserFollows } = useUser()
+  const { authUser, user, toggleFollows } = useUser()
   const { asPath, replace } = useRouter()
   const [isFollowed, setIsFollowed] = useState(getIsProducerFollowed(product, user))
 
@@ -26,7 +26,7 @@ const useFollow = (product: Product | null) => {
         product: product,
         authUserId: authUser.uid,
       } as RegisteringFollowsFields)
-      setUserFollows(product)
+      toggleFollows(product)
     } catch (error) {
       return
     }

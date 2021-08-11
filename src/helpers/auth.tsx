@@ -16,7 +16,8 @@ export interface IUserContext {
   update: (values: UpdatingUser) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
-  setUserFollows: (product: Product) => void
+  toggleFollows: (product: Product) => void
+  toggleActiveFollow: (producerName: string | undefined) => void
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
@@ -104,8 +105,7 @@ export const UserProvider: FC = ({ children }) => {
     })
   }
 
-  const setUserFollows = async (product: Product) => {
-    const hasFollowed = getIsProducerFollowed(product, user)
+  const toggleFollows = async (product: Product) => {
     if (!user) return
     if (!user.follows) {
       setUser({
@@ -114,24 +114,46 @@ export const UserProvider: FC = ({ children }) => {
       })
       return
     }
+    const hasFollowed = getIsProducerFollowed(product, user)
+    if (hasFollowed) {
+      setUser({
+        ...(user as User),
+        follows: user.follows.filter((follow) => follow.producerUID !== product.uid),
+      })
+      return
+    }
     const producerDoc = await firestore.collection("users").doc(product.uid).get()
     const producer = getObject(producerDoc) as User
     const newFollow = {
       producerName: producer.name,
       producerUID: producer.objectID,
-      address: producer.address,
+      producerAddress: producer.address,
       isActive: true,
     }
     setUser({
       ...(user as User),
-      follows: !hasFollowed
-        ? [newFollow, ...user.follows]
-        : user.follows.filter((follow) => follow.producerUID !== product.uid),
+      follows: [newFollow, ...user.follows],
+    })
+  }
+
+  const toggleActiveFollow = (producerName: string | undefined) => {
+    if (!user || producerName) return
+    if (!user.follows) return
+    setUser({
+      ...(user as User),
+      follows: user.follows.map((follow) => {
+        if (follow.producerName === producerName) {
+          follow.isActive = !follow.isActive
+        }
+        return follow
+      }),
     })
   }
 
   return (
-    <UserContext.Provider value={{ loading, wait, authUser, user, update, signin, signout, setUserFollows }}>
+    <UserContext.Provider
+      value={{ loading, wait, authUser, user, update, signin, signout, toggleFollows, toggleActiveFollow }}
+    >
       {children}
     </UserContext.Provider>
   )

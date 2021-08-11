@@ -36,7 +36,7 @@ interface RegisteringFollows {
 interface Follow {
   producerName?: string
   producerUID: string
-  address?: string
+  producerAddress?: string
   isActive: boolean
 }
 
