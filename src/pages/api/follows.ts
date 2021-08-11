@@ -31,17 +31,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     const newFollow = {
       producerName: producer.name,
       producerUID: producer.objectID,
-      address: producer.address,
+      producerAddress: producer.address,
       isActive: true,
     }
 
     if (!user.follows) {
-      await userDocRef.set({ ...user, follows: [newFollow] })
+      await userDocRef.set({ ...user, follows: [newFollow], hasAcceptedFollowsEmail: true })
       return respond(res)
-    }
-
-    if (user.hasAcceptedFollowsEmail === undefined) {
-      await userDocRef.set({ ...user, hasAcceptedFollowsEmail: true })
     }
 
     if (!hasFollowThisProducer) {
@@ -51,6 +47,39 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     }
 
     return respond(res)
+  }
+
+  if (req.method === "PUT") {
+    const fields = req.body
+    const token = await getToken(req)
+    if (!token || token.uid !== fields.authUserId) {
+      return badRequest(res, 403)
+    }
+    if (fields.action === "receiveMail") {
+      const userDocRef = await firestore.collection("users").doc(fields.userId)
+      const userDoc = await userDocRef.get()
+      const user = getObject(userDoc) as User
+
+      await userDocRef.set({ ...user, hasAcceptedFollowsEmail: !user.hasAcceptedFollowsEmail })
+      return respond(res)
+    }
+
+    if (fields.action === "toggleActive") {
+      const userDocRef = await firestore.collection("users").doc(fields.userId)
+      const userDoc = await userDocRef.get()
+      const user = getObject(userDoc) as User
+
+      await userDocRef.set({
+        ...user,
+        follows: user.follows.map((follow) => {
+          if (follow.producerName === fields.producerName) {
+            follow.isActive = !follow.isActive
+          }
+          return follow
+        }),
+      })
+      return respond(res)
+    }
   }
 }
 

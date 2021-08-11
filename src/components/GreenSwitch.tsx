@@ -20,19 +20,23 @@ const CustomSwitch = withStyles({
 })(Switch)
 
 interface GreenSwitchProps {
-  checked: boolean
+  checked?: boolean
+  defaultChecked?: boolean
   handleChange: () => void
   name: string
-  label: string
+  label?: string
+  margin: string
 }
 
-const GreenSwitch: React.FC<GreenSwitchProps> = ({ checked, handleChange, name, label }) => {
+const GreenSwitch: React.FC<GreenSwitchProps> = ({ checked, defaultChecked, handleChange, name, label, margin }) => {
   return (
     <FormControlLabel
-      control={<CustomSwitch checked={checked} onChange={handleChange} name={name} />}
-      label={label}
+      control={
+        <CustomSwitch {...(defaultChecked ? { defaultChecked } : { checked })} onChange={handleChange} name={name} />
+      }
+      label={label ?? ""}
       labelPlacement="start"
-      style={{ marginLeft: "0px", marginTop: "20px" }}
+      style={{ margin }}
     />
   )
 }
