@@ -18,6 +18,7 @@ export interface IUserContext {
   signout: () => void
   toggleUserFollow: (producerUid: string) => void
   toggleActiveFollow: (follow: Follow) => void
+  deleteManyFollows: (follows: Follow[]) => void
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
@@ -143,6 +144,24 @@ export const UserProvider: FC = ({ children }) => {
     }
   }
 
+  const deleteManyFollows = async (follows: Follow[]) => {
+    if (!user || !authUser) return
+    if (!user.follows) return
+    try {
+      const response: any = await api.delete("follows", {
+        userId: user.objectID,
+        authUserId: authUser.uid,
+        follows: follows,
+      })
+      setUser({
+        ...(user as User),
+        follows: response.follows as Follow[],
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -155,6 +174,7 @@ export const UserProvider: FC = ({ children }) => {
         signout,
         toggleUserFollow,
         toggleActiveFollow,
+        deleteManyFollows,
       }}
     >
       {children}
