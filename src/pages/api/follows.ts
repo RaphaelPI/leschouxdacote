@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next"
 
 import { badRequest, respond } from "src/helpers-api"
-import { RegisteringFollows, RegisteringFollowsFields, User } from "src/types/model"
+import { RegisteringFollowsFields, User } from "src/types/model"
 import { firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { getIsProducerFollowed } from "src/helpers/follows"
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringFollows>>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const fields = req.body as RegisteringFollowsFields
 
@@ -14,7 +14,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       return badRequest(res, 403)
     }
 
-    const producerId = fields.product.uid
+    const producerId = fields.producerUid
 
     const producerDoc = await firestore.collection("users").doc(producerId).get()
     if (!producerDoc.exists) {
@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     const userDoc = await userDocRef.get()
     const user = getObject(userDoc) as User
 
-    const hasFollowThisProducer = getIsProducerFollowed(fields.product, user)
+    const hasFollowThisProducer = getIsProducerFollowed(fields.producerUid, user)
 
     const newFollow = {
       producerName: producer.name,
@@ -46,7 +46,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       await userDocRef.set({ ...user, follows: user.follows.filter((follow) => follow.producerUID !== producerId) })
     }
 
-    return respond(res)
+    const UpdatedUserDoc = await userDocRef.get()
+    const upatedUser = getObject(UpdatedUserDoc) as User
+
+    return res.status(200).json({ follows: upatedUser.follows })
   }
 
   if (req.method === "PUT") {
@@ -78,7 +81,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
           return follow
         }),
       })
-      return respond(res)
+      const UpdatedUserDoc = await userDocRef.get()
+      const upatedUser = getObject(UpdatedUserDoc) as User
+      return res.status(200).json({ follows: upatedUser.follows })
     }
   }
 }

@@ -16,7 +16,6 @@ import { useUser } from "src/helpers/auth"
 import GreenSwitch from "src/components/GreenSwitch"
 import DeleteIcon from "src/assets/delete.svg"
 import api from "src/helpers/api"
-import { Follow } from "../../types/model"
 
 const Wrapper = styled.div`
   padding: 4rem 5rem;
@@ -78,7 +77,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AlertsPage = () => {
-  const { user, authUser, toggleActiveFollow } = useUser()
+  const { user, authUser, toggleUserFollow, toggleActiveFollow } = useUser()
   const classes = useStyles()
 
   const handleReceiveMailChange = async () => {
@@ -95,23 +94,6 @@ const AlertsPage = () => {
   }
 
   const hasFollows = user && user.follows && user.follows.length > 0
-
-  const handleActiveFollow = async (follow: Follow) => {
-    if (!user || !authUser) return
-    try {
-      await api.put("follows", {
-        userId: user.objectID,
-        authUserId: authUser.uid,
-        producerName: follow.producerName,
-        action: "toggleActive",
-      })
-      toggleActiveFollow(follow.producerName)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  console.log("USER", user)
 
   return (
     <Layout title="Mes alertes" noindex fullWidth>
@@ -165,11 +147,11 @@ const AlertsPage = () => {
                           <div className={classes.actions}>
                             <GreenSwitch
                               defaultChecked={follow.isActive}
-                              handleChange={() => handleActiveFollow(follow)}
+                              handleChange={() => toggleActiveFollow(follow)}
                               name={`receive-email-${index}`}
                               margin="0px "
                             />
-                            <div className={classes.deleteIcon}>
+                            <div className={classes.deleteIcon} onClick={() => toggleUserFollow(follow.producerUID)}>
                               <DeleteIcon />
                             </div>
                           </div>
