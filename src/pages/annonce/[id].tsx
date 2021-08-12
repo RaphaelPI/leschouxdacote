@@ -15,7 +15,8 @@ import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import useFollow from "src/hooks/useFollow"
+import { useUser } from "src/helpers/auth"
+import { getIsProducerFollowed } from "src/helpers/follows"
 
 const Wrapper = styled.div`
   padding: 4rem 5rem;
@@ -178,7 +179,9 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
-  const { isFollowed, handleFollow } = useFollow(product)
+  const { user, toggleUserFollow } = useUser()
+  const isFollowed = getIsProducerFollowed(product?.uid, user)
+
   if (!product) {
     return <ErrorPage statusCode={404} title="Produit introuvable" />
   }
@@ -246,7 +249,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 
             <ProducerFollow>
               <Button
-                onClick={handleFollow}
+                onClick={() => toggleUserFollow(product?.uid)}
                 variant="contained"
                 style={{ backgroundColor: "white", color: "#F21414", textTransform: "none", fontWeight: 300 }}
                 startIcon={isFollowed ? <IconHeart /> : <IconHeartEmpty />}
