@@ -8,12 +8,13 @@ import {
   TableBody,
   Table,
   Checkbox,
+  FormControlLabel,
 } from "@material-ui/core"
 
 import Layout from "src/layout"
 import { COLORS, LAYOUT } from "src/constants"
 import { useUser } from "src/helpers/auth"
-import GreenSwitch from "src/components/GreenSwitch"
+import CustomSwitch from "src/components/CustomSwitch"
 import DeleteIcon from "src/assets/delete.svg"
 import api from "src/helpers/api"
 
@@ -68,7 +69,23 @@ const useStyles = makeStyles(() => ({
       backgroundColor: "#DF3D3D1A",
     },
   },
+  ActiveMessage: {
+    display: "none",
+    position: "absolute",
+    top: "-20px",
+    right: "0px",
+    padding: "5px 10px",
+    backgroundColor: "#101010",
+    color: "white",
+    fontSize: "10px",
+  },
+  activeSwitch: {
+    "&:hover + $ActiveMessage ": {
+      display: "block",
+    },
+  },
   actions: {
+    position: "relative",
     display: "flex",
     gap: "50px",
     alignItems: "center",
@@ -104,13 +121,20 @@ const AlertsPage = () => {
           <Padding>
             <SubTitle>Vous avez {user?.follows?.length ?? 0} producteur(s) artisan(s) en favoris</SubTitle>
             {hasFollows && (
-              <GreenSwitch
-                defaultChecked={user?.hasAcceptedFollowsEmail ?? false}
-                handleChange={handleReceiveMailChange}
-                name="receive-email"
-                label="Recevoir un email des annonces de ces producteurs"
-                margin="0px 20px 0px 0px"
-              />
+              <>
+                <FormControlLabel
+                  control={
+                    <CustomSwitch
+                      defaultChecked={user?.hasAcceptedFollowsEmail ?? false}
+                      onChange={handleReceiveMailChange}
+                      name="receive-email"
+                    />
+                  }
+                  label="Recevoir un email des annonces de ces producteurs"
+                  labelPlacement="start"
+                  style={{ margin: "0px 20px 0px 0px" }}
+                />
+              </>
             )}
             {hasFollows && (
               <TableContainer className={classes.table}>
@@ -145,12 +169,23 @@ const AlertsPage = () => {
                         <TableCell> {follow.producerAddress}</TableCell>
                         <TableCell align="right">
                           <div className={classes.actions}>
-                            <GreenSwitch
-                              defaultChecked={follow.isActive}
-                              handleChange={() => toggleActiveFollow(follow)}
-                              name={`receive-email-${index}`}
-                              margin="0px "
+                            <FormControlLabel
+                              className={classes.activeSwitch}
+                              control={
+                                <CustomSwitch
+                                  defaultChecked={follow.isActive}
+                                  onChange={() => toggleActiveFollow(follow)}
+                                  name={`receive-email-${index}`}
+                                />
+                              }
+                              label=""
+                              labelPlacement="start"
                             />
+                            <span className={classes.ActiveMessage}>
+                              {follow.isActive
+                                ? "Ne plus recevoir d'email lors des annonces de ce producteur"
+                                : "Recevoir un email des annonces de ce producteur"}
+                            </span>
                             <div className={classes.deleteIcon} onClick={() => toggleUserFollow(follow.producerUID)}>
                               <DeleteIcon />
                             </div>
