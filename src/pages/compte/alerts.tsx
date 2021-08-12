@@ -1,4 +1,4 @@
-import styled from "@emotion/styled"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import {
   makeStyles,
   TableRow,
@@ -9,51 +9,45 @@ import {
   Table,
   Checkbox,
   FormControlLabel,
+  Button,
 } from "@material-ui/core"
 
 import Layout from "src/layout"
-import { COLORS, LAYOUT } from "src/constants"
+import { COLORS } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import CustomSwitch from "src/components/CustomSwitch"
 import DeleteIcon from "src/assets/delete.svg"
 import api from "src/helpers/api"
 
-const Wrapper = styled.div`
-  padding: 4rem 5rem;
-
-  @media (max-width: ${LAYOUT.mobile}px) {
-    padding: 30px 10px;
-  }
-`
-
-const Card = styled.div`
-  background-color: white;
-  box-shadow: 5px 5px 20px #00000029;
-  padding: 30px;
-  margin-top: 20px;
-`
-
-const CardTitle = styled.h2`
-  font-weight: bold;
-  font-size: 20px;
-`
-
-const Padding = styled.div`
-  padding: 20px 0px 20px 20px;
-
-  @media (max-width: ${LAYOUT.mobile}px) {
-    padding: 0px;
-  }
-`
-
-const SubTitle = styled.h3`
-  color: ${COLORS.dark};
-  opacity: 0.7;
-  font-size: 18px;
-  font-weight: normal;
-`
-
 const useStyles = makeStyles(() => ({
+  wrapper: {
+    padding: "4rem 5rem",
+    ["@media (max-width: 900px)"]: {
+      padding: "30px 10px",
+    },
+  },
+  card: {
+    backgroundColor: "white",
+    boxShadow: "5px 5px 20px #00000029",
+    padding: "30px",
+    marginTop: "20px",
+  },
+  cardTitle: {
+    fontweight: "bold",
+    fontSize: "20px",
+  },
+  padding: {
+    padding: "20px 0px 20px 20px",
+    ["@media (max-width: 900px)"]: {
+      padding: "0px",
+    },
+  },
+  subtitle: {
+    color: COLORS.dark,
+    opacity: "0.7",
+    fontSize: "18px",
+    fontWeight: "normal",
+  },
   table: {
     marginTop: "50px",
     color: COLORS.lightDark,
@@ -67,6 +61,15 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     "&:hover": {
       backgroundColor: "#DF3D3D1A",
+    },
+  },
+  deleteAllBtn: {
+    textTransform: "none",
+    backgroundColor: COLORS.red,
+    fontSize: "14px",
+    padding: "5px 30px",
+    "&:hover": {
+      backgroundColor: COLORS.red,
     },
   },
   ActiveMessage: {
@@ -94,8 +97,38 @@ const useStyles = makeStyles(() => ({
 }))
 
 const AlertsPage = () => {
-  const { user, authUser, toggleUserFollow, toggleActiveFollow } = useUser()
+  const { user, authUser, toggleUserFollow, toggleActiveFollow, deleteManyFollows } = useUser()
   const classes = useStyles()
+  const hasFollows = user && user.follows && user.follows.length > 0
+  const [selectAll, setSelectAll] = useState(false)
+  const [optionsSelected, setOptionsSelected] = useState([] as number[])
+
+  const hasOptionSelected = useMemo(() => {
+    return optionsSelected.length > 0
+  }, [optionsSelected])
+
+  const isOptionSelected = useCallback(
+    (index: number) => {
+      return optionsSelected.some((option) => option === index)
+    },
+    [optionsSelected]
+  )
+
+  useEffect(() => {
+    if (!user || !user.follows) {
+      return
+    }
+    if (selectAll) {
+      setOptionsSelected(user.follows.map((follow, index) => index))
+    } else {
+      setOptionsSelected([])
+    }
+  }, [selectAll, user])
+
+  const handleSelectOption = (index: number) => {
+    const exist = optionsSelected.some((option) => option === index)
+    setOptionsSelected((prevState) => (exist ? prevState.filter((option) => option !== index) : [...prevState, index]))
+  }
 
   const handleReceiveMailChange = async () => {
     if (!user || !authUser) return
@@ -110,16 +143,29 @@ const AlertsPage = () => {
     }
   }
 
-  const hasFollows = user && user.follows && user.follows.length > 0
+  const handleDeleteMany = async () => {
+    if (optionsSelected.length === 0) return
+    if (!user || !user.follows || !authUser) return
+    const followsToDelete = []
+    for (const option of optionsSelected) {
+      const follow = user.follows.find((f, index) => index === option)
+      if (follow) {
+        followsToDelete.push(follow)
+      }
+    }
+    await deleteManyFollows(followsToDelete)
+  }
 
   return (
     <Layout title="Mes alertes" noindex fullWidth>
-      <Wrapper>
+      <div className={classes.wrapper}>
         <h1>Mes alertes</h1>
-        <Card>
-          <CardTitle>Liste des producteurs favoris</CardTitle>
-          <Padding>
-            <SubTitle>Vous avez {user?.follows?.length ?? 0} producteur(s) artisan(s) en favoris</SubTitle>
+        <div className={classes.card}>
+          <h2 className={classes.cardTitle}>Liste des producteurs favoris</h2>
+          <div className={classes.padding}>
+            <h3 className={classes.subtitle}>
+              Vous avez {user?.follows?.length ?? 0} producteur(s) artisan(s) en favoris
+            </h3>
             {hasFollows && (
               <>
                 <FormControlLabel
@@ -142,26 +188,29 @@ const AlertsPage = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>
-                        <Checkbox
-                          checked={true}
-                          onChange={() => console.log("in")}
-                          inputProps={{ "aria-label": "primary checkbox" }}
-                        />
+                        <Checkbox checked={selectAll} onChange={() => setSelectAll((prevState) => !prevState)} />
                       </TableCell>
                       <TableCell>Producteur</TableCell>
                       <TableCell>Ville</TableCell>
-                      <TableCell align="right" />
+                      <TableCell align="right">
+                        {hasOptionSelected && (
+                          <Button
+                            size="small"
+                            variant="contained"
+                            className={classes.deleteAllBtn}
+                            onClick={handleDeleteMany}
+                          >
+                            Supprimer tous
+                          </Button>
+                        )}
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {user?.follows.map((follow, index) => (
                       <TableRow key={follow.producerUID}>
                         <TableCell align="left">
-                          <Checkbox
-                            checked={true}
-                            onChange={() => console.log("in")}
-                            inputProps={{ "aria-label": "primary checkbox" }}
-                          />
+                          <Checkbox checked={isOptionSelected(index)} onChange={() => handleSelectOption(index)} />
                         </TableCell>
                         <TableCell component="th" scope="row">
                           {follow.producerName}
@@ -197,9 +246,9 @@ const AlertsPage = () => {
                 </Table>
               </TableContainer>
             )}
-          </Padding>
-        </Card>
-      </Wrapper>
+          </div>
+        </div>
+      </div>
     </Layout>
   )
 }

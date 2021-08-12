@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 
 import { badRequest, respond } from "src/helpers-api"
-import { RegisteringFollowsFields, User } from "src/types/model"
+import { Follow, RegisteringFollowsFields, User } from "src/types/model"
 import { firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { getIsProducerFollowed } from "src/helpers/follows"
 
@@ -85,6 +85,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const upatedUser = getObject(UpdatedUserDoc) as User
       return res.status(200).json({ follows: upatedUser.follows })
     }
+  }
+
+  if (req.method === "DELETE") {
+    const fields = req.body
+    const token = await getToken(req)
+    if (!token || token.uid !== fields.authUserId) {
+      return badRequest(res, 403)
+    }
+    const followsToDelete = fields.follows
+
+    const userDocRef = await firestore.collection("users").doc(fields.userId)
+    const userDoc = await userDocRef.get()
+    const user = getObject(userDoc) as User
+    await userDocRef.set({
+      ...user,
+      follows: user.follows.filter(
+        (follow) => !followsToDelete.some((f: Follow) => f.producerUID === follow.producerUID)
+      ),
+    })
+
+    const UpdatedUserDoc = await userDocRef.get()
+    const upatedUser = getObject(UpdatedUserDoc) as User
+    return res.status(200).json({ follows: upatedUser.follows })
   }
 }
 
