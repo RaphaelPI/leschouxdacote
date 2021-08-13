@@ -15,17 +15,33 @@ import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import useFollow from "src/hooks/useFollow"
+import { useUser } from "src/helpers/auth"
+import { getIsProducerFollowed } from "src/helpers/follows"
 
 const Wrapper = styled.div`
-  display: flex;
-  gap: 100px;
   padding: 4rem 5rem;
 
   @media (max-width: ${LAYOUT.mobile}px) {
     padding: 30px 10px;
+  }
+`
+
+const TopSection = styled.section`
+  width: 100%;
+  display: flex;
+  gap: 100px;
+
+  @media (max-width: ${LAYOUT.mobile}px) {
     flex-direction: column;
     gap: 30px;
+  }
+`
+
+const BottomSection = styled.section`
+  width: 75%;
+
+  @media (max-width: ${LAYOUT.mobile}px) {
+    width: 100%;
   }
 `
 
@@ -36,10 +52,11 @@ const ProductSection = styled.section`
   background-color: white;
   box-shadow: 20px 20px 60px #00000014;
   border-radius: 4px;
-  flex: 1;
+  width: 75%;
 
   @media (max-width: ${LAYOUT.mobile}px) {
     flex-direction: column;
+    width: 100%;
   }
 `
 
@@ -80,7 +97,9 @@ const ProducerSection = styled.section`
   box-shadow: 20px 20px 60px #00000014;
   border-radius: 4px;
   padding: 20px 30px;
-  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 
 const Title = styled.h2`
@@ -94,10 +113,6 @@ const Description = styled.h3`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
-`
-
-const ProducerInfo = styled.div`
-  margin-top: 40px;
 `
 
 const ProducerFollow = styled.div`
@@ -164,7 +179,9 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
-  const { isFollowed, handleFollow } = useFollow(product)
+  const { user, toggleUserFollow } = useUser()
+  const isFollowed = getIsProducerFollowed(product?.uid, user)
+
   if (!product) {
     return <ErrorPage statusCode={404} title="Produit introuvable" />
   }
@@ -180,7 +197,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   return (
     <Layout title={product.title} description={description} fullWidth={true}>
       <Wrapper>
-        <div>
+        <TopSection>
           <ProductSection>
             <ImageContainer>
               <img src={product.photo} alt={product.title} />
@@ -219,7 +236,30 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
               </Address>
             </ProductInfo>
           </ProductSection>
+          <ProducerSection>
+            <Title>{producer.name}</Title>
 
+            <div>
+              <Label>Email</Label>
+              <Info>{producer.email}</Info>
+
+              <Label>Téléphone</Label>
+              <Info>{producer.phone}</Info>
+            </div>
+
+            <ProducerFollow>
+              <Button
+                onClick={() => toggleUserFollow(product?.uid)}
+                variant="contained"
+                style={{ backgroundColor: "white", color: "#F21414", textTransform: "none", fontWeight: 300 }}
+                startIcon={isFollowed ? <IconHeart /> : <IconHeartEmpty />}
+              >
+                {isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
+              </Button>
+            </ProducerFollow>
+          </ProducerSection>
+        </TopSection>
+        <BottomSection>
           <DescriptionSection>
             <Description>Description</Description>
             <Text $size={SIZES.card} $color={COLORS.input}>
@@ -237,28 +277,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
               </Products>
             </OtherProducts>
           )}
-        </div>
-
-        <ProducerSection>
-          <Title>{producer.name}</Title>
-          <ProducerInfo>
-            <Label>Email</Label>
-            <Info>{producer.email}</Info>
-
-            <Label>Téléphone</Label>
-            <Info>{producer.phone}</Info>
-            <ProducerFollow>
-              <Button
-                onClick={handleFollow}
-                variant="contained"
-                style={{ backgroundColor: "white", color: "#F21414", textTransform: "none", fontWeight: 300 }}
-                startIcon={isFollowed ? <IconHeart /> : <IconHeartEmpty />}
-              >
-                {isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
-              </Button>
-            </ProducerFollow>
-          </ProducerInfo>
-        </ProducerSection>
+        </BottomSection>
       </Wrapper>
     </Layout>
   )

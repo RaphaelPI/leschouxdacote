@@ -117,6 +117,10 @@ const Menu = () => {
               <PersonIcon />
               <ListItemText>Mon profil</ListItemText>
             </ListItemLink>
+            <ListItemLink href="/compte/alerts">
+              <PersonIcon />
+              <ListItemText>Mes alertes</ListItemText>
+            </ListItemLink>
           </>
         )}
       </List>

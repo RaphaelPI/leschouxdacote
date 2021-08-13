@@ -1,10 +1,10 @@
 import { useRouter } from "next/router"
-import { createContext, FC, useContext, useEffect, useState } from "react"
+import React, { createContext, FC, useContext, useEffect, useState } from "react"
 
 import { auth, firestore, getObject } from "src/helpers/firebase"
-import { AuthUser, Product, UpdatingUser, User } from "src/types/model"
+import { AuthUser, Follow, RegisteringFollowsFields, UpdatingUser, User } from "src/types/model"
 import { USER_ROLE } from "src/constants"
-import { getIsProducerFollowed } from "src/helpers/follows"
+import api from "./api"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
@@ -16,7 +16,9 @@ export interface IUserContext {
   update: (values: UpdatingUser) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
-  setUserFollows: (product: Product) => void
+  toggleUserFollow: (producerUid: string) => void
+  toggleActiveFollow: (follow: Follow) => void
+  deleteManyFollows: (follows: Follow[]) => void
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
@@ -104,24 +106,77 @@ export const UserProvider: FC = ({ children }) => {
     })
   }
 
-  const setUserFollows = (product: Product) => {
-    const hasFollowed = getIsProducerFollowed(product, user)
-    if (!user) return
-    if (!user.follows) {
+  const toggleUserFollow = async (producerUid: string) => {
+    if (!authUser || !user || !producerUid) {
+      return replace("/connexion?next=" + asPath)
+    }
+    try {
+      const response: any = await api.post("follows", {
+        userId: user.objectID,
+        producerUid: producerUid,
+        authUserId: authUser.uid,
+      } as RegisteringFollowsFields)
       setUser({
         ...(user as User),
-        follows: [],
+        follows: response.follows as Follow[],
       })
+    } catch (error) {
       return
     }
-    setUser({
-      ...(user as User),
-      follows: !hasFollowed ? [product.uid, ...user.follows] : user.follows?.filter((follow) => follow !== product.uid),
-    })
+  }
+
+  const toggleActiveFollow = async (follow: Follow) => {
+    if (!user || !authUser) return
+    if (!user.follows) return
+    try {
+      const response: any = await api.put("follows", {
+        userId: user.objectID,
+        authUserId: authUser.uid,
+        producerName: follow.producerName,
+        action: "toggleActive",
+      })
+      setUser({
+        ...(user as User),
+        follows: response.follows as Follow[],
+      })
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const deleteManyFollows = async (follows: Follow[]) => {
+    if (!user || !authUser) return
+    if (!user.follows) return
+    try {
+      const response: any = await api.delete("follows", {
+        userId: user.objectID,
+        authUserId: authUser.uid,
+        follows: follows,
+      })
+      setUser({
+        ...(user as User),
+        follows: response.follows as Follow[],
+      })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
-    <UserContext.Provider value={{ loading, wait, authUser, user, update, signin, signout, setUserFollows }}>
+    <UserContext.Provider
+      value={{
+        loading,
+        wait,
+        authUser,
+        user,
+        update,
+        signin,
+        signout,
+        toggleUserFollow,
+        toggleActiveFollow,
+        deleteManyFollows,
+      }}
+    >
       {children}
     </UserContext.Provider>
   )

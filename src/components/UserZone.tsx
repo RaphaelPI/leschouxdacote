@@ -86,6 +86,7 @@ const UserZone = () => {
             <Menu>
               {user?.role === USER_ROLE.PRODUCER && <Entry href="/compte/producteur/annonces">Mes annonces</Entry>}
               <Entry href="/compte/profil">Mon profil</Entry>
+              <Entry href="/compte/alerts">Mes alertes</Entry>
               <Logout onClick={signout}>Se déconnecter</Logout>
             </Menu>
           )}
