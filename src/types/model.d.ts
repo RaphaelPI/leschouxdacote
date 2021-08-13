@@ -25,12 +25,14 @@ interface Geoloc {
 interface RegisteringFollowsFields {
   userId: string
   authUserId: string
-  product: Product
+  producerUid: string
 }
 
-interface RegisteringFollows {
-  userId: string
-  producerId: string
+interface Follow {
+  producerName?: string
+  producerUID: string
+  producerAddress?: string
+  isActive: boolean
 }
 
 interface User extends Identified {
@@ -43,9 +45,10 @@ interface User extends Identified {
   description?: string
   email?: string
   phone: string
-  follows?: string[]
+  follows: Follow[]
   earlyAdopter?: boolean
   role: USER_ROLE
+  hasAcceptedFollowsEmail: boolean
 }
 
 interface RegisteringUser extends Registering<User> {

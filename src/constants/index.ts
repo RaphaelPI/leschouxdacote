@@ -15,6 +15,7 @@ export const COLORS = {
     light: "#0000001A",
     regular: "#0000004A",
   },
+  lightDark: "#272D3B",
   blue: "#0077CF",
 }
 

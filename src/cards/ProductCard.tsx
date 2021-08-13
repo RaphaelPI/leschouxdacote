@@ -8,7 +8,8 @@ import { useHover } from "src/helpers/hover"
 import { Product } from "src/types/model"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import useFollow from "src/hooks/useFollow"
+import { getIsProducerFollowed } from "src/helpers/follows"
+import { useUser } from "src/helpers/auth"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
@@ -88,8 +89,13 @@ interface Props {
 }
 
 export const ProductInfos = ({ product }: Props) => {
-  const { isFollowed, handleFollow } = useFollow(product)
+  const { user, toggleUserFollow } = useUser()
+  const isFollowed = getIsProducerFollowed(product.uid, user)
 
+  const handleFollow = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault()
+    toggleUserFollow(product.uid)
+  }
   return (
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
