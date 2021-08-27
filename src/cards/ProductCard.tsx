@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import React from "react"
+import React, { useState, useEffect } from "react"
 
 import { COLORS } from "src/constants"
 import Link from "src/components/Link"
@@ -90,12 +90,18 @@ interface Props {
 
 export const ProductInfos = ({ product }: Props) => {
   const { user, toggleUserFollow } = useUser()
-  const isFollowed = getIsProducerFollowed(product.uid, user)
+  const [isFollowed, setIsFollowed] = useState(getIsProducerFollowed(product.uid, user))
 
   const handleFollow = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
+    setIsFollowed((prev) => !prev)
     toggleUserFollow(product.uid)
   }
+
+  useEffect(() => {
+    setIsFollowed(getIsProducerFollowed(product.uid, user))
+  }, [user, product])
+
   return (
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
