@@ -241,10 +241,16 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 
             <div>
               <Label>Email</Label>
-              <Info>{producer.email}</Info>
+              <Info>
+                <a href={`mailto:${producer.email}`} target="_blank" rel="noreferrer">
+                  {producer.email}
+                </a>
+              </Info>
 
               <Label>Téléphone</Label>
-              <Info>{producer.phone}</Info>
+              <Info>
+                <a href={`tel:${producer.phone}`}>{producer.phone}</a>
+              </Info>
             </div>
 
             <ProducerFollow>
