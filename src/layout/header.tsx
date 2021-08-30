@@ -108,8 +108,8 @@ const Header = () => {
               Créer une annonce
             </ButtonLink>
           )}
-          <UserZone />
         </Actions>
+        <UserZone />
       </Desktop>
       <Mobile>
         <IconButton onClick={() => setOpen(!openMenu)}>
