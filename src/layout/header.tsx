@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer"
-import IconButton from "@material-ui/core/IconButton"
+import SwipeableDrawer from "@mui/material/SwipeableDrawer"
+import IconButton from "@mui/material/IconButton"
 
-import MenuIcon from "@material-ui/icons/Menu"
-import SearchIcon from "@material-ui/icons/Search"
+import MenuIcon from "@mui/icons-material/Menu"
+import SearchIcon from "@mui/icons-material/Search"
 
 import Link, { ButtonLink } from "src/components/Link"
 import SearchBar from "src/components/SearchBar"

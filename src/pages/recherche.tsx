@@ -4,10 +4,10 @@ import { useEffect, useState } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 import { SearchOptions } from "@algolia/client-search"
-import Fab from "@material-ui/core/Fab"
+import Fab from "@mui/material/Fab"
 
-import MapIcon from "@material-ui/icons/Map"
-import ListIcon from "@material-ui/icons/ViewList"
+import MapIcon from "@mui/icons-material/Map"
+import ListIcon from "@mui/icons-material/ViewList"
 
 import Layout from "src/layout"
 import ResultsMap from "src/components/ResultsMap"

@@ -35,7 +35,7 @@ const checkCompany = async (siret: string, nocheck = false) => {
   }
 
   if (!nocheck) {
-    const data = await response.json()
+    const data: any = await response.json()
     const activityCode = data.etablissement.uniteLegale.activitePrincipaleUniteLegale.replace(".", "")
 
     const { exists } = await firestore.collection("activityCodes").doc(activityCode).get()

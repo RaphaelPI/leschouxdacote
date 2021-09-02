@@ -62,7 +62,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "PUT") {
-    console.log("PUT")
     const fields = req.body as EmailPayload
 
     const userDocRef = firestore.collection("users").doc(token.uid)
