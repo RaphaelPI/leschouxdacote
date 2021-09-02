@@ -5,10 +5,10 @@ import { COLORS } from "src/constants"
 
 const CustomSwitch = styled(Switch)`
   .Mui-checked {
-    color: ${COLORS.green};
+    color: ${COLORS.green} !important;
   }
   .Mui-checked + .MuiSwitch-track {
-    background-color: ${COLORS.green};
+    background-color: ${COLORS.green} !important;
   }
 `
 
