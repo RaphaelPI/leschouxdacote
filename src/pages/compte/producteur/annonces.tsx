@@ -1,3 +1,5 @@
+import type { Product } from "src/types/model"
+
 import { useState } from "react"
 import styled from "@emotion/styled"
 
@@ -6,7 +8,6 @@ import { useUser } from "src/helpers/auth"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
 import AccountProduct from "src/components/AccountProduct"
-import { Product } from "src/types/model"
 
 type Tab = "all" | "online" | "disabled"
 

@@ -1,10 +1,11 @@
+import type { AuthUser, User } from "src/types/model"
+
 import { useRouter } from "next/router"
 import React, { createContext, FC, useContext, useEffect, useState } from "react"
 
 import { auth, firestore, getObject } from "src/helpers/firebase"
-import { AuthUser, Follow, RegisteringFollowsFields, UpdatingUser, User } from "src/types/model"
 import { USER_ROLE } from "src/constants"
-import api from "./api"
+import api from "src/helpers/api"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
@@ -13,12 +14,10 @@ export interface IUserContext {
   wait: boolean
   authUser: AuthUser | null
   user: User | null
-  update: (values: UpdatingUser) => void
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
-  toggleUserFollow: (producerUid: string) => void
-  toggleActiveFollow: (follow: Follow) => void
-  deleteManyFollows: (follows: Follow[]) => void
+  toggleFollow: (producerUid: string, follow: boolean) => Promise<void>
+  toggleEmailAlert: (producerUid: string, active: boolean) => Promise<void>
 }
 
 const UserContext = createContext<IUserContext>({} as IUserContext)
@@ -46,11 +45,10 @@ export const UserProvider: FC = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      firestore
+      return firestore
         .collection("users")
         .doc(authUser.uid)
-        .get()
-        .then((doc) => {
+        .onSnapshot((doc) => {
           setUser(getObject(doc) as User)
         })
     } else {
@@ -98,68 +96,43 @@ export const UserProvider: FC = ({ children }) => {
 
   const wait = Boolean(redirectUrl) || (isPrivateRoute && !user)
 
-  const update = (values: UpdatingUser) => {
-    setUser({
-      ...(user as User),
-      ...values,
-      updated: Date.now(),
-    })
-  }
-
-  const toggleUserFollow = async (producerUid: string) => {
-    if (!authUser || !user || !producerUid) {
-      return replace("/connexion?next=" + asPath)
-    }
-    try {
-      const response: any = await api.post("follows", {
-        userId: user.objectID,
-        producerUid: producerUid,
-        authUserId: authUser.uid,
-      } as RegisteringFollowsFields)
-      setUser({
-        ...(user as User),
-        follows: response.follows as Follow[],
-      })
-    } catch (error) {
+  const toggleFollow = async (producerUid: string, follow: boolean) => {
+    if (!authUser || !user) {
+      replace("/connexion?next=" + asPath)
       return
     }
+
+    const followedProducers = { ...user.followedProducers }
+
+    if (follow) {
+      followedProducers[producerUid] = { emailAlert: true } // the rest will be added by the backend
+    } else {
+      delete followedProducers[producerUid]
+    }
+
+    setUser({
+      ...user,
+      followedProducers,
+    })
+
+    await api.post("follow", { producerUid, follow })
   }
 
-  const toggleActiveFollow = async (follow: Follow) => {
-    if (!user || !authUser) return
-    if (!user.follows) return
-    try {
-      const response: any = await api.put("follows", {
-        userId: user.objectID,
-        authUserId: authUser.uid,
-        producerName: follow.producerName,
-        action: "toggleActive",
-      })
-      setUser({
-        ...(user as User),
-        follows: response.follows as Follow[],
-      })
-    } catch (e) {
-      console.error(e)
+  const toggleEmailAlert = async (producerUid: string, active: boolean) => {
+    if (!authUser || !user) {
+      replace("/connexion?next=" + asPath)
+      return
     }
-  }
 
-  const deleteManyFollows = async (follows: Follow[]) => {
-    if (!user || !authUser) return
-    if (!user.follows) return
-    try {
-      const response: any = await api.delete("follows", {
-        userId: user.objectID,
-        authUserId: authUser.uid,
-        follows: follows,
-      })
-      setUser({
-        ...(user as User),
-        follows: response.follows as Follow[],
-      })
-    } catch (e) {
-      console.error(e)
-    }
+    const followedProducers = { ...user.followedProducers }
+    followedProducers[producerUid].emailAlert = active
+
+    setUser({
+      ...user,
+      followedProducers,
+    })
+
+    await api.put("follow", { producerUid, active })
   }
 
   return (
@@ -169,12 +142,10 @@ export const UserProvider: FC = ({ children }) => {
         wait,
         authUser,
         user,
-        update,
         signin,
         signout,
-        toggleUserFollow,
-        toggleActiveFollow,
-        deleteManyFollows,
+        toggleFollow,
+        toggleEmailAlert,
       }}
     >
       {children}

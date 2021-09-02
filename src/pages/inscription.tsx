@@ -1,17 +1,19 @@
+import type { RegisteringUser } from "src/types/model"
+
+import React from "react"
+import HttpError from "standard-http-error"
 import { useRouter } from "next/router"
 import styled from "@emotion/styled"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+
 import Layout from "src/layout"
 import { StyledButton, ValidationError } from "src/components/Form"
 import api from "src/helpers/api"
 import { MIN_PASSWORD_LENGTH } from "src/helpers/validators"
-import React from "react"
 import { LAYOUT, USER_ROLE } from "src/constants"
-import { RegisteringUser } from "src/types/model"
 import { StyledForm, Title, Required, YupInput as Input, YupRadioInput as RadioInput } from "src/components/YupForm"
-import { SubmitHandler, useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
 import { schemaSignUp } from "src/schemas/form.schemas"
-import HttpError from "standard-http-error"
 import { handleError } from "src/helpers/errors"
 
 const Paragraph = styled.p`

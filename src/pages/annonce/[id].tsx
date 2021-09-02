@@ -1,5 +1,7 @@
 import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
+import type { Product, User } from "src/types/model"
+
 import { Button } from "@material-ui/core"
 import styled from "@emotion/styled"
 
@@ -8,15 +10,15 @@ import Layout from "src/layout"
 import { COLORS, LAYOUT, SIZES, SSR_CACHE_HEADER } from "src/constants"
 import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
-import { Product, User } from "src/types/model"
 import { Text } from "src/components/Text"
-import PinIcon from "src/assets/pin.svg"
 import Products from "src/components/Products"
 import ProductCard from "src/cards/ProductCard"
+import { useUser } from "src/helpers/auth"
+import { isFollowed } from "src/helpers/user"
+
+import PinIcon from "src/assets/pin.svg"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import { useUser } from "src/helpers/auth"
-import { getIsProducerFollowed } from "src/helpers/follows"
 
 const Wrapper = styled.div`
   padding: 4rem 5rem;
@@ -179,8 +181,7 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
-  const { user, toggleUserFollow } = useUser()
-  const isFollowed = getIsProducerFollowed(product?.uid, user)
+  const { user, toggleFollow } = useUser()
 
   if (!product) {
     return <ErrorPage statusCode={404} title="Produit introuvable" />
@@ -193,6 +194,8 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
   const priceParts = price.split(",")
+
+  const followed = isFollowed(product.uid, user)
 
   return (
     <Layout title={product.title} description={description} fullWidth={true}>
@@ -255,12 +258,12 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 
             <ProducerFollow>
               <Button
-                onClick={() => toggleUserFollow(product?.uid)}
+                onClick={() => toggleFollow(product?.uid, !followed)}
                 variant="contained"
                 style={{ backgroundColor: "white", color: "#F21414", textTransform: "none", fontWeight: 300 }}
-                startIcon={isFollowed ? <IconHeart /> : <IconHeartEmpty />}
+                startIcon={followed ? <IconHeart /> : <IconHeartEmpty />}
               >
-                {isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
+                {followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
               </Button>
             </ProducerFollow>
           </ProducerSection>

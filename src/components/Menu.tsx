@@ -117,7 +117,7 @@ const Menu = () => {
               <PersonIcon />
               <ListItemText>Mon profil</ListItemText>
             </ListItemLink>
-            <ListItemLink href="/compte/alerts">
+            <ListItemLink href="/compte/alertes">
               <PersonIcon />
               <ListItemText>Mes alertes</ListItemText>
             </ListItemLink>

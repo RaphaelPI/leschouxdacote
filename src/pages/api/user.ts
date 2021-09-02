@@ -1,4 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import type { RegisteringUser, UpdatingUser } from "src/types/model"
+
 import fetch from "node-fetch"
 
 import { auth, firestore, getToken } from "src/helpers-api/firebase"
@@ -6,7 +8,6 @@ import { badRequest, respond } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
 import { CONTACT_EMAIL, USER_ROLE } from "src/constants"
-import { RegisteringUser, UpdatingUser } from "src/types/model"
 
 const checkCompany = async (siret: string, nocheck = false) => {
   const response = await fetch("https://api.insee.fr/entreprises/sirene/V3/siret/" + siret, {
