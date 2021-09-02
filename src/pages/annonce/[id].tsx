@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 import type { Product, User } from "src/types/model"
 
-import { Button } from "@material-ui/core"
+import { Button } from "@mui/material"
 import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"

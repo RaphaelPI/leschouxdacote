@@ -1,20 +1,15 @@
-import Switch from "@material-ui/core/Switch"
-import { withStyles } from "@material-ui/core/styles"
+import Switch from "@mui/material/Switch"
+import styled from "@emotion/styled"
 
 import { COLORS } from "src/constants"
 
-const CustomSwitch = withStyles({
-  switchBase: {
-    color: "#f0f0f0",
-    "&$checked": {
-      color: COLORS.green,
-    },
-    "&$checked + $track": {
-      backgroundColor: COLORS.green,
-    },
-  },
-  checked: {},
-  track: {},
-})(Switch)
+const CustomSwitch = styled(Switch)`
+  .Mui-checked {
+    color: ${COLORS.green};
+  }
+  .Mui-checked + .MuiSwitch-track {
+    background-color: ${COLORS.green};
+  }
+`
 
 export default CustomSwitch

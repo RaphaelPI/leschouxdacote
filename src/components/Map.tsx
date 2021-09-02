@@ -11,8 +11,8 @@ import { ProductInfos } from "src/cards/ProductCard"
 import { useHover } from "src/helpers/hover"
 import { COLORS, LAYOUT } from "src/constants"
 
-import PrevIcon from "@material-ui/icons/NavigateBefore"
-import NextIcon from "@material-ui/icons/NavigateNext"
+import PrevIcon from "@mui/icons-material/NavigateBefore"
+import NextIcon from "@mui/icons-material/NavigateNext"
 
 const ZOOM = {
   city: 12,

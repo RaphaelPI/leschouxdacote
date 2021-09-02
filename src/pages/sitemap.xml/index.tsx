@@ -2,7 +2,7 @@ import type { Product, User } from "src/types/model"
 
 import { getServerSideSitemap } from "next-sitemap"
 import { GetServerSideProps } from "next"
-import { ISitemapFiled } from "next-sitemap/dist/@types/interface"
+import { ISitemapField } from "next-sitemap/dist/@types/interface"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { SSR_CACHE_HEADER } from "src/constants"
@@ -13,26 +13,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const URL = process.env.NEXT_PUBLIC_URL
 
-  const fields: ISitemapFiled[] = [
+  const fields: ISitemapField[] = [
     {
       loc: URL + "/",
       changefreq: "weekly",
-      priority: "0.5",
+      priority: 0.5,
     },
     {
       loc: URL + "/recherche",
       changefreq: "daily",
-      priority: "0.3",
+      priority: 0.3,
     },
     {
       loc: URL + "/connexion",
       changefreq: "weekly",
-      priority: "0.2",
+      priority: 0.2,
     },
     {
       loc: URL + "/inscription",
       changefreq: "weekly",
-      priority: "0.2",
+      priority: 0.2,
     },
   ]
 
@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       loc: URL + "/annonce/" + doc.id,
       changefreq: "daily",
       lastmod: new Date(product.updated || product.created).toISOString(),
-      priority: "1.0",
+      priority: 1.0,
     })
   })
 
@@ -52,7 +52,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       loc: URL + "/producteur/" + doc.id,
       changefreq: "daily",
       lastmod: new Date(producer.updated || producer.created).toISOString(),
-      priority: "0.8",
+      priority: 0.8,
     })
   })
 
