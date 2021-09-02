@@ -1,3 +1,5 @@
+import type { Product } from "src/types/model"
+
 import { useEffect, useState } from "react"
 import "leaflet/dist/leaflet.css"
 import { icon, LatLngTuple, LatLngBoundsLiteral } from "leaflet"
@@ -11,7 +13,6 @@ import { COLORS, LAYOUT } from "src/constants"
 
 import PrevIcon from "@material-ui/icons/NavigateBefore"
 import NextIcon from "@material-ui/icons/NavigateNext"
-import { Product } from "src/types/model"
 
 const ZOOM = {
   city: 12,

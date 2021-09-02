@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import type { Product, User } from "src/types/model"
+
 import { formatISO9075 } from "date-fns"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import getCsv from "src/helpers-api/csv"
-import { Product, User } from "src/types/model"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
   const query = req.query.q

@@ -5,7 +5,7 @@ import { COLORS } from "src/constants"
 
 const CustomSwitch = withStyles({
   switchBase: {
-    color: COLORS.green,
+    color: "#f0f0f0",
     "&$checked": {
       color: COLORS.green,
     },

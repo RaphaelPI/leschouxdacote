@@ -1,6 +1,7 @@
+import type { Geoloc } from "src/types/model"
+import type { NextApiRequest } from "next"
+
 import * as admin from "firebase-admin"
-import { NextApiRequest } from "next"
-import { Geoloc } from "src/types/model"
 
 const app = admin.apps.length
   ? admin.app()
@@ -17,6 +18,7 @@ export const auth = app.auth()
 export const firestore = app.firestore()
 export const storage = app.storage()
 export const GeoPoint = admin.firestore.GeoPoint
+export const FieldValue = admin.firestore.FieldValue
 
 export const getObject = <T extends DataObject = DataObject>(doc: admin.firestore.DocumentSnapshot) => {
   if (!doc.exists) {

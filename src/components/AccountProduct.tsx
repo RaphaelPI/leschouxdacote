@@ -1,6 +1,7 @@
+import type { Product } from "src/types/model"
+
 import { useState } from "react"
 import styled from "@emotion/styled"
-
 import { IconButton } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -14,7 +15,6 @@ import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
-import { Product } from "src/types/model"
 
 const Container = styled.div<{ $odd?: boolean }>`
   position: relative;

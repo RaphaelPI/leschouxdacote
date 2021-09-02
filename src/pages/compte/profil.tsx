@@ -1,3 +1,5 @@
+import type { UpdatingUser } from "src/types/model"
+
 import { DefaultValues } from "react-hook-form"
 import styled from "@emotion/styled"
 
@@ -7,7 +9,6 @@ import { Button } from "src/components/Button"
 import { useUser } from "src/helpers/auth"
 import { validatePhoneNumber } from "src/helpers/validators"
 import api from "src/helpers/api"
-import { UpdatingUser } from "src/types/model"
 import { USER_ROLE } from "src/constants"
 
 const DangerZone = styled.div`
@@ -16,13 +17,12 @@ const DangerZone = styled.div`
 `
 
 const MyAccountPage = () => {
-  const { user, update, signout } = useUser()
+  const { user, signout } = useUser()
 
   const defaultValues: DefaultValues<UpdatingUser> | undefined = user || undefined
 
   const handleSubmit: Submit<UpdatingUser> = async (values) => {
     await api.put("user", values)
-    update(values)
     alert("Modifications effectuées")
   }
 

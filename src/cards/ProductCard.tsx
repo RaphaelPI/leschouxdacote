@@ -1,15 +1,17 @@
+import type { Product } from "src/types/model"
+
+import React from "react"
 import styled from "@emotion/styled"
-import React, { useState, useEffect } from "react"
 
 import { COLORS } from "src/constants"
 import Link from "src/components/Link"
 import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import { useHover } from "src/helpers/hover"
-import { Product } from "src/types/model"
+import { isFollowed } from "src/helpers/user"
+import { useUser } from "src/helpers/auth"
+
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
-import { getIsProducerFollowed } from "src/helpers/follows"
-import { useUser } from "src/helpers/auth"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
@@ -89,25 +91,20 @@ interface Props {
 }
 
 export const ProductInfos = ({ product }: Props) => {
-  const { user, toggleUserFollow } = useUser()
-  const [isFollowed, setIsFollowed] = useState(getIsProducerFollowed(product.uid, user))
+  const { user, toggleFollow } = useUser()
+  const followed = isFollowed(product.uid, user)
 
   const handleFollow = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault()
-    setIsFollowed((prev) => !prev)
-    toggleUserFollow(product.uid)
+    toggleFollow(product.uid, !followed)
   }
-
-  useEffect(() => {
-    setIsFollowed(getIsProducerFollowed(product.uid, user))
-  }, [user, product])
 
   return (
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
       <Content>
-        <Follow onClick={handleFollow}>{isFollowed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
-        <FollowHover>{isFollowed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
+        <Follow onClick={handleFollow}>{followed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
+        <FollowHover>{followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
         <Title>{product.title}</Title>
         <Producer>{product.producer}</Producer>
         <Location>{product.city}</Location>
