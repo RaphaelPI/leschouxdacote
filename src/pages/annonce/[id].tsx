@@ -8,10 +8,11 @@ import styled from "@emotion/styled"
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
 import { COLORS, LAYOUT, SIZES, SSR_CACHE_HEADER } from "src/constants"
-import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink } from "src/helpers/text"
+import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink, formatPhone } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { Text } from "src/components/Text"
 import Products from "src/components/Products"
+import Link from "src/components/Link"
 import ProductCard from "src/cards/ProductCard"
 import { useUser } from "src/helpers/auth"
 import { isFollowed } from "src/helpers/user"
@@ -21,27 +22,34 @@ import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
 
 const Wrapper = styled.div`
-  padding: 4rem 5rem;
+  margin: 0 auto;
+  padding: 4rem;
 
   @media (max-width: ${LAYOUT.mobile}px) {
     padding: 30px 10px;
   }
 `
 
-const TopSection = styled.section`
-  width: 100%;
+const TopSection = styled.div`
   display: flex;
-  gap: 100px;
+  gap: 80px;
 
-  @media (max-width: ${LAYOUT.mobile}px) {
+  @media (max-width: ${LAYOUT.tablet}px) {
+    gap: 30px;
+  }
+
+  @media (max-width: 1040px) {
     flex-direction: column;
     gap: 30px;
   }
 `
 
-const BottomSection = styled.section`
-  width: 75%;
+const ProductColumn = styled.div`
+  flex: 1;
+`
 
+const BottomSection = styled.section`
+  margin-top: 40px;
   @media (max-width: ${LAYOUT.mobile}px) {
     width: 100%;
   }
@@ -49,12 +57,9 @@ const BottomSection = styled.section`
 
 const ProductSection = styled.section`
   display: flex;
-  gap: 50px;
-  flex-direction: row;
-  background-color: white;
-  box-shadow: 20px 20px 60px #00000014;
-  border-radius: 4px;
-  width: 75%;
+  gap: 10px;
+  box-shadow: 20px 20px 60px ${COLORS.shadow.light};
+  border-radius: 6px;
 
   @media (max-width: ${LAYOUT.mobile}px) {
     flex-direction: column;
@@ -62,9 +67,29 @@ const ProductSection = styled.section`
   }
 `
 
-const ProductInfo = styled.div`
-  margin-top: 20px;
+const ImageContainer = styled.div`
+  position: relative;
   flex: 1;
+  min-width: 250px;
+
+  img {
+    max-width: 100%;
+    height: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0px 3px 6px ${COLORS.shadow.light};
+    display: block;
+
+    @media (max-width: ${LAYOUT.mobile}px) {
+      max-height: 50vh;
+    }
+  }
+`
+
+const ProductInfo = styled.div`
+  padding: 20px;
+  flex: 2;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -76,100 +101,83 @@ const ProductTitle = styled.h1`
   text-align: center;
 `
 
-const PriceContainer = styled.div`
+const Prices = styled.div`
+  flex: 1;
+  width: 270px;
   display: flex;
   align-items: center;
-  gap: 80px;
+  justify-content: space-between;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 20px 0;
+  padding: 10px 0 20px;
+  margin-top: 10px;
 
   @media (max-width: ${LAYOUT.mobile}px) {
-    border-top: none;
-    border-bottom: none;
-  }
-`
-
-const Price = styled.div`
-  display: flex;
-`
-
-const ProducerSection = styled.section`
-  background-color: white;
-  box-shadow: 20px 20px 60px #00000014;
-  border-radius: 4px;
-  padding: 20px 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`
-
-const Title = styled.h2`
-  margin: 0;
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-`
-
-const Description = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-`
-
-const ProducerFollow = styled.div`
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-`
-
-const Label = styled.p`
-  font-weight: bold;
-  margin-bottom: 10px;
-`
-
-const Info = styled.span`
-  padding-bottom: 15px;
-  display: block;
-`
-
-const ImageContainer = styled.div`
-  position: relative;
-  flex: 0.6;
-
-  img {
-    max-width: 100%;
-    height: auto;
-    max-height: 50vh;
-    object-fit: contain;
-    border-radius: 6px;
-    box-shadow: 0px 3px 6px ${COLORS.shadow.light};
+    border: none;
   }
 `
 
 const Address = styled.a`
-  padding: 8px 0;
+  margin-top: 10px;
   svg {
     margin: 8px 8px 0 0;
     vertical-align: -2px;
   }
 `
 
+const ProducerBox = styled.section`
+  background-color: white;
+  box-shadow: 20px 20px 60px ${COLORS.shadow.light};
+  border-radius: 6px;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const ProducerTitle = styled.h2`
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+`
+
+const Label = styled.div`
+  font-weight: bold;
+  margin-top: 30px;
+`
+
+const Info = styled.p``
+
+const FollowButton = styled(Button)`
+  margin: 20px auto 10px;
+  background-color: white;
+  color: #f21414;
+  text-transform: none;
+  font-weight: 300;
+  &:hover {
+    background-color: white;
+  }
+`
+
 const DescriptionSection = styled.section`
   background-color: white;
-  box-shadow: 20px 20px 60px #00000014;
-  border-radius: 4px;
+  box-shadow: 20px 20px 60px ${COLORS.shadow.light};
+  border-radius: 6px;
   margin-top: 30px;
-  padding: 20px 50px;
+  padding: 20px 25px;
 
   @media (max-width: ${LAYOUT.mobile}px) {
     padding: 30px 10px;
   }
 `
 
-const OtherProducts = styled.section`
-  margin-top: 40px;
+const DescriptionTitle = styled.h3`
+  font-size: ${SIZES.large}px;
+  font-weight: bold;
+  margin-top: 0;
 `
+
 interface Params extends ParsedUrlQuery {
   id: string
 }
@@ -193,7 +201,6 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const price = formatPrice(product)
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
-  const priceParts = price.split(",")
 
   const followed = isFollowed(product.uid, user)
 
@@ -201,48 +208,51 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
     <Layout title={product.title} description={description} fullWidth={true}>
       <Wrapper>
         <TopSection>
-          <ProductSection>
-            <ImageContainer>
-              <img src={product.photo} alt={product.title} />
-            </ImageContainer>
-            <ProductInfo>
-              <div>
+          <ProductColumn>
+            <ProductSection>
+              <ImageContainer>
+                <img src={product.photo} alt={product.title} />
+              </ImageContainer>
+              <ProductInfo>
                 <ProductTitle>{product.title}</ProductTitle>
                 {product.quantity && product.unit && (
                   <Text $size={SIZES.card} $color={COLORS.input}>
                     {formatQuantity(product)}
                   </Text>
                 )}
-              </div>
 
-              <PriceContainer>
-                {pricePerUnit && (
-                  <Text $size={SIZES.card} $color={COLORS.input}>
-                    {pricePerUnit}
+                <Prices>
+                  {pricePerUnit && (
+                    <Text $size={SIZES.card} $color={COLORS.input}>
+                      {pricePerUnit}
+                    </Text>
+                  )}
+                  <Text $weight={400} $color={COLORS.green} $size={30}>
+                    {price}
                   </Text>
-                )}
-                <Price>
-                  <Text as="span" $weight={400} $color={COLORS.green} $size={30}>
-                    {priceParts[0]}
-                  </Text>
-                  <Text as="span" $weight={400} $color={COLORS.green} $size={30}>
-                    ,{priceParts[1]}
-                  </Text>
-                </Price>
-              </PriceContainer>
+                </Prices>
 
-              <Address href={getMapsLink(product)} target="_blank" rel="noopener">
-                <PinIcon />
-                <Text as="span" $color={COLORS.input} $size={15}>
-                  {product.address}
-                </Text>
-              </Address>
-            </ProductInfo>
-          </ProductSection>
-          <ProducerSection>
-            <Title>{producer.name}</Title>
-
+                <Address href={getMapsLink(product)} target="_blank" rel="noopener">
+                  <PinIcon />
+                  <Text as="span" $color={COLORS.input} $size={15}>
+                    {product.address}
+                  </Text>
+                </Address>
+              </ProductInfo>
+            </ProductSection>
+            <DescriptionSection>
+              <DescriptionTitle>Description</DescriptionTitle>
+              <Text $size={SIZES.card} $color={COLORS.input}>
+                {product.description}
+              </Text>
+            </DescriptionSection>
+          </ProductColumn>
+          <ProducerBox>
             <div>
+              <ProducerTitle>
+                <Link href={`/producteur/${producer.objectID}`}>{producer.name}</Link>
+              </ProducerTitle>
+
               <Label>Email</Label>
               <Info>
                 <a href={`mailto:${producer.email}`} target="_blank" rel="noreferrer">
@@ -252,39 +262,29 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 
               <Label>Téléphone</Label>
               <Info>
-                <a href={`tel:${producer.phone}`}>{producer.phone}</a>
+                <a href={`tel:${producer.phone}`}>{formatPhone(producer.phone)}</a>
               </Info>
             </div>
 
-            <ProducerFollow>
-              <Button
-                onClick={() => toggleFollow(product?.uid, !followed)}
-                variant="contained"
-                style={{ backgroundColor: "white", color: "#F21414", textTransform: "none", fontWeight: 300 }}
-                startIcon={followed ? <IconHeart /> : <IconHeartEmpty />}
-              >
-                {followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
-              </Button>
-            </ProducerFollow>
-          </ProducerSection>
+            <FollowButton
+              onClick={() => toggleFollow(product?.uid, !followed)}
+              variant="contained"
+              startIcon={followed ? <IconHeart /> : <IconHeartEmpty />}
+            >
+              {followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
+            </FollowButton>
+          </ProducerBox>
         </TopSection>
         <BottomSection>
-          <DescriptionSection>
-            <Description>Description</Description>
-            <Text $size={SIZES.card} $color={COLORS.input}>
-              {product.description}
-            </Text>
-          </DescriptionSection>
-
           {otherProducts && otherProducts.length > 0 && (
-            <OtherProducts>
+            <>
               <h2>Ce producteur vend aussi</h2>
-              <Products $col={3}>
+              <Products $col={4}>
                 {otherProducts.map((prod) => (
                   <ProductCard key={prod.objectID} product={prod} />
                 ))}
               </Products>
-            </OtherProducts>
+            </>
           )}
         </BottomSection>
       </Wrapper>

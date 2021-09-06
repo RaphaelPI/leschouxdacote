@@ -13,7 +13,7 @@ import { getMapsLink } from "src/helpers/text"
 import DeleteIcon from "src/assets/delete.svg"
 
 const Container = styled.div`
-  padding: 4rem 5rem;
+  padding: 4rem;
   @media (max-width: 900px) {
     padding: 30px 10px;
   }
