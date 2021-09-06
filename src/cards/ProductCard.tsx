@@ -88,9 +88,10 @@ const Quantity = styled.div`
 
 interface Props {
   product: Product
+  followButton?: boolean
 }
 
-export const ProductInfos = ({ product }: Props) => {
+export const ProductInfos = ({ product, followButton }: Props) => {
   const { user, toggleFollow } = useUser()
   const followed = isFollowed(product.uid, user)
 
@@ -103,8 +104,13 @@ export const ProductInfos = ({ product }: Props) => {
     <Link href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
       <Content>
-        <Follow onClick={handleFollow}>{followed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
-        <FollowHover>{followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
+        {followButton && (
+          <>
+            <Follow onClick={handleFollow}>{followed ? <IconHeart /> : <IconHeartEmpty />}</Follow>
+            <FollowHover>{followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
+          </>
+        )}
+
         <Title>{product.title}</Title>
         <Producer>{product.producer}</Producer>
         <Location>{product.city}</Location>
@@ -120,7 +126,7 @@ export const ProductInfos = ({ product }: Props) => {
   )
 }
 
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product, followButton }: Props) => {
   const { productId, setProduct } = useHover()
 
   return (
@@ -129,7 +135,7 @@ const ProductCard = ({ product }: Props) => {
       onMouseOut={() => setProduct(null)}
       $hover={productId === product.objectID}
     >
-      <ProductInfos product={product} />
+      <ProductInfos product={product} followButton={followButton} />
     </Container>
   )
 }

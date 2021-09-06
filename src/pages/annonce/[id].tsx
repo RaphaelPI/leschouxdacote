@@ -2,7 +2,6 @@ import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 import type { Product, User } from "src/types/model"
 
-import { Button } from "@mui/material"
 import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
@@ -13,13 +12,10 @@ import { firestore, getObject } from "src/helpers-api/firebase"
 import { Text } from "src/components/Text"
 import Products from "src/components/Products"
 import Link from "src/components/Link"
+import FollowButton from "src/components/FollowButton"
 import ProductCard from "src/cards/ProductCard"
-import { useUser } from "src/helpers/auth"
-import { isFollowed } from "src/helpers/user"
 
 import PinIcon from "src/assets/pin.svg"
-import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
-import IconHeart from "src/assets/icon-heart.svg"
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -149,17 +145,6 @@ const Label = styled.div`
 
 const Info = styled.p``
 
-const FollowButton = styled(Button)`
-  margin: 20px auto 10px;
-  background-color: white;
-  color: #f21414;
-  text-transform: none;
-  font-weight: 300;
-  &:hover {
-    background-color: white;
-  }
-`
-
 const DescriptionSection = styled.section`
   background-color: white;
   box-shadow: 20px 20px 60px ${COLORS.shadow.light};
@@ -189,8 +174,6 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
-  const { user, toggleFollow } = useUser()
-
   if (!product) {
     return <ErrorPage statusCode={404} title="Produit introuvable" />
   }
@@ -201,8 +184,6 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const price = formatPrice(product)
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
-
-  const followed = isFollowed(product.uid, user)
 
   return (
     <Layout title={product.title} description={description} fullWidth={true}>
@@ -266,13 +247,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
               </Info>
             </div>
 
-            <FollowButton
-              onClick={() => toggleFollow(product?.uid, !followed)}
-              variant="contained"
-              startIcon={followed ? <IconHeart /> : <IconHeartEmpty />}
-            >
-              {followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}
-            </FollowButton>
+            <FollowButton producer={producer.objectID} />
           </ProducerBox>
         </TopSection>
         <BottomSection>

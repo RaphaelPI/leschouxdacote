@@ -28,7 +28,7 @@ const SearchResults = ({ products }: Props) => {
       {products?.length ? (
         <Products $col={2}>
           {products.map((product) => (
-            <ProductCard key={product.objectID} product={product} />
+            <ProductCard key={product.objectID} product={product} followButton />
           ))}
         </Products>
       ) : (

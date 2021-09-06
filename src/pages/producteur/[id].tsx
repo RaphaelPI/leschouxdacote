@@ -13,6 +13,7 @@ import { firestore, getObject } from "src/helpers-api/firebase"
 import { COLORS, SIZES, LAYOUT, SSR_CACHE_HEADER } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
+import FollowButton from "src/components/FollowButton"
 
 const Title = styled.h1`
   a {
@@ -66,6 +67,7 @@ const ProducerPage = ({ producer, products }: Props) => {
       <p>
         <a href={`tel:${producer.phone}`}>{formatPhone(producer.phone)}</a>
       </p>
+      <FollowButton producer={producer.objectID} />
       {products && (
         <>
           <h2>{products.length} annonces en ligne</h2>
