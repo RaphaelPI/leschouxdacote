@@ -123,7 +123,7 @@ const AlertsPage = () => {
                     <TableRow>
                       <TableCell>Producteur</TableCell>
                       <TableCell>Adresse</TableCell>
-                      <TableCell />
+                      <TableCell align="right">Alertes pour les nouvelles annonces</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
