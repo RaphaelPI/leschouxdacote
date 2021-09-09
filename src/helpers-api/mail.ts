@@ -1,23 +1,30 @@
-import { SES } from "aws-sdk"
-import { createTransport } from "nodemailer"
+import { connect, Email } from "node-mailjet"
 
 import { CONTACT_EMAIL } from "src/constants"
 
-const transport = createTransport({
-  SES: new SES({
-    accessKeyId: process.env.AWS_ACCESS,
-    secretAccessKey: process.env.AWS_SECRET,
-    region: process.env.AWS_SES_REGION,
-  }),
-})
+export enum MailjetTemplate {
+  alert = 3161633,
+}
 
-export const sendEmail = (to: string, subject: string, message: string) =>
-  transport.sendMail({
-    from: {
-      name: "Les choux d'à côté",
-      address: CONTACT_EMAIL,
-    },
-    to,
-    subject,
-    text: message,
-  })
+export const sendTemplateEmail = async (
+  recipient: string,
+  templateId: MailjetTemplate,
+  variables: Record<string, any>,
+  subject?: string
+) => {
+  const mailjet = connect(process.env.MAILJET_PUBLIC_KEY as string, process.env.MAILJET_PRIVATE_KEY as string)
+
+  const message: Email.SendParamsMessage = {
+    From: { Email: CONTACT_EMAIL, Name: "Les Choux d'à Côté" },
+    To: [{ Email: recipient }],
+    TemplateLanguage: true,
+    TemplateID: templateId,
+    Variables: variables,
+    Subject: subject,
+  }
+
+  const { body } = await mailjet.post("send", { version: "v3.1" }).request({ Messages: [message] })
+
+  const infos = body.Messages[0]
+  return { to: infos.To[0].Email, status: infos.Status }
+}

@@ -90,10 +90,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       })
     }
 
+    const now = new Date()
+
     const position = { lat: Number(fields.lat), lng: Number(fields.lng) }
 
     const product: RegisteringProduct = {
-      created: existing ? new Date(existing.created) : new Date(),
+      created: existing ? new Date(existing.created) : now,
       uid: fields.uid,
       title: fields.title,
       quantity: Number(fields.quantity) || null,
@@ -107,13 +109,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       photo,
       email: fields.email || null,
       phone: fields.phone ? normalizeNumber(fields.phone) : null,
-      expires: addDays(new Date(), Number(fields.days)),
+      expires: addDays(now, Number(fields.days)),
       // data fan-out:
       producer: producer.name ?? "",
     }
 
     if (existing) {
-      product.updated = new Date()
+      product.updated = now
     }
 
     await ref.set(product)
@@ -123,6 +125,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       objectID: ref.id,
       created: product.created.getTime(),
       updated: product.updated?.getTime(),
+      published: existing?.expires && existing.expires > now.getTime() ? existing.published : now.getTime(),
       expires: product.expires.getTime(),
       _geoloc: position,
     }

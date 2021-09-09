@@ -46,7 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (fields.follow) {
       const item: FollowedProducer = {
         emailAlert: true,
-        name: producer.name,
+        name: producer.name, // TODO: keep in sync with name updates (use double data fan-out)
         address: producer.address,
       }
       await userDocRef.update({
