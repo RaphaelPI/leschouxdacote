@@ -7,13 +7,13 @@ import styled from "@emotion/styled"
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
 import Products from "src/components/Products"
+import FollowButton from "src/components/FollowButton"
 import ProductCard from "src/cards/ProductCard"
 import { formatPhone, getMapsLink } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { COLORS, SIZES, LAYOUT, SSR_CACHE_HEADER } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
-import FollowButton from "src/components/FollowButton"
 
 const Title = styled.h1`
   a {
