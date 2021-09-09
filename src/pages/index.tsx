@@ -71,7 +71,7 @@ const HomePage = () => {
       <Title>
         <strong>Producteurs artisans</strong>, publiez des annonces de vos produits.
         <br />
-        Acheteurs, jeter un oeil aux <strong> produits locaux</strong> en vente directe autour de vous.
+        Acheteurs, découvrez les <strong>produits locaux</strong> autour de chez vous.
       </Title>
       <SearchGroup />
     </Layout>
