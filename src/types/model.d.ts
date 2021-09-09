@@ -37,7 +37,7 @@ interface User extends Identified {
   address?: string
   // _geoloc: Geoloc
   description?: string
-  email?: string
+  email: string
   phone: string
   followedProducers: Record<string, FollowedProducer>
   earlyAdopter?: boolean
@@ -68,6 +68,7 @@ interface Product extends Identified {
   photo: string
   email: string | null
   phone: string | null
+  published: number | null // timestamp in ms
   expires: number | null // timestamp in ms (null = disabled)
   // data fan-out:
   producer: string // producer.name
@@ -76,11 +77,12 @@ interface Product extends Identified {
 interface RegisteringProduct extends Registering<Product> {
   created: Date
   updated?: Date
+  published?: Date
   expires: Date
   _geoloc: GeoPoint
 }
 
-interface ProductPayload extends Omit<RegisteringProduct, "created" | "expires" | "_geoloc"> {
+interface ProductPayload extends Omit<RegisteringProduct, "created" | "updated" | "expires" | "published" | "_geoloc"> {
   id?: string
   days: string
   lat: string

@@ -186,7 +186,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
 
   return (
-    <Layout title={product.title} description={description} fullWidth={true}>
+    <Layout title={product.title} description={description} image={product.photo} fullWidth={true}>
       <Wrapper>
         <TopSection>
           <ProductColumn>

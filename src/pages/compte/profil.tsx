@@ -19,8 +19,6 @@ const DangerZone = styled.div`
 const MyAccountPage = () => {
   const { user, signout } = useUser()
 
-  const defaultValues: DefaultValues<UpdatingUser> | undefined = user || undefined
-
   const handleSubmit: Submit<UpdatingUser> = async (values) => {
     await api.put("user", values)
     alert("Modifications effectuées")
@@ -36,7 +34,7 @@ const MyAccountPage = () => {
 
   return (
     <Layout title="Mon compte" noindex>
-      <Form title="Mon profil" hasRequired onSubmit={handleSubmit} defaultValues={defaultValues}>
+      <Form title="Mon profil" hasRequired onSubmit={handleSubmit} defaultValues={user as DefaultValues<UpdatingUser>}>
         {user?.role === USER_ROLE.PRODUCER && (
           <>
             <TextInput name="name" label="Nom commercial" required maxLength={180} />
