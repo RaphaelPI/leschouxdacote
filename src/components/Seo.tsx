@@ -1,7 +1,7 @@
 import Head from "next/head"
 
 const CONFIG = {
-  title: "Les choux d'à côté",
+  title: "Les Choux d'à Côté",
   tagline: "L'alimentaire sans intermédiaire",
   description:
     "1ère plateforme d’annonces alimentaire pour la vente directe. Achetez directement aux producteurs locaux. Vendez directement aux clients.",

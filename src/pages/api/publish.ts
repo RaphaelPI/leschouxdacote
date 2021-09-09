@@ -7,6 +7,8 @@ import { firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
 
+const getDate = (ts?: number | null) => (ts ? new Date(ts) : null)
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringProduct>>) => {
   const { id, days } = req.body as Publish
   const ref = firestore.collection("products").doc(id)
@@ -28,13 +30,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     if (!days) {
       return badRequest(res, 400)
     }
-    const expires = addDays(product.expires && product.expires > now.getTime() ? product.expires : now, days)
+    const online = product.expires != null && product.expires > now.getTime()
+    const expires = addDays(product.expires && online ? product.expires : now, days)
+    const published = online ? getDate(product.published) : now
     await ref.update({
       updated: now,
+      published,
       expires,
     })
-    product.expires = expires.getTime()
     product.updated = now.getTime()
+    product.published = published && published.getTime()
+    product.expires = expires.getTime()
     await algolia.saveObject(product)
 
     return respond(res)
@@ -44,6 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
   if (req.method === "PUT") {
     await ref.update({
       updated: now,
+      published: null,
       expires: null,
     })
     await algolia.deleteObject(product.objectID)
