@@ -3,7 +3,7 @@ import { connect, Email } from "node-mailjet"
 import { CONTACT_EMAIL } from "src/constants"
 
 export enum MailjetTemplate {
-  alert = 3161633,
+  alert = 3162690,
 }
 
 export const sendTemplateEmail = async (
