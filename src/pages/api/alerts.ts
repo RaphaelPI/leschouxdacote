@@ -39,13 +39,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const producerAlert = user.followedProducers[producerId]
       const producer = producerAlert.name
       const products = producers[producerId]
-      if (producerAlert.emailAlert && products && producerId !== user.objectID) {
+      if (producerAlert.emailAlert && products) {
         const title = `${producer} vient de publier ${products.length} annonce${products.length > 1 ? "s" : ""}`
         const variables = {
           title,
           name: user.firstname,
           producer,
-          num: products.length,
           products: products.map((product) => ({
             url: `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`,
             photo: product.photo,
