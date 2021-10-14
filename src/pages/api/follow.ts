@@ -71,6 +71,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return respond(res)
   }
+
+  badRequest(res)
 }
 
 export default handler

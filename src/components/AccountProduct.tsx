@@ -15,6 +15,7 @@ import { formatAmount, formatQuantity } from "src/helpers/text"
 import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
+import PointerIcon from "src/assets/pointer.svg"
 
 const Container = styled.div<{ $odd?: boolean }>`
   position: relative;
@@ -64,6 +65,23 @@ const Days = styled.div`
   @media (max-width: ${LAYOUT.mobile}px) {
     margin: 8px 0;
     font-size: 0.9em;
+  }
+`
+const Stats = styled.div`
+  width: 120px;
+  text-align: center;
+  figure {
+    font-size: ${SIZES.large}px;
+    font-weight: 400;
+    margin: 12px 8px 4px;
+    svg {
+      vertical-align: -4px;
+      margin-right: 4px;
+    }
+  }
+  figcaption {
+    font-size: ${SIZES.small}px;
+    color: ${COLORS.grey};
   }
 `
 const Actions = styled.div`
@@ -184,6 +202,12 @@ const AccountProduct = ({ product, odd }: Props) => {
             Annonce créée le {formatDate(product.created)}
             {product.updated && <> et modifiée le {formatDate(product.updated)}</>}
           </Days>
+          <Stats>
+            <figure>
+              <PointerIcon /> {product.views || 0}
+            </figure>
+            <figcaption>Nombre de clics</figcaption>
+          </Stats>
         </Infos>
       </Ad>
       <Actions>

@@ -58,6 +58,10 @@ const globalStyle = css`
     font-size: inherit;
     outline: none;
   }
+
+  figure {
+    margin: 0;
+  }
 `
 
 const ErrorContainer = styled.div`

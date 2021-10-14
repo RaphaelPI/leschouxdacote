@@ -110,6 +110,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       email: fields.email || null,
       phone: fields.phone ? normalizeNumber(fields.phone) : null,
       expires: addDays(now, Number(fields.days)),
+      views: existing?.views || 0,
       // data fan-out:
       producer: producer.name ?? "",
     }
