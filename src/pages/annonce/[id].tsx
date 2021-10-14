@@ -223,7 +223,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             </ProductSection>
             <DescriptionSection>
               <DescriptionTitle>Description</DescriptionTitle>
-              <Text $size={SIZES.card} $color={COLORS.input}>
+              <Text $size={SIZES.card} $color={COLORS.input} $linebreaks>
                 {product.description}
               </Text>
             </DescriptionSection>
