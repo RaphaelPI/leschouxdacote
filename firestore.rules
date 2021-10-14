@@ -1,0 +1,16 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    match /users/{document=**} {
+    	allow read: if resource.id == request.auth.uid || resource.data.role == "PRODUCER"
+      allow write: if resource.id == request.auth.uid
+    }
+    match /products/{document=**} {
+    	allow read: if true;
+      allow write: if resource.data.uid == request.auth.uid
+    }
+  }
+}
