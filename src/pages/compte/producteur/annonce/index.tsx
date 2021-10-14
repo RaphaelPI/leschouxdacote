@@ -144,7 +144,14 @@ const EditProductPage = () => {
         </Row>
         <TextInput name="price" label="Prix total" required type="number" min={0} step={0.01} suffix="euros" />
         <PriceInfos />
-        <TextInput name="address" label="Adresse" required placeholder="" id="place" ref={handleRef} />
+        <TextInput
+          name="address"
+          label="Adresse de la vente (ferme, magasin, marché, point de distribution…)"
+          required
+          placeholder=""
+          id="place"
+          ref={handleRef}
+        />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
         {data && <Photo src={data.photo} />}
         <TextInput
