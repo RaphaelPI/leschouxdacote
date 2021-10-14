@@ -35,8 +35,8 @@
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
     "@hookform/resolvers": "^2.7.0",
-    "@mui/icons-material": "^5.0.0-rc.0",
-    "@mui/material": "^5.0.0-rc.0",
+    "@mui/icons-material": "^5.0.3",
+    "@mui/material": "^5.0.3",
     "@svgr/webpack": "^5.5.0",
     "@types/formidable": "^1.0.32",
     "@types/googlemaps": "^3.43.2",
@@ -68,26 +68,26 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.1.0",
-    "react-leaflet": "3.1",
+    "react-leaflet": "^3.2.2",
     "sharp": "^0.29.0",
     "standard-http-error": "^2.0.1",
     "typescript": "^4.1.2",
     "yup": "^0.32.9"
   },
   "engines": {
-    "node": ">=10.13"
+    "node": ">=12.22"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.2.0",
     "@next/eslint-plugin-next": "^11.1.2",
-    "@typescript-eslint/eslint-plugin": "^4.8.2",
-    "@typescript-eslint/parser": "^4.8.2",
-    "eslint": "^7.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^7.0.2",
-    "lint-staged": "^11.1.2"
+    "lint-staged": "^11.2.3"
   }
 }

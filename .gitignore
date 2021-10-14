@@ -18,6 +18,7 @@
 # misc
 .DS_Store
 *.pem
+.idea
 
 # debug
 npm-debug.log*
@@ -36,9 +37,3 @@ yarn-error.log*
 
 # firebase
 .firebaserc
-firebase.json
-firestore.indexes.json
-firestore.rules
-
-
-.idea
