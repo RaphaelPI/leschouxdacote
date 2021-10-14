@@ -2,6 +2,7 @@ import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 import type { Product, User } from "src/types/model"
 
+import { useEffect } from "react"
 import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
@@ -14,6 +15,7 @@ import Products from "src/components/Products"
 import Link from "src/components/Link"
 import FollowButton from "src/components/FollowButton"
 import ProductCard from "src/cards/ProductCard"
+import api from "src/helpers/api"
 
 import PinIcon from "src/assets/pin.svg"
 
@@ -174,6 +176,12 @@ interface Props {
 }
 
 const ProductPage = ({ product, producer, otherProducts }: Props) => {
+  useEffect(() => {
+    if (product) {
+      api.post("view", { id: product.objectID })
+    }
+  }, [product])
+
   if (!product) {
     return <ErrorPage statusCode={404} title="Produit introuvable" />
   }

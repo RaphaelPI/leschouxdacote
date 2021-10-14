@@ -70,6 +70,7 @@ interface Product extends Identified {
   phone: string | null
   published: number | null // timestamp in ms
   expires: number | null // timestamp in ms (null = disabled)
+  views: number | null
   // data fan-out:
   producer: string // producer.name
 }
