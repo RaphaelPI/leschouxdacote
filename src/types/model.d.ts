@@ -30,18 +30,18 @@ interface FollowedProducer {
 }
 
 interface User extends Identified {
-  siret?: string
-  name?: string // company name
   firstname: string
   lastname: string
-  address?: string
   // _geoloc: Geoloc
-  description?: string
   email: string
   phone: string
   followedProducers: Record<string, FollowedProducer>
-  earlyAdopter?: boolean
   role: USER_ROLE
+  // for producers:
+  siret?: string
+  name?: string // company name
+  description?: string
+  address?: string
 }
 
 interface RegisteringUser extends Registering<User> {

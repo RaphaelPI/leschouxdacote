@@ -1,6 +1,6 @@
 import type { Product } from "src/types/model"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import "leaflet/dist/leaflet.css"
 import { icon, LatLngTuple, LatLngBoundsLiteral } from "leaflet"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
@@ -106,8 +106,11 @@ const PlacePopup = ({ products }: PlaceProps) => {
     setProduct(open ? current : null)
   }, [setProduct, current, open])
 
+  const onOpen = useCallback(() => setOpen(true), [])
+  const onClose = useCallback(() => setOpen(false), [])
+
   return (
-    <StyledPopup onOpen={() => setOpen(true)} onClose={() => setOpen(false)}>
+    <StyledPopup onOpen={onOpen} onClose={onClose}>
       <PopupContent>
         <Slider style={{ transform: `translateX(${-LAYOUT.mapPopupWidth * index}px)` }}>
           {products.map((product) => (

@@ -86,7 +86,7 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
-    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-react-hooks": "^4.2.1-alpha-8ee4ff883-20211013",
     "husky": "^7.0.2",
     "lint-staged": "^11.2.3"
   }

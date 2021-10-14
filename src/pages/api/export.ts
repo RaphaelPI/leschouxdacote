@@ -5,6 +5,7 @@ import { formatISO9075 } from "date-fns"
 
 import { firestore, getObject } from "src/helpers-api/firebase"
 import getCsv from "src/helpers-api/csv"
+import { USER_ROLE } from "src/constants"
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
   const query = req.query.q
@@ -21,7 +22,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
       }
     })
 
-    const producersSnapshot = await firestore.collection("users").get()
+    const producersSnapshot = await firestore.collection("users").where("role", "==", USER_ROLE.PRODUCER).get()
     const producers = producersSnapshot.docs.map((doc) => {
       const producer = getObject(doc) as User
       return [
