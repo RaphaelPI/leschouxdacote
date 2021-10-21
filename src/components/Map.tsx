@@ -4,10 +4,19 @@ import { useEffect, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import "mapbox-gl/dist/mapbox-gl.css"
 import mapboxgl, { GeoJSONSource, Map, PopupOptions } from "mapbox-gl"
-import PlacePopup from "./PlacePopup"
+import { useRouter } from "next/router"
+
+import PlacePopup from "src/components/PlacePopup"
 import { LAYOUT } from "src/constants"
+import { getBounds } from "src/helpers/map"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
+
+const ZOOM = {
+  city: 12,
+  dpt: 9,
+  region: 7,
+}
 
 const POPUP_OPTIONS: PopupOptions = {
   offset: 15,
@@ -35,40 +44,60 @@ interface Place {
 }
 
 const Mapbox = ({ products }: MapProps) => {
-  const container = useRef<HTMLDivElement>(null)
-  const map = useRef<Map>()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const mapRef = useRef<Map>()
   const popupRef = useRef<HTMLDivElement>(null)
   const [loaded, setLoaded] = useState(false)
   const [placePopup, setPlacePopup] = useState<Place>()
+  const { query } = useRouter()
+  const { type, ll } = query as SearchQuery
+  const placeCoords = ll ? (ll.split(",").reverse().map(Number) as [number, number]) : null
+  const bounds = getBounds(products.map(({ _geoloc }) => [_geoloc.lng, _geoloc.lat]))
 
   useEffect(() => {
-    if (!container.current || map.current) {
+    if (!mapRef.current) {
       return
     }
-    const mapRef = new mapboxgl.Map({
-      container: container.current,
+    if (bounds) {
+      mapRef.current.fitBounds(bounds, {
+        maxZoom: 12,
+        padding: 50,
+      })
+    } else if (placeCoords) {
+      mapRef.current.fitBounds([placeCoords, placeCoords], {
+        zoom: ZOOM[type || "city"],
+      })
+    }
+  }, [loaded, type, JSON.stringify(bounds), JSON.stringify(placeCoords)]) // eslint-disable-line
+
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) {
+      return
+    }
+    const map = new mapboxgl.Map({
+      container: containerRef.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [1.7, 46.7],
       zoom: 5,
     })
 
-    mapRef.on("load", () => {
-      mapRef.loadImage("/marker.png", (error, image) => {
+    map.on("load", () => {
+      map.loadImage("/marker.png", (error, image) => {
         if (error) {
           throw error
         }
         if (image) {
-          mapRef.addImage("marker", image)
+          map.addImage("marker", image)
         }
       })
-      mapRef.addSource("source", {
+      map.addSource("source", {
         type: "geojson",
         data: {
           type: "FeatureCollection",
           features: [],
         },
       })
-      mapRef.addLayer({
+      map.addLayer({
         id: "layer",
         type: "symbol",
         source: "source",
@@ -80,12 +109,16 @@ const Mapbox = ({ products }: MapProps) => {
       setLoaded(true)
     })
 
-    mapRef.on("move", () => {
-      // TODO: refresh results
-      console.log(mapRef.getCenter(), mapRef.getZoom())
-    })
+    const handleMove = () => {
+      const center = map.getCenter()
+      const zoom = map.getZoom()
+      console.log(center, zoom) // TODO: update search
+    }
 
-    mapRef.on("click", "layer", ({ features }) => {
+    map.on("zoomend", handleMove)
+    map.on("dragend", handleMove)
+
+    map.on("click", "layer", ({ features }) => {
       if (!features) {
         return
       }
@@ -95,19 +128,19 @@ const Mapbox = ({ products }: MapProps) => {
       }
     })
 
-    mapRef.on("mouseenter", "layer", () => {
-      mapRef.getCanvas().style.cursor = "pointer"
+    map.on("mouseenter", "layer", () => {
+      map.getCanvas().style.cursor = "pointer"
     })
 
-    mapRef.on("mouseleave", "layer", () => {
-      mapRef.getCanvas().style.cursor = ""
+    map.on("mouseleave", "layer", () => {
+      map.getCanvas().style.cursor = ""
     })
 
-    map.current = mapRef
+    mapRef.current = map
   })
 
   useEffect(() => {
-    if (!map.current || !loaded) {
+    if (!mapRef.current || !loaded) {
       return
     }
 
@@ -122,7 +155,7 @@ const Mapbox = ({ products }: MapProps) => {
       places[product.placeId].products.push(product)
     })
 
-    const source = map.current.getSource("source") as GeoJSONSource
+    const source = mapRef.current.getSource("source") as GeoJSONSource
     source.setData({
       type: "FeatureCollection",
       features: Object.keys(places).map((placeId) => {
@@ -142,14 +175,14 @@ const Mapbox = ({ products }: MapProps) => {
   }, [products, loaded])
 
   useEffect(() => {
-    if (!placePopup || !popupRef.current) {
+    if (!placePopup || !mapRef.current || !popupRef.current) {
       return
     }
 
     const popup = new mapboxgl.Popup(POPUP_OPTIONS)
       .setLngLat(placePopup.coordinates)
       .setDOMContent(popupRef.current)
-      .addTo(map.current as Map)
+      .addTo(mapRef.current)
 
     return () => {
       popup.remove()
@@ -157,7 +190,9 @@ const Mapbox = ({ products }: MapProps) => {
   }, [placePopup])
 
   return (
-    <Container ref={container}>{placePopup && <PlacePopup products={placePopup.products} ref={popupRef} />}</Container>
+    <Container ref={containerRef}>
+      {placePopup && <PlacePopup products={placePopup.products} ref={popupRef} />}
+    </Container>
   )
 }
 
