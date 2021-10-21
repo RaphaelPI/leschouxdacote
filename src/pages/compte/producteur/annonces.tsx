@@ -21,8 +21,6 @@ const Tabs = styled.div`
   margin-bottom: 20px;
 `
 const Tab = styled.button<{ $active: boolean }>`
-  background-color: transparent;
-  border: none;
   color: ${({ $active }) => ($active ? COLORS.green : COLORS.dark)};
   padding: 0;
   font-size: ${SIZES.large}px;

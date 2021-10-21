@@ -8,16 +8,16 @@ import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
 import Divider from "@mui/material/Divider"
 
-import PersonAddIcon from "@mui/icons-material/PersonAdd"
 import AddCircleIcon from "@mui/icons-material/AddCircle"
 import PersonIcon from "@mui/icons-material/Person"
 import LoginIcon from "@mui/icons-material/Login"
 import LogoutIcon from "@mui/icons-material/Logout"
+import CollectionsIcon from "@mui/icons-material/Collections"
 
 import Loader from "src/components/Loader"
 import { useUser } from "src/helpers/auth"
+import { getName } from "src/helpers/user"
 import { COLORS, USER_ROLE } from "src/constants"
-import CollectionsIcon from "@mui/icons-material/Collections"
 
 const Container = styled.nav`
   width: 300px;
@@ -89,16 +89,10 @@ const Menu = () => {
   return (
     <Container>
       <h1>Les Choux d’à Côté</h1>
-      {user && <h2>{user.role === USER_ROLE.PRODUCER ? user.name : `${user.firstname} ${user.lastname}`}</h2>}
+      {user && <h2>{getName(user)}</h2>}
       <Divider />
       <List>
-        {!authUser && (
-          <ListItemLink href="/inscription">
-            <PersonAddIcon />
-            <ListItemText>S’inscire</ListItemText>
-          </ListItemLink>
-        )}
-        {user?.role === USER_ROLE.PRODUCER && (
+        {user?.role !== USER_ROLE.BUYER && (
           <ListItemLink href="/compte/producteur/annonce">
             <AddCircleIcon />
             <ListItemText>Créer une annonce</ListItemText>

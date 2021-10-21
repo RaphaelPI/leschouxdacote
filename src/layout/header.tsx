@@ -16,6 +16,14 @@ import { COLORS, LAYOUT, USER_ROLE } from "src/constants"
 import LogoSvg from "src/assets/logo.svg"
 import { useUser } from "src/helpers/auth"
 
+const Container = styled.header`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: ${COLORS.white};
+  box-shadow: 0px 3px 3px ${COLORS.shadow.light};
+`
 const Content = styled.div`
   display: flex;
   justify-content: space-between;
@@ -48,13 +56,8 @@ const Mobile = styled(Content)`
     display: none;
   }
 `
-const Container = styled.header`
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  background-color: ${COLORS.white};
-  box-shadow: 0px 3px 3px ${COLORS.shadow.light};
+const Spacer = styled.div`
+  flex: 1;
 `
 const Logo = styled(LogoSvg)`
   height: 45px;
@@ -64,9 +67,10 @@ const Logo = styled(LogoSvg)`
     height: 30px;
   }
 `
-const Actions = styled.div`
+const Middle = styled.div`
+  flex: 1;
   display: flex;
-  align-items: center;
+  justify-content: center;
   > a {
     margin: 0 36px;
   }
@@ -76,6 +80,9 @@ const Actions = styled.div`
       display: none;
     }
   }
+`
+const Cta = styled(ButtonLink)`
+  margin-right: 16px;
 `
 
 const Header = () => {
@@ -95,20 +102,22 @@ const Header = () => {
     <Container>
       <Desktop>
         {isHome ? (
-          <div style={{ flex: 1 }} />
+          <Spacer />
         ) : (
-          <Link href="/">
-            <Logo />
-          </Link>
+          <>
+            <Link href="/">
+              <Logo />
+            </Link>
+            <Middle>
+              <SearchBar />
+            </Middle>
+          </>
         )}
-        <Actions>
-          {!isHome && <SearchBar />}
-          {user?.role === USER_ROLE.PRODUCER && (
-            <ButtonLink href="/compte/producteur/annonce" $variant="green">
-              Créer une annonce
-            </ButtonLink>
-          )}
-        </Actions>
+        {user?.role !== USER_ROLE.BUYER && (
+          <Cta href="/compte/producteur/annonce" $variant="green">
+            Créer une annonce
+          </Cta>
+        )}
         <UserZone />
       </Desktop>
       <Mobile>

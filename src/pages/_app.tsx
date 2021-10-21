@@ -57,6 +57,8 @@ const globalStyle = css`
     cursor: pointer;
     font-size: inherit;
     outline: none;
+    background-color: transparent;
+    border: none;
   }
 
   figure {
