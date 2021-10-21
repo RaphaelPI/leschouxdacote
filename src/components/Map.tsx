@@ -1,202 +1,164 @@
 import type { Product } from "src/types/model"
 
-import { useCallback, useEffect, useState } from "react"
-import "leaflet/dist/leaflet.css"
-import { icon, LatLngTuple, LatLngBoundsLiteral } from "leaflet"
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
+import { useEffect, useRef, useState } from "react"
 import styled from "@emotion/styled"
-import { useRouter } from "next/router"
+import "mapbox-gl/dist/mapbox-gl.css"
+import mapboxgl, { GeoJSONSource, Map, PopupOptions } from "mapbox-gl"
+import PlacePopup from "./PlacePopup"
+import { LAYOUT } from "src/constants"
 
-import { ProductInfos } from "src/cards/ProductCard"
-import { useHover } from "src/helpers/hover"
-import { COLORS, LAYOUT } from "src/constants"
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
-import PrevIcon from "@mui/icons-material/NavigateBefore"
-import NextIcon from "@mui/icons-material/NavigateNext"
-
-const ZOOM = {
-  city: 12,
-  dpt: 9,
-  region: 7,
+const POPUP_OPTIONS: PopupOptions = {
+  offset: 15,
+  maxWidth: LAYOUT.mapPopupWidth + "px",
 }
 
-const TILES_URL = "https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png" // TODO: use vector tiles
-const TILES_ATTR =
-  '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-
-const ICON_INACTIVE = icon({
-  iconUrl: "/marker-inactive.png",
-  iconSize: [32, 32],
-  popupAnchor: [0, -10],
-})
-const ICON_ACTIVE = icon({
-  iconUrl: "/marker.png",
-  iconSize: [32, 32],
-  popupAnchor: [0, -10],
-})
-
-const Container = styled(MapContainer)`
+const Container = styled.div`
   width: 100%;
   height: 100%;
-`
-const StyledPopup = styled(Popup)`
-  .leaflet-popup-content-wrapper {
-    border-radius: 0;
+  .mapboxgl-control-container {
+    display: none;
+  }
+  .mapboxgl-popup-content {
     padding: 0;
   }
-  .leaflet-popup-content {
-    margin: 0 -1px 0 0;
-  }
-  a.leaflet-popup-close-button {
-    color: white;
-  }
-  a.leaflet-popup-close-button:hover {
-    color: black;
-  }
-  .leaflet-popup-content a {
-    color: ${COLORS.dark};
-    width: 100%;
-  }
 `
-const PopupContent = styled.div`
-  width: ${LAYOUT.mapPopupWidth}px;
-  white-space: nowrap;
-  overflow: hidden;
-`
-const Slider = styled.div`
-  transition: transform 200ms ease-in-out;
-  > a {
-    white-space: normal;
-    display: inline-block;
-    vertical-align: top;
-    img {
-      height: 120px;
-    }
-  }
-`
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  font-size: 13px;
-  border-top: 1px solid ${COLORS.border};
-  button {
-    height: 34px;
-    border: none;
-    background-color: transparent;
-    padding: 5px;
-  }
-  div {
-    flex: 1;
-  }
-`
-
-interface PlaceProps {
-  products: Product[]
-}
-
-const PlacePopup = ({ products }: PlaceProps) => {
-  const [open, setOpen] = useState(false)
-  const [index, setIndex] = useState(0)
-  const { setProduct } = useHover()
-
-  const current = products[index].objectID
-
-  useEffect(() => {
-    setProduct(open ? current : null)
-  }, [setProduct, current, open])
-
-  const onOpen = useCallback(() => setOpen(true), [])
-  const onClose = useCallback(() => setOpen(false), [])
-
-  return (
-    <StyledPopup onOpen={onOpen} onClose={onClose}>
-      <PopupContent>
-        <Slider style={{ transform: `translateX(${-LAYOUT.mapPopupWidth * index}px)` }}>
-          {products.map((product) => (
-            <ProductInfos key={product.objectID} product={product} />
-          ))}
-        </Slider>
-        {products.length > 1 && (
-          <Nav>
-            <button onClick={() => setIndex(Math.max(0, index - 1))}>
-              <PrevIcon />
-            </button>
-            <div>
-              {index + 1}/{products.length}
-            </div>
-            <button onClick={() => setIndex(Math.min(products.length - 1, index + 1))}>
-              <NextIcon />
-            </button>
-          </Nav>
-        )}
-      </PopupContent>
-    </StyledPopup>
-  )
-}
-
-interface CentererProps {
-  bounds: LatLngBoundsLiteral
-}
-
-const Centerer = ({ bounds }: CentererProps) => {
-  const map = useMap()
-  const { query } = useRouter()
-  const { type, ll } = query as SearchQuery
-
-  const placeCoords = ll ? (ll.split(",").map(Number) as LatLngTuple) : null
-
-  useEffect(() => {
-    if (bounds.length) {
-      map.fitBounds(placeCoords ? bounds.concat(placeCoords) : bounds, {
-        padding: [50, 50],
-        maxZoom: 15,
-      })
-    } else if (placeCoords) {
-      map.setView(placeCoords, ZOOM[type || "city"])
-    } else {
-      map.setView([46.7, 1.7], 6) // France
-    }
-  }, [map, type, JSON.stringify(bounds), JSON.stringify(placeCoords)]) // eslint-disable-line
-
-  return null
-}
 
 interface MapProps {
   products: Product[]
 }
 
-const Map = ({ products }: MapProps) => {
-  const { productId } = useHover()
+interface Place {
+  coordinates: [number, number]
+  products: Product[]
+}
 
-  const places: Record<Product["placeId"], Product[]> = {}
-  const bounds: LatLngBoundsLiteral = []
-  products.forEach((product) => {
-    if (!places[product.placeId]) {
-      places[product.placeId] = []
-      bounds.push([product._geoloc.lat, product._geoloc.lng])
+const Mapbox = ({ products }: MapProps) => {
+  const container = useRef<HTMLDivElement>(null)
+  const map = useRef<Map>()
+  const popupRef = useRef<HTMLDivElement>(null)
+  const [loaded, setLoaded] = useState(false)
+  const [placePopup, setPlacePopup] = useState<Place>()
+
+  useEffect(() => {
+    if (!container.current || map.current) {
+      return
     }
-    places[product.placeId].push(product)
+    const mapRef = new mapboxgl.Map({
+      container: container.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [1.7, 46.7],
+      zoom: 5,
+    })
+
+    mapRef.on("load", () => {
+      mapRef.loadImage("/marker.png", (error, image) => {
+        if (error) {
+          throw error
+        }
+        if (image) {
+          mapRef.addImage("marker", image)
+        }
+      })
+      mapRef.addSource("source", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [],
+        },
+      })
+      mapRef.addLayer({
+        id: "layer",
+        type: "symbol",
+        source: "source",
+        layout: {
+          "icon-image": "marker",
+          "icon-size": 0.5,
+        },
+      })
+      setLoaded(true)
+    })
+
+    mapRef.on("move", () => {
+      // TODO: refresh results
+      console.log(mapRef.getCenter(), mapRef.getZoom())
+    })
+
+    mapRef.on("click", "layer", ({ features }) => {
+      if (!features) {
+        return
+      }
+      const place = JSON.parse(features[0].properties?.place) as Place | undefined
+      if (place) {
+        setPlacePopup(place)
+      }
+    })
+
+    mapRef.on("mouseenter", "layer", () => {
+      mapRef.getCanvas().style.cursor = "pointer"
+    })
+
+    mapRef.on("mouseleave", "layer", () => {
+      mapRef.getCanvas().style.cursor = ""
+    })
+
+    map.current = mapRef
   })
 
+  useEffect(() => {
+    if (!map.current || !loaded) {
+      return
+    }
+
+    const places: Record<Product["placeId"], Place> = {}
+    products.forEach((product) => {
+      if (!places[product.placeId]) {
+        places[product.placeId] = {
+          coordinates: [product._geoloc.lng, product._geoloc.lat],
+          products: [],
+        }
+      }
+      places[product.placeId].products.push(product)
+    })
+
+    const source = map.current.getSource("source") as GeoJSONSource
+    source.setData({
+      type: "FeatureCollection",
+      features: Object.keys(places).map((placeId) => {
+        const place = places[placeId]
+        return {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: place.coordinates,
+          },
+          properties: {
+            place,
+          },
+        }
+      }),
+    })
+  }, [products, loaded])
+
+  useEffect(() => {
+    if (!placePopup || !popupRef.current) {
+      return
+    }
+
+    const popup = new mapboxgl.Popup(POPUP_OPTIONS)
+      .setLngLat(placePopup.coordinates)
+      .setDOMContent(popupRef.current)
+      .addTo(map.current as Map)
+
+    return () => {
+      popup.remove()
+    }
+  }, [placePopup])
+
   return (
-    <Container tap={false}>
-      <Centerer bounds={bounds} />
-      <TileLayer url={TILES_URL} attribution={TILES_ATTR} crossOrigin />
-      {Object.keys(places).map((placeId) => {
-        const list = places[placeId]
-        return (
-          <Marker
-            key={placeId}
-            position={list[0]._geoloc}
-            icon={productId && list.find(({ objectID }) => objectID === productId) ? ICON_ACTIVE : ICON_INACTIVE}
-          >
-            <PlacePopup products={list} />
-          </Marker>
-        )
-      })}
-    </Container>
+    <Container ref={container}>{placePopup && <PlacePopup products={placePopup.products} ref={popupRef} />}</Container>
   )
 }
 
-export default Map
+export default Mapbox
