@@ -54,21 +54,7 @@ export const LinkButton = styled.a<ButtonProps>`
   display: inline-block;
 `
 
-export const ButtonGroup = styled.div`
-  > *:first-of-type {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  > *:not(:first-of-type) {
-    margin-left: -1px;
-  }
-  > *:last-of-type {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-`
-
-const IconButtonStyle = styled.button`
+const StyledIconButton = styled.button`
   border-radius: 5px;
   box-shadow: 0px 3px 6px #00000029;
   padding: 10px 30px;
@@ -76,13 +62,14 @@ const IconButtonStyle = styled.button`
 
 interface IconButtonProps {
   iconUrl: string
+  alt?: string
 }
 
-export const IconButton: React.FC<IconButtonProps> = ({ iconUrl, children }) => {
+export const IconButton: React.FC<IconButtonProps> = ({ iconUrl, alt, children }) => {
   return (
-    <IconButtonStyle>
-      <img src={iconUrl} alt="button icon description" />
+    <StyledIconButton>
+      <img src={iconUrl} alt={alt} />
       <span>{children}</span>
-    </IconButtonStyle>
+    </StyledIconButton>
   )
 }

@@ -77,8 +77,8 @@ const LoginPage = () => {
   return (
     <Layout title="Connexion">
       {query.next && (
-        <Message type="error">
-          <p>Vous devez vous connecter pour accéder à cette fonctionnalité</p>
+        <Message type="info">
+          <p>Vous devez vous connecter pour accéder à cette fonctionnalité.</p>
         </Message>
       )}
       {query.success && (

@@ -3,10 +3,11 @@ import { css } from "@emotion/react"
 
 import { useUser } from "src/helpers/auth"
 import Loader from "src/components/Loader"
-import { Button, ButtonGroup } from "src/components/Button"
+import { Button } from "src/components/Button"
 import Link, { ButtonLink } from "src/components/Link"
 import { useMenu } from "src/helpers/menu"
 import { ellipsis } from "src/helpers/text"
+import { getName } from "src/helpers/user"
 import { COLORS, USER_ROLE } from "src/constants"
 
 import DownIcon from "src/assets/down.svg"
@@ -72,34 +73,29 @@ const UserZone = () => {
 
   const title = (
     <Name>
-      {ellipsis(user?.role === USER_ROLE.PRODUCER ? user?.name : `${user?.firstname} ${user?.lastname}`)} <DownIcon />
+      {ellipsis(getName(user))} <DownIcon />
     </Name>
   )
 
-  if (authUser) {
-    return (
-      <Dropdown ref={ref}>
-        <Placeholder>{title}</Placeholder>
-        <ProducerButton $variant="white" onClick={() => setOpen(!open)} $open={open}>
-          {title}
-          {open && (
-            <Menu>
-              {user?.role === USER_ROLE.PRODUCER && <Entry href="/compte/producteur/annonces">Mes annonces</Entry>}
-              <Entry href="/compte/profil">Mon profil</Entry>
-              <Entry href="/compte/alertes">Mes alertes</Entry>
-              <Logout onClick={signout}>Se déconnecter</Logout>
-            </Menu>
-          )}
-        </ProducerButton>
-      </Dropdown>
-    )
+  if (!authUser) {
+    return <ButtonLink href="/connexion">Se connecter</ButtonLink>
   }
 
   return (
-    <ButtonGroup>
-      <ButtonLink href="/inscription">S’inscrire</ButtonLink>
-      <ButtonLink href="/connexion">Se connecter</ButtonLink>
-    </ButtonGroup>
+    <Dropdown ref={ref}>
+      <Placeholder>{title}</Placeholder>
+      <ProducerButton $variant="white" onClick={() => setOpen(!open)} $open={open}>
+        {title}
+        {open && (
+          <Menu>
+            {user?.role === USER_ROLE.PRODUCER && <Entry href="/compte/producteur/annonces">Mes annonces</Entry>}
+            <Entry href="/compte/profil">Mon profil</Entry>
+            <Entry href="/compte/alertes">Mes alertes</Entry>
+            <Logout onClick={signout}>Se déconnecter</Logout>
+          </Menu>
+        )}
+      </ProducerButton>
+    </Dropdown>
   )
 }
 

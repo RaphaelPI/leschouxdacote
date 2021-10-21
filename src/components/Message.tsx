@@ -1,29 +1,36 @@
-import React, { MutableRefObject, useRef } from "react"
+import React, { useState } from "react"
 import styled from "@emotion/styled"
 
 import { COLORS, LAYOUT, SIZES } from "src/constants"
-import CheckCircle from "src/assets/icon-feather-check-circle.svg"
-import CloseCirce from "src/assets/icon-lose-circle-outline.svg"
-import InfoIcon from "src/assets/icon-feather-info.svg"
+import CheckIcon from "src/assets/check-circle.svg"
+import CloseCirce from "src/assets/x-circle.svg"
+import InfoIcon from "src/assets/info.svg"
 
-type MessageType = "success" | "error"
+type MessageType = "success" | "info"
 
-const Box = styled.div<{ $type: MessageType }>`
+const Container = styled.div<{ $type: MessageType }>`
   display: flex;
   align-items: center;
   margin: 0 auto;
   width: 70%;
   padding: 20px 30px;
   border-radius: 10px;
-  background-color: ${({ $type }) => ($type === "success" ? "rgb(71, 210, 91, 10%)" : "rgb(0, 119, 207, 10%)")};
+  background-color: ${({ $type }) => COLORS.background[$type]};
   position: relative;
 
   @media (max-width: ${LAYOUT.mobile}px) {
     width: 100%;
-    padding: 10px;
+    padding: 10px 15px;
   }
 `
+const Content = styled.div`
+  margin-left: 20px;
+  flex: 1;
 
+  @media (max-width: ${LAYOUT.mobile}px) {
+    margin: 0 10px;
+  }
+`
 const Title = styled.span`
   color: ${COLORS.green};
   font-weight: bold;
@@ -34,8 +41,7 @@ const Title = styled.span`
   }
 `
 
-const Content = styled.span`
-  display: block;
+const Text = styled.div`
   margin-top: 10px;
   font-size: ${SIZES.large}px;
 
@@ -44,11 +50,11 @@ const Content = styled.span`
   }
 `
 
-const CloseIconWrapper = styled.div`
+const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
+  top: 8px;
+  right: 8px;
+  padding: 4px;
 `
 
 interface SuccessProps {
@@ -57,26 +63,24 @@ interface SuccessProps {
 }
 
 const Message: React.FC<SuccessProps> = ({ title, type, children }) => {
-  const ref = useRef<HTMLDivElement>(null) as MutableRefObject<HTMLDivElement>
+  const [visible, setVisible] = useState(true)
 
-  const handleClick = () => {
-    if (ref && ref.current) {
-      ref.current.style.display = "none"
-    }
+  if (!visible) {
+    return null
   }
 
   return (
-    <Box ref={ref} $type={type}>
-      <CloseIconWrapper onClick={handleClick}>
+    <Container $type={type}>
+      <CloseButton onClick={() => setVisible(false)}>
         <CloseCirce />
-      </CloseIconWrapper>
-      {type === "success" && <CheckCircle style={{ flex: "0 0 20%" }} />}
-      {type === "error" && <InfoIcon style={{ flex: "0 0 20%" }} />}
-      <div>
-        {type === "success" && <Title>{title}</Title>}
-        <Content>{children}</Content>
-      </div>
-    </Box>
+      </CloseButton>
+      {type === "success" && <CheckIcon />}
+      {type === "info" && <InfoIcon />}
+      <Content>
+        {title && <Title>{title}</Title>}
+        <Text>{children}</Text>
+      </Content>
+    </Container>
   )
 }
 

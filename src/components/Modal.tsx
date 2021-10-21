@@ -33,8 +33,6 @@ const CloseButton = styled.button`
   right: 15px;
   font-size: 32px;
   font-weight: 300;
-  border: none;
-  background-color: transparent;
   padding: 2px 5px 6px;
   line-height: 20px;
 `

@@ -17,6 +17,10 @@ export const COLORS = {
   },
   lightDark: "#272D3B",
   blue: "#0077CF",
+  background: {
+    success: "rgb(71, 210, 91, 10%)",
+    info: "rgb(0, 119, 207, 10%)",
+  },
 }
 
 // eslint-disable-next-line no-shadow
