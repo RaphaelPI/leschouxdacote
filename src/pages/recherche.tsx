@@ -96,12 +96,12 @@ const SearchPage = () => {
         <Row>
           {view !== "map" && (
             <LeftCol>
-              <ResultsList products={results} />
+              <ResultsList products={results as Product[]} />
             </LeftCol>
           )}
           {view !== "list" && (
             <RightCol>
-              <ResultsMap products={results} />
+              <ResultsMap products={results as Product[]} />
             </RightCol>
           )}
         </Row>
