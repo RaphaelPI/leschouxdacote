@@ -15,7 +15,7 @@ import ResultsList from "src/components/ResultsList"
 import algolia from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
 import { HoverProvider } from "src/helpers/hover"
-import { SEARCH_RADIUS, COLORS } from "src/constants"
+import { COLORS, SEARCH_RADIUS } from "src/constants"
 
 const Row = styled.div`
   display: flex;
@@ -41,13 +41,13 @@ const MobileSwitches = styled.div`
   }
 `
 
-const getOptions = (type: SearchQuery["type"], ll?: string) => {
+const getOptions = (radius: number, latlng?: string) => {
   const options: Mutable<SearchOptions> = {
     numericFilters: `expires > ${Date.now()}`,
   }
-  if (ll) {
-    options.aroundLatLng = ll
-    options.aroundRadius = SEARCH_RADIUS[type || "city"]
+  if (latlng) {
+    options.aroundLatLng = latlng
+    options.aroundRadius = radius
   }
   return options
 }
@@ -56,7 +56,9 @@ const SearchPage = () => {
   const { query, isReady } = useRouter()
   const [view, setView] = useState<"list" | "map" | "both">("list")
   const [results, setResults] = useState<Product[]>()
-  const { what, type, ll } = query as SearchQuery
+  const { what, ll, r, type } = query as SearchQuery
+
+  const radius = Number(r) || SEARCH_RADIUS[type || "dpt"]
 
   useEffect(() => {
     if (window.innerWidth > 1000) {
@@ -69,10 +71,10 @@ const SearchPage = () => {
       return
     }
     algolia
-      .search<Product>(what || "", getOptions(type, ll))
+      .search<Product>(what || "", getOptions(radius, ll))
       .then(({ hits }) => setResults(hits))
       .catch(handleError)
-  }, [isReady, what, ll, type])
+  }, [isReady, what, radius, ll])
 
   return (
     <Layout title="Recherche" fullWidth loading={!results}>

@@ -38,9 +38,9 @@ const Submit = styled(Button)`
   }
 `
 
-const getType = (types?: string[]): SearchQuery["type"] => {
+const getType = (types?: string[]) => {
   if (!types) {
-    return "city"
+    return "dpt"
   }
   if (types.includes("administrative_area_level_1")) {
     return "region"
@@ -51,11 +51,17 @@ const getType = (types?: string[]): SearchQuery["type"] => {
   return "city"
 }
 
+const ZOOM = {
+  city: 11,
+  dpt: 8,
+  region: 6,
+}
+
 interface Props {
   className?: string
 }
 
-const INITIAL_QUERY: SearchQuery = { what: "", where: "", ll: "", type: "" }
+const INITIAL_QUERY: SearchQuery = { what: "", where: "" }
 
 const getQuery = (previous: SearchQuery, routerQuery: ParsedUrlQuery) => {
   const newQuery: SearchQuery = {}
@@ -94,11 +100,14 @@ const SearchBar = ({ className }: Props) => {
           return
         }
         const { location } = place.geometry
+        const type = getType(place.types)
+        const zoom = ZOOM[type]
         setQuery((previous) => ({
-          ...previous,
+          what: previous.what,
           where: place.name,
           ll: `${location.lat()},${location.lng()}`,
-          type: getType(place.types),
+          type,
+          z: String(zoom),
         }))
       })
     })

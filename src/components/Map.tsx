@@ -8,19 +8,23 @@ import { useRouter } from "next/router"
 
 import PlacePopup from "src/components/PlacePopup"
 import { LAYOUT } from "src/constants"
-import { getBounds } from "src/helpers/map"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
-const ZOOM = {
-  city: 12,
-  dpt: 9,
-  region: 7,
-}
+const MAP_STYLE = "mapbox://styles/mapbox/streets-v11"
+const DEFAULT_COORDS: Coordinates = [1.7, 46.7] // France
+const DEFAULT_ZOOM = 5
 
 const POPUP_OPTIONS: PopupOptions = {
   offset: 15,
   maxWidth: LAYOUT.mapPopupWidth + "px",
+}
+
+const getCoordinates = (ll?: string) => {
+  if (!ll) {
+    return DEFAULT_COORDS
+  }
+  return ll.split(",").reverse().map(Number) as Coordinates
 }
 
 const Container = styled.div`
@@ -39,7 +43,7 @@ interface MapProps {
 }
 
 interface Place {
-  coordinates: [number, number]
+  coordinates: Coordinates
   products: Product[]
 }
 
@@ -49,36 +53,50 @@ const Mapbox = ({ products }: MapProps) => {
   const popupRef = useRef<HTMLDivElement>(null)
   const [loaded, setLoaded] = useState(false)
   const [placePopup, setPlacePopup] = useState<Place>()
-  const { query } = useRouter()
-  const { type, ll } = query as SearchQuery
-  const placeCoords = ll ? (ll.split(",").reverse().map(Number) as [number, number]) : null
-  const bounds = getBounds(products.map(({ _geoloc }) => [_geoloc.lng, _geoloc.lat]))
+  const { query, replace } = useRouter()
+  const { type, ll, z } = query as SearchQuery
+  const center = getCoordinates(ll)
+  const zoom = Number(z) || DEFAULT_ZOOM
 
   useEffect(() => {
     if (!mapRef.current) {
       return
     }
-    if (bounds) {
-      mapRef.current.fitBounds(bounds, {
-        maxZoom: 12,
-        padding: 50,
-      })
-    } else if (placeCoords) {
-      mapRef.current.fitBounds([placeCoords, placeCoords], {
-        zoom: ZOOM[type || "city"],
-      })
+    if (center && z) {
+      mapRef.current.fitBounds([center, center], { zoom })
     }
-  }, [loaded, type, JSON.stringify(bounds), JSON.stringify(placeCoords)]) // eslint-disable-line
+  }, [loaded, type, zoom, ll]) // eslint-disable-line
+
+  const handleMove = () => {
+    const map = mapRef.current as Map
+    const { lat, lng } = map.getCenter()
+    const bounds = map.getBounds()
+    const diagonal = bounds.getNorthWest().distanceTo(bounds.getSouthEast())
+    const radius = Math.round(diagonal / 2)
+
+    // TODO: fix "what" var scope
+    console.log("move", radius, query)
+
+    replace({
+      query: {
+        ...query,
+        ll: `${lat.toFixed(4)},${lng.toFixed(4)}`,
+        z: map.getZoom(),
+        r: radius,
+      },
+    })
+  }
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
       return
     }
+
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [1.7, 46.7],
-      zoom: 5,
+      style: MAP_STYLE,
+      center,
+      zoom,
     })
 
     map.on("load", () => {
@@ -108,12 +126,6 @@ const Mapbox = ({ products }: MapProps) => {
       })
       setLoaded(true)
     })
-
-    const handleMove = () => {
-      const center = map.getCenter()
-      const zoom = map.getZoom()
-      console.log(center, zoom) // TODO: update search
-    }
 
     map.on("zoomend", handleMove)
     map.on("dragend", handleMove)
