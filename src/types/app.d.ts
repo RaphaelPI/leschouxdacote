@@ -10,10 +10,12 @@ interface LostPassword {
 type ParsedUrlQueryInput = import("querystring").ParsedUrlQueryInput
 
 interface SearchQuery extends ParsedUrlQueryInput {
-  what?: string
-  where?: string
-  ll?: string
-  type?: "city" | "dpt" | "region" | ""
+  what?: string // product
+  where?: string // place
+  type?: "city" | "dpt" | "region"
+  ll?: string // lat,lon
+  r?: string // radius
+  z?: string // zoom
 }
 
 interface Place {
@@ -27,3 +29,6 @@ interface Publish {
   id: Product["id"]
   days?: number
 }
+
+type Coordinates = [number, number]
+type Bounds = [number, number, number, number]

@@ -1,4 +1,4 @@
-export const getBounds = (list: [number, number][]): null | [number, number, number, number] => {
+export const getBounds = (list: Coordinates[]): null | Bounds => {
   if (!list.length) {
     return null
   }
