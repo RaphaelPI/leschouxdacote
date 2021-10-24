@@ -57,6 +57,8 @@ const Mapbox = ({ products }: MapProps) => {
   const { type, ll, z } = query as SearchQuery
   const center = getCoordinates(ll)
   const zoom = Number(z) || DEFAULT_ZOOM
+  const queryRef = useRef(query)
+  queryRef.current = query
 
   useEffect(() => {
     if (!mapRef.current) {
@@ -66,26 +68,6 @@ const Mapbox = ({ products }: MapProps) => {
       mapRef.current.fitBounds([center, center], { zoom })
     }
   }, [loaded, type, zoom, ll]) // eslint-disable-line
-
-  const handleMove = () => {
-    const map = mapRef.current as Map
-    const { lat, lng } = map.getCenter()
-    const bounds = map.getBounds()
-    const diagonal = bounds.getNorthWest().distanceTo(bounds.getSouthEast())
-    const radius = Math.round(diagonal / 2)
-
-    // TODO: fix "what" var scope
-    console.log("move", radius, query)
-
-    replace({
-      query: {
-        ...query,
-        ll: `${lat.toFixed(4)},${lng.toFixed(4)}`,
-        z: map.getZoom(),
-        r: radius,
-      },
-    })
-  }
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) {
@@ -126,6 +108,22 @@ const Mapbox = ({ products }: MapProps) => {
       })
       setLoaded(true)
     })
+
+    const handleMove = () => {
+      const { lat, lng } = map.getCenter()
+      const bounds = map.getBounds()
+      const diagonal = bounds.getNorthWest().distanceTo(bounds.getSouthEast())
+      const radius = Math.round(diagonal / 2)
+
+      replace({
+        query: {
+          ...queryRef.current,
+          ll: `${lat.toFixed(4)},${lng.toFixed(4)}`,
+          z: map.getZoom().toFixed(4),
+          r: radius,
+        },
+      })
+    }
 
     map.on("zoomend", handleMove)
     map.on("dragend", handleMove)
