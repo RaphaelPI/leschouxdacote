@@ -1,5 +1,3 @@
-import type { ParsedUrlQuery } from "querystring"
-
 import { ChangeEvent, useState, FormEvent, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
@@ -61,23 +59,13 @@ interface Props {
   className?: string
 }
 
-const INITIAL_QUERY: SearchQuery = { what: "", where: "" }
-
-const getQuery = (previous: SearchQuery, routerQuery: ParsedUrlQuery) => {
-  const newQuery: SearchQuery = {}
-  for (const key in INITIAL_QUERY) {
-    newQuery[key] = routerQuery[key] || previous[key] || ""
-  }
-  return newQuery
-}
-
 const SearchBar = ({ className }: Props) => {
   const router = useRouter()
 
-  const [query, setQuery] = useState<SearchQuery>(getQuery(INITIAL_QUERY, router.query))
+  const [query, setQuery] = useState<SearchQuery>(router.query)
 
   useEffect(() => {
-    setQuery((previous) => getQuery(previous, router.query))
+    setQuery(router.query)
   }, [router.query])
 
   const autocomplete = useRef<google.maps.places.Autocomplete>()
@@ -142,8 +130,14 @@ const SearchBar = ({ className }: Props) => {
   return (
     <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
       <div>
-        <SearchInput name="what" value={query.what} onChange={handleChange} placeholder="Que recherchez-vous ?" />
-        <SearchInput name="where" value={query.where} onChange={handleChange} placeholder="Où ?" ref={handleRef} />
+        <SearchInput name="what" value={query.what || ""} onChange={handleChange} placeholder="Que recherchez-vous ?" />
+        <SearchInput
+          name="where"
+          value={query.where || ""}
+          onChange={handleChange}
+          placeholder="Où ?"
+          ref={handleRef}
+        />
       </div>
       <Submit $variant="green" type="submit">
         <span>Rechercher</span>
