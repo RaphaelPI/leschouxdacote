@@ -3,7 +3,7 @@ import type { Product } from "src/types/model"
 import { useEffect, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import "mapbox-gl/dist/mapbox-gl.css"
-import mapboxgl, { AnyLayer, GeoJSONSource, Map, PopupOptions } from "mapbox-gl"
+import mapboxgl, { AnyLayer, GeoJSONSource, Map, MapboxEvent, PopupOptions } from "mapbox-gl"
 import MapboxLanguage from "@mapbox/mapbox-gl-language"
 import { useRouter } from "next/router"
 
@@ -77,6 +77,8 @@ const Container = styled.div`
   }
 `
 
+type MoveEvent = MapboxEvent<MouseEvent | TouchEvent | WheelEvent | undefined>
+
 interface MapProps {
   products: Product[]
 }
@@ -146,7 +148,11 @@ const Mapbox = ({ products }: MapProps) => {
       setLoaded(true)
     })
 
-    const handleMove = () => {
+    const handleMove = ({ originalEvent }: MoveEvent) => {
+      if (!originalEvent) {
+        // weird shit => ignore
+        return
+      }
       const { lat, lng } = map.getCenter()
       const bounds = map.getBounds()
       const diagonal = bounds.getNorthWest().distanceTo(bounds.getSouthEast())
