@@ -3,7 +3,8 @@ import type { Product } from "src/types/model"
 import { useEffect, useRef, useState } from "react"
 import styled from "@emotion/styled"
 import "mapbox-gl/dist/mapbox-gl.css"
-import mapboxgl, { GeoJSONSource, Map, PopupOptions } from "mapbox-gl"
+import mapboxgl, { AnyLayer, GeoJSONSource, Map, PopupOptions } from "mapbox-gl"
+import MapboxLanguage from "@mapbox/mapbox-gl-language"
 import { useRouter } from "next/router"
 
 import PlacePopup from "src/components/PlacePopup"
@@ -12,12 +13,49 @@ import { LAYOUT } from "src/constants"
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
 const MAP_STYLE = "mapbox://styles/mapbox/streets-v11"
+const NAV_OPTIONS = { showCompass: false }
+const MAP_LOCALE = {
+  "NavigationControl.ZoomIn": "Zoomer",
+  "NavigationControl.ZoomOut": "Dézoomer",
+}
+const ANIMATION_DURATION = 1000
 const DEFAULT_COORDS: Coordinates = [1.7, 46.7] // France
 const DEFAULT_ZOOM = 5
-
+const MARKER_NAME = "marker"
+const MARKER_URI = "/marker.png"
+const SOURCE_NAME = "source"
+const MARKER_LAYER: AnyLayer = {
+  id: "layer",
+  type: "symbol",
+  source: SOURCE_NAME,
+  layout: {
+    "icon-image": MARKER_NAME,
+    "icon-size": 0.5,
+  },
+}
 const POPUP_OPTIONS: PopupOptions = {
   offset: 15,
   maxWidth: LAYOUT.mapPopupWidth + "px",
+}
+
+type Places = Record<Product["placeId"], Place>
+const getFeatures = (places: Places) => {
+  return {
+    type: "FeatureCollection",
+    features: Object.keys(places).map((placeId) => {
+      const place = places[placeId]
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: place.coordinates,
+        },
+        properties: {
+          place,
+        },
+      }
+    }),
+  } as GeoJSON.FeatureCollection
 }
 
 const getCoordinates = (ll?: string) => {
@@ -30,7 +68,8 @@ const getCoordinates = (ll?: string) => {
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  .mapboxgl-control-container {
+  .mapboxgl-ctrl-bottom-left,
+  .mapboxgl-ctrl-bottom-right {
     display: none;
   }
   .mapboxgl-popup-content {
@@ -64,8 +103,8 @@ const Mapbox = ({ products }: MapProps) => {
     if (!mapRef.current) {
       return
     }
-    if (center && z) {
-      mapRef.current.fitBounds([center, center], { zoom })
+    if (center && zoom) {
+      mapRef.current.fitBounds([center, center], { zoom, duration: ANIMATION_DURATION })
     }
   }, [loaded, type, zoom, ll]) // eslint-disable-line
 
@@ -79,33 +118,31 @@ const Mapbox = ({ products }: MapProps) => {
       style: MAP_STYLE,
       center,
       zoom,
+      locale: MAP_LOCALE,
     })
 
+    map.addControl(new mapboxgl.NavigationControl(NAV_OPTIONS))
+
+    const language = new MapboxLanguage()
+    map.addControl(language)
+
     map.on("load", () => {
-      map.loadImage("/marker.png", (error, image) => {
+      map.loadImage(MARKER_URI, (error, image) => {
         if (error) {
           throw error
         }
         if (image) {
-          map.addImage("marker", image)
+          map.addImage(MARKER_NAME, image)
         }
       })
-      map.addSource("source", {
+      map.addSource(SOURCE_NAME, {
         type: "geojson",
         data: {
           type: "FeatureCollection",
           features: [],
         },
       })
-      map.addLayer({
-        id: "layer",
-        type: "symbol",
-        source: "source",
-        layout: {
-          "icon-image": "marker",
-          "icon-size": 0.5,
-        },
-      })
+      map.addLayer(MARKER_LAYER)
       setLoaded(true)
     })
 
@@ -154,7 +191,7 @@ const Mapbox = ({ products }: MapProps) => {
       return
     }
 
-    const places: Record<Product["placeId"], Place> = {}
+    const places: Places = {}
     products.forEach((product) => {
       if (!places[product.placeId]) {
         places[product.placeId] = {
@@ -165,23 +202,8 @@ const Mapbox = ({ products }: MapProps) => {
       places[product.placeId].products.push(product)
     })
 
-    const source = mapRef.current.getSource("source") as GeoJSONSource
-    source.setData({
-      type: "FeatureCollection",
-      features: Object.keys(places).map((placeId) => {
-        const place = places[placeId]
-        return {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: place.coordinates,
-          },
-          properties: {
-            place,
-          },
-        }
-      }),
-    })
+    const source = mapRef.current.getSource(SOURCE_NAME) as GeoJSONSource
+    source.setData(getFeatures(places))
   }, [products, loaded])
 
   useEffect(() => {
