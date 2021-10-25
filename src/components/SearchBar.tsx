@@ -93,8 +93,8 @@ const SearchBar = ({ className }: Props) => {
         setQuery((previous) => ({
           what: previous.what,
           where: place.name,
-          ll: `${location.lat()},${location.lng()}`,
           type,
+          ll: `${location.lat()},${location.lng()}`,
           z: String(zoom),
         }))
       })
@@ -103,11 +103,16 @@ const SearchBar = ({ className }: Props) => {
 
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = currentTarget
-    setQuery({
+    const newQuery = {
       ...query,
       [name]: value,
-      ll: name === "where" ? "" : query.ll,
-    })
+    }
+    if (name === "where") {
+      delete newQuery.type
+      delete newQuery.ll
+      delete newQuery.z
+    }
+    setQuery(newQuery)
   }
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
