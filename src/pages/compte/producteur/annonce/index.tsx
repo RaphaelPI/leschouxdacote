@@ -15,6 +15,7 @@ import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
 import { useObjectQuery } from "src/helpers/firebase"
 import { loadGmaps } from "src/helpers/scripts"
+import TagsInput from "src/components/TagsInput"
 
 // https://sharp.pixelplumbing.com/#formats
 const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]
@@ -153,6 +154,7 @@ const EditProductPage = () => {
           ref={handleRef}
         />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
+        <TagsInput name="_tags" label="Mots-clés" />
         {data && <Photo src={data.photo} />}
         <TextInput
           name="photo"

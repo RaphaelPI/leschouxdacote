@@ -72,6 +72,7 @@ interface Product extends Identified {
   price: number // total, in cents
   address: string
   _geoloc: Geoloc
+  _tags: string[] | null
   placeId: string // from Google places
   city: string
   description: string
@@ -98,4 +99,5 @@ interface ProductPayload extends Omit<RegisteringProduct, "created" | "updated" 
   days: string
   lat: string
   lng: string
+  _tags: any
 }

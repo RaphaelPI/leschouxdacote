@@ -63,26 +63,6 @@ const Tooltip = styled.div`
   font-size: 10px;
 `
 
-// TODO: use standard tooltip
-// const useStyles = makeStyles(() => ({
-//   deleteIcon: {
-//     cursor: "pointer",
-//     padding: "10px",
-//     borderRadius: "50%",
-//     width: "40px",
-//     display: "flex",
-//     justifyContent: "center",
-//     "&:hover": {
-//       backgroundColor: "#DF3D3D1A",
-//     },
-//   },
-//   activeSwitch: {
-//     "&:hover + $ActiveMessage ": {
-//       display: "block",
-//     },
-//   },
-// }))
-
 interface TableItem extends FollowedProducer {
   uid: string
 }
