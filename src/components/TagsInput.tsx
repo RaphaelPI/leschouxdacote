@@ -45,10 +45,6 @@ const Suggestions = styled.div`
   }
 `
 
-interface TagRecord {
-  objectID: string
-}
-
 interface Props {
   label?: string
 }
@@ -56,7 +52,7 @@ interface Props {
 const TagsInput = ({ label }: Props) => {
   const { register, getValues, setValue, watch } = useFormContext()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [suggestions, setSuggestions] = useState<TagRecord[]>([])
+  const [suggestions, setSuggestions] = useState<QuerySuggestion[]>([])
   register("_tags")
   const values: string[] = watch("_tags") || []
 
@@ -82,8 +78,8 @@ const TagsInput = ({ label }: Props) => {
       reset()
       return
     }
-    const { hits } = await suggestionsIndex.search<TagRecord>(text, SEARCH_OPTIONS)
-    setSuggestions(hits.filter((value) => !values.includes(value.objectID)))
+    const { hits } = await suggestionsIndex.search<QuerySuggestion>(text, SEARCH_OPTIONS)
+    setSuggestions(hits.filter((value) => !values.includes(value.query)))
   }
 
   const handleKey = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -99,8 +95,8 @@ const TagsInput = ({ label }: Props) => {
     reset()
   }
 
-  const handleSelect = (objectID: string) => () => {
-    add(objectID)
+  const handleSelect = (tag: string) => () => {
+    add(tag)
     reset()
   }
 
@@ -126,13 +122,14 @@ const TagsInput = ({ label }: Props) => {
         onChange={handleChange}
         ref={inputRef}
         onKeyPress={handleKey}
-        placeholder="Exemples : légume, miel, fromage…" // TODO: get examples from Algolia
+        placeholder="Exemples : légume, miel, fromage… (ajoutez en tapant Entrée)"
+        autoComplete="off"
       />
       {suggestions.length > 0 && (
         <Suggestions>
-          {suggestions.map(({ objectID }) => (
-            <button key={objectID} onClick={handleSelect(objectID)} type="button">
-              {objectID}
+          {suggestions.map(({ objectID, query }) => (
+            <button key={objectID} onClick={handleSelect(query)} type="button">
+              {query}
             </button>
           ))}
         </Suggestions>
