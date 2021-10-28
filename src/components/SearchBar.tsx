@@ -1,16 +1,24 @@
-import { ChangeEvent, useState, FormEvent, useRef, useEffect } from "react"
+import { ChangeEvent, KeyboardEvent, useState, FormEvent, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
 
 import SearchInput from "src/components/SearchInput"
 import { Button } from "src/components/Button"
 import { loadGmaps } from "src/helpers/scripts"
+import { suggestionsIndex } from "src/helpers/algolia"
 import { LAYOUT } from "src/constants"
 
 import SearchIcon from "src/assets/search.svg"
 
 const Form = styled.form`
   position: relative;
+`
+const Suggestions = styled.div`
+  width: 50%;
+  .pac-item-query {
+    font-weight: 400;
+    padding-left: 5px;
+  }
 `
 const Submit = styled(Button)`
   width: 25px;
@@ -67,6 +75,8 @@ const SearchBar = ({ className }: Props) => {
   const router = useRouter()
 
   const [query, setQuery] = useState<SearchQuery>(router.query)
+  const [focus, setFocus] = useState(false)
+  const [suggestions, setSuggestions] = useState<QuerySuggestion[]>([])
 
   useEffect(() => {
     setQuery(router.query)
@@ -89,6 +99,9 @@ const SearchBar = ({ className }: Props) => {
       autocomplete.current.addListener("place_changed", () => {
         const place = autocomplete.current?.getPlace()
         if (!place || !place.geometry) {
+          setQuery((previous) => ({
+            what: previous.what,
+          }))
           return
         }
         const { location } = place.geometry
@@ -105,6 +118,15 @@ const SearchBar = ({ className }: Props) => {
     })
   }
 
+  const handleFocus = () => {
+    setFocus(true)
+  }
+  const handleBlur = () => {
+    setTimeout(() => {
+      setFocus(false)
+    }, 100)
+  }
+
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = currentTarget
     const newQuery = {
@@ -117,6 +139,30 @@ const SearchBar = ({ className }: Props) => {
       delete newQuery.z
     }
     setQuery(newQuery)
+    if (name === "what") {
+      if (value) {
+        suggestionsIndex.search<QuerySuggestion>(value).then((result) => {
+          setSuggestions(result.hits)
+        })
+      } else {
+        setSuggestions([])
+      }
+    }
+  }
+
+  const handleSuggestion = (tag: string) => () => {
+    setQuery((previous) => ({
+      ...previous,
+      what: tag,
+    }))
+    setSuggestions([])
+    input.current?.focus()
+  }
+
+  const handleKey = (event: KeyboardEvent) => {
+    if (event.key === "Enter" && !query.ll) {
+      event.preventDefault()
+    }
   }
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -124,9 +170,12 @@ const SearchBar = ({ className }: Props) => {
     if (!input.current) {
       return
     }
-    if (!query.ll && input.current.value.length > 0) {
-      input.current.value = ""
-      query.where = ""
+    if (query.where && !query.ll) {
+      setQuery((previous) => ({
+        ...previous,
+        where: "",
+      }))
+      input.current.focus()
       return
     }
 
@@ -139,13 +188,31 @@ const SearchBar = ({ className }: Props) => {
   return (
     <Form method="GET" action="/recherche" onSubmit={handleSearch} className={className}>
       <div>
-        <SearchInput name="what" value={query.what || ""} onChange={handleChange} placeholder="Que recherchez-vous ?" />
+        <SearchInput
+          name="what"
+          value={query.what || ""}
+          onChange={handleChange}
+          placeholder="Que recherchez-vous ?"
+          autoComplete="off"
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        {focus && suggestions.length > 0 && (
+          <Suggestions className="pac-container">
+            {suggestions.map((hit) => (
+              <div className="pac-item" key={hit.objectID} onClick={handleSuggestion(hit.query)}>
+                <span className="pac-item-query">{hit.query}</span>
+              </div>
+            ))}
+          </Suggestions>
+        )}
         <SearchInput
           name="where"
           value={query.where || ""}
           onChange={handleChange}
           placeholder="Où ?"
           ref={handleRef}
+          onKeyDown={handleKey}
         />
       </div>
       <Submit $variant="green" type="submit">
