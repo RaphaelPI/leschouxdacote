@@ -54,6 +54,7 @@ export const SEARCH_RADIUS = {
   city: 50_000,
   dpt: 120_000,
   region: 300_000,
+  country: 500_000,
 }
 
 // TODO: https://vercel.com/docs/concepts/next.js/incremental-static-regeneration

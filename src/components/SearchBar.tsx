@@ -46,10 +46,14 @@ const getType = (types?: string[]) => {
   if (types.includes("administrative_area_level_2")) {
     return "dpt"
   }
+  if (types.includes("country")) {
+    return "country"
+  }
   return "city"
 }
 
 const ZOOM = {
+  country: 5,
   city: 11,
   dpt: 8,
   region: 6,
