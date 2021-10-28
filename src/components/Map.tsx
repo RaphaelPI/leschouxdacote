@@ -42,8 +42,8 @@ type Places = Record<Product["placeId"], Place>
 const getFeatures = (places: Places) => {
   return {
     type: "FeatureCollection",
-    features: Object.keys(places).map((placeId) => {
-      const place = places[placeId]
+    features: Object.keys(places).map((id) => {
+      const place = places[id]
       return {
         type: "Feature",
         geometry: {
@@ -63,6 +63,12 @@ const getCoordinates = (ll?: string) => {
     return DEFAULT_COORDS
   }
   return ll.split(",").reverse().map(Number) as Coordinates
+}
+
+const getPlaceId = ({ _geoloc }: Product) => {
+  // because Google's placeId is unstable
+  // https://developers.google.com/maps/documentation/places/web-service/place-id
+  return `${_geoloc.lng.toFixed(4)},${_geoloc.lat.toFixed(4)}`
 }
 
 const Container = styled.div`
@@ -161,8 +167,8 @@ const Mapbox = ({ products }: MapProps) => {
       replace({
         query: {
           ...queryRef.current,
-          ll: `${lat.toFixed(4)},${lng.toFixed(4)}`,
-          z: map.getZoom().toFixed(4),
+          ll: `${lat.toFixed(6)},${lng.toFixed(6)}`,
+          z: map.getZoom().toFixed(6),
           r: radius,
         },
       })
@@ -199,13 +205,14 @@ const Mapbox = ({ products }: MapProps) => {
 
     const places: Places = {}
     products.forEach((product) => {
-      if (!places[product.placeId]) {
-        places[product.placeId] = {
+      const id = getPlaceId(product)
+      if (!places[id]) {
+        places[id] = {
           coordinates: [product._geoloc.lng, product._geoloc.lat],
           products: [],
         }
       }
-      places[product.placeId].products.push(product)
+      places[id].products.push(product)
     })
 
     const source = mapRef.current.getSource(SOURCE_NAME) as GeoJSONSource
