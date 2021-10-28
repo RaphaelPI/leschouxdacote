@@ -7,11 +7,12 @@ import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
-import { COLORS, BIO, LAYOUT, SIZES, ISR_REVALIDATE } from "src/constants"
+import { COLORS, LAYOUT, SIZES, ISR_REVALIDATE } from "src/constants"
 import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink, formatPhone } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { Text } from "src/components/Text"
 import Products from "src/components/Products"
+import Tag, { FloatingTag } from "src/components/Tag"
 import Link from "src/components/Link"
 import FollowButton from "src/components/FollowButton"
 import ProductCard from "src/cards/ProductCard"
@@ -165,16 +166,6 @@ const DescriptionTitle = styled.h3`
     margin-top: 0;
   }
 `
-const Tag = styled.strong`
-  display: inline-block;
-  font-weight: normal;
-  background-color: ${COLORS.green};
-  color: ${COLORS.white};
-  box-shadow: 0px 3px 3px ${COLORS.shadow.light};
-  border-radius: 12px;
-  margin: 4px 12px 8px 0;
-  padding: 4px 12px;
-`
 
 interface Params extends ParsedUrlQuery {
   id: string
@@ -212,6 +203,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             <ProductSection>
               <ImageContainer>
                 <img src={product.photo} alt={product.title} />
+                {product.bio && <FloatingTag>Bio / raisonné</FloatingTag>}
               </ImageContainer>
               <ProductInfo>
                 <ProductTitle>{product.title}</ProductTitle>
@@ -249,7 +241,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
                 <>
                   <DescriptionTitle>Mots-clés</DescriptionTitle>
                   {product._tags.map((tag) => (
-                    <Tag key={tag}>{tag === BIO ? "Bio ou raisonné" : tag}</Tag>
+                    <Tag key={tag}>{tag}</Tag>
                   ))}
                 </>
               )}

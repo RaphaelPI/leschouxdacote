@@ -5,6 +5,7 @@ import styled from "@emotion/styled"
 
 import { COLORS } from "src/constants"
 import Link from "src/components/Link"
+import { FloatingTag } from "src/components/Tag"
 import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
 import { useHover } from "src/helpers/hover"
 import { isFollowed } from "src/helpers/user"
@@ -15,6 +16,10 @@ import IconHeart from "src/assets/icon-heart.svg"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
+`
+const CardLink = styled(Link)`
+  position: relative;
+  display: block;
 `
 const Image = styled.img`
   display: block;
@@ -101,8 +106,9 @@ export const ProductInfos = ({ product, followButton }: Props) => {
   }
 
   return (
-    <Link href={`/annonce/${product.objectID}`}>
+    <CardLink href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
+      {product.bio && <FloatingTag>Bio / raisonné</FloatingTag>}
       <Content>
         {followButton && (
           <>
@@ -122,7 +128,7 @@ export const ProductInfos = ({ product, followButton }: Props) => {
           </>
         )}
       </Content>
-    </Link>
+    </CardLink>
   )
 }
 
