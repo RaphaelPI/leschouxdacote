@@ -119,7 +119,10 @@ export const ProductInfos = ({ product, followButton }: Props) => {
 
         <Title $margin={followButton}>{product.title}</Title>
         <Producer>{product.producer}</Producer>
-        <Location>{product.city}</Location>
+        <Location>
+          {product.city}
+          {product.dpt && <> ({product.dpt})</>}
+        </Location>
         <Price>{formatPrice(product)}</Price>
         {product.quantity && product.unit && (
           <>

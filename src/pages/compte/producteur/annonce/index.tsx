@@ -47,7 +47,7 @@ const EditProductPage = () => {
 
   useEffect(() => {
     if (!place && data) {
-      setPlace({ id: data.placeId, city: data.city, lat: data._geoloc.lat, lng: data._geoloc.lng })
+      setPlace({ id: data.placeId, city: data.city, dpt: data.dpt, lat: data._geoloc.lat, lng: data._geoloc.lng })
     }
   }, [place, data])
 
@@ -75,6 +75,7 @@ const EditProductPage = () => {
     payload.append("lat", String(place.lat))
     payload.append("lng", String(place.lng))
     payload.append("city", place.city)
+    payload.append("dpt", String(place.dpt))
     payload.append("uid", (authUser as AuthUser).uid)
 
     if (productId) {
@@ -109,7 +110,8 @@ const EditProductPage = () => {
         return
       }
       const city = res.address_components.find((c) => c.types.includes("locality"))
-      if (!city) {
+      const postCode = res.address_components.find((c) => c.types.includes("postal_code"))
+      if (!city || !postCode) {
         setPlace(null)
         return
       }
@@ -119,6 +121,7 @@ const EditProductPage = () => {
         lat: location.lat(),
         lng: location.lng(),
         city: city.short_name,
+        dpt: Number(postCode.short_name.substr(0, 2)),
       })
     })
   }
