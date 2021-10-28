@@ -8,15 +8,18 @@ import { COLORS } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import CustomSwitch from "src/components/CustomSwitch"
 import Link from "src/components/Link"
-import { getMapsLink } from "src/helpers/text"
+import { getMapsLink, s } from "src/helpers/text"
 
 import DeleteIcon from "src/assets/delete.svg"
 
 const Container = styled.div`
-  padding: 4rem;
+  padding: 32px 4rem;
   @media (max-width: 900px) {
     padding: 30px 10px;
   }
+`
+const Title = styled.h1`
+  text-align: center;
 `
 const Card = styled.div`
   background-color: white;
@@ -29,7 +32,7 @@ const CardTitle = styled.h2`
   font-size: 20px;
 `
 const Content = styled.div`
-  padding: 20px 0px 20px 20px;
+  padding: 0 0 16px 0;
   @media (max-width: 900px) {
     padding: 0;
   }
@@ -111,11 +114,14 @@ const AlertsPage = () => {
   return (
     <Layout title="Mes alertes" noindex fullWidth>
       <Container>
-        <h1>Mes alertes</h1>
+        <Title>Mes alertes</Title>
         <Card>
           <CardTitle>Liste des producteurs favoris</CardTitle>
           <Content>
-            <Subtitle>Vous avez {numFollowedProducers} producteur(s) artisan(s) en favoris</Subtitle>
+            <Subtitle>
+              Vous avez {numFollowedProducers} producteur{s(numFollowedProducers)} artisan{s(numFollowedProducers)} en
+              favoris
+            </Subtitle>
             {numFollowedProducers > 0 && (
               <TableWrapper>
                 <Table size="small">

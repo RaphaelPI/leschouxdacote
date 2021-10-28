@@ -2,23 +2,30 @@ import type { Product } from "src/types/model"
 
 import { useState } from "react"
 import styled from "@emotion/styled"
+import FavoriteIcon from "@mui/icons-material/FavoriteBorder"
 
 import Layout from "src/layout"
+import AccountProduct from "src/components/AccountProduct"
 import { useUser } from "src/helpers/auth"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
-import AccountProduct from "src/components/AccountProduct"
+import { s } from "src/helpers/text"
 
 type Tab = "all" | "online" | "disabled"
 
 const Title = styled.h1`
   text-align: center;
-  @media (max-width: ${LAYOUT.mobile}px) {
-    display: none;
+`
+const Subtitle = styled.h2`
+  text-align: center;
+  margin: -12px 0 24px;
+  svg {
+    vertical-align: -4px;
+    margin-right: 8px;
   }
 `
 const Tabs = styled.div`
-  margin-bottom: 20px;
+  margin: 40px 0 20px;
 `
 const Tab = styled.button<{ $active: boolean }>`
   color: ${({ $active }) => ($active ? COLORS.green : COLORS.dark)};
@@ -26,6 +33,7 @@ const Tab = styled.button<{ $active: boolean }>`
   font-size: ${SIZES.large}px;
   @media (max-width: ${LAYOUT.mobile}px) {
     margin-bottom: 8px;
+    display: block;
   }
   @media (min-width: ${LAYOUT.mobile}px) {
     &:not(:last-of-type) {
@@ -48,6 +56,8 @@ const MyAdsPage = () => {
 
   const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.objectID] : false, true)
 
+  const followers = producer?.followers ? Object.keys(producer.followers).length : null
+
   const now = Date.now()
   const tabsData: Record<Tab, Product[]> = {
     all: data,
@@ -58,6 +68,12 @@ const MyAdsPage = () => {
   return (
     <Layout title="Mes annonces" noindex>
       <Title>Mes annonces</Title>
+      {followers && (
+        <Subtitle>
+          <FavoriteIcon />
+          {followers} abonné{s(followers)}
+        </Subtitle>
+      )}
       <Tabs>
         {TABS.map(({ id, title }) => (
           <Tab key={id} $active={id === tab} onClick={() => setTab(id)}>

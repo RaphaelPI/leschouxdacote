@@ -28,6 +28,9 @@ interface FollowedProducer {
   name?: string
   address?: string
 }
+interface Follower {
+  emailAlert: boolean
+}
 
 interface User extends Identified {
   firstname: string
@@ -42,6 +45,7 @@ interface User extends Identified {
   name?: string // company name
   description?: string
   address?: string
+  followers?: Record<string, Follower>
 }
 
 interface RegisteringUser extends Registering<User> {
