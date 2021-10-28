@@ -52,11 +52,19 @@ const PlacePopup = forwardRef<HTMLDivElement, PlaceProps>(({ products }, ref) =>
   const [index, setIndex] = useState(0)
   const { setProduct } = useHover()
 
-  const current = products[index].objectID
+  useEffect(() => {
+    setIndex(0)
+  }, [products])
+
+  const current = products[index]?.objectID
 
   useEffect(() => {
     setProduct(current)
   }, [setProduct, current])
+
+  if (!current) {
+    return <PopupContent ref={ref} />
+  }
 
   return (
     <PopupContent ref={ref}>
