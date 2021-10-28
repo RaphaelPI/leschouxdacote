@@ -72,6 +72,7 @@ interface Product extends Identified {
   price: number // total, in cents
   address: string
   _geoloc: Geoloc
+  bio: boolean | null
   _tags: string[] | null
   placeId: string // from Google places
   city: string

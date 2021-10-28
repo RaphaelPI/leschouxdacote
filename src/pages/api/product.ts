@@ -103,6 +103,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       price,
       address: fields.address,
       _geoloc: new GeoPoint(position.lat, position.lng),
+      bio: Boolean(fields.bio),
       _tags: fields._tags ? fields._tags.split(",") : null,
       placeId: fields.placeId,
       city: fields.city,

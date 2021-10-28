@@ -2,10 +2,10 @@ import { useState, ChangeEvent, useRef, KeyboardEvent } from "react"
 import { useFormContext } from "react-hook-form"
 import styled from "@emotion/styled"
 
-import { Label, ErrorMessage } from "src/components/Form"
+import { Label } from "src/components/Form"
 import CustomSwitch from "src/components/CustomSwitch"
 import { tagsIndex } from "src/helpers/algolia"
-import { COLORS, BIO } from "src/constants"
+import { COLORS } from "src/constants"
 
 const Tag = styled.span`
   display: inline-block;
@@ -46,40 +46,29 @@ interface TagRecord {
 }
 
 interface Props {
-  name: string
   label?: string
 }
 
-const TagsInput = ({ name, label }: Props) => {
-  const { register, formState, setValue, watch } = useFormContext()
+const TagsInput = ({ label }: Props) => {
+  const { register, getValues, setValue, watch } = useFormContext()
   const inputRef = useRef<HTMLInputElement>(null)
   const [suggestions, setSuggestions] = useState<TagRecord[]>([])
-  const error = formState.errors[name]
-  register(name)
-  const values: string[] = watch(name) || []
+  register("_tags")
+  const values: string[] = watch("_tags") || []
 
+  const add = (value: string) => {
+    setValue("_tags", [...values, value])
+  }
+  const remove = (value: string) => {
+    setValue(
+      "_tags",
+      values.filter((val) => val !== value)
+    )
+  }
   const reset = () => {
     setSuggestions([])
     if (inputRef.current) {
       inputRef.current.value = ""
-    }
-  }
-
-  const add = (value: string) => {
-    setValue(name, [...values, value])
-  }
-  const remove = (value: string) => {
-    setValue(
-      name,
-      values.filter((val) => val !== value)
-    )
-  }
-
-  const handleSwitch = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
-    if (currentTarget.checked) {
-      add(BIO)
-    } else {
-      remove(BIO)
     }
   }
 
@@ -112,29 +101,24 @@ const TagsInput = ({ name, label }: Props) => {
   }
 
   return (
-    <Label $error={Boolean(error)} htmlFor={name}>
+    <Label htmlFor={"_tags"}>
       <div>{label}</div>
       <label>
-        <CustomSwitch checked={values.includes(BIO)} onChange={handleSwitch} /> Bio ou agriculture raisonnée
+        <CustomSwitch name="bio" defaultChecked={getValues("bio")} /> Bio ou agriculture raisonnée
       </label>
       <div>
-        {values.map((value) => {
-          if (value === BIO) {
-            return null
-          }
-          return (
-            <Tag key={value}>
-              {value}
-              <button type="button" onClick={() => remove(value)}>
-                ×
-              </button>
-            </Tag>
-          )
-        })}
+        {values.map((value) => (
+          <Tag key={value}>
+            {value}
+            <button type="button" onClick={() => remove(value)}>
+              ×
+            </button>
+          </Tag>
+        ))}
       </div>
-      <input type="hidden" name={name} value={values.join(",")} />
+      <input type="hidden" name={"_tags"} value={values.join(",")} />
       <input
-        id={name}
+        id={"_tags"}
         onChange={handleChange}
         ref={inputRef}
         onKeyPress={handleKey}
@@ -149,7 +133,6 @@ const TagsInput = ({ name, label }: Props) => {
           ))}
         </Suggestions>
       )}
-      {error && <ErrorMessage>{error.message}</ErrorMessage>}
     </Label>
   )
 }

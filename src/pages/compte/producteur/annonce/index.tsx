@@ -154,7 +154,7 @@ const EditProductPage = () => {
           ref={handleRef}
         />
         <TextInput name="description" label="Description" required rows={8} maxLength={4000} />
-        <TagsInput name="_tags" label="Mots-clés" />
+        <TagsInput label="Mots-clés" />
         {data && <Photo src={data.photo} />}
         <TextInput
           name="photo"

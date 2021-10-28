@@ -106,7 +106,7 @@ export const Row = styled.div`
   }
 `
 
-export const Label = styled.label<{ $error: boolean }>`
+export const Label = styled.label<{ $error?: boolean }>`
   display: block;
   position: relative;
   margin: 20px 0;
