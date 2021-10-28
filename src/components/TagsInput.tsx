@@ -4,8 +4,12 @@ import styled from "@emotion/styled"
 
 import { Label } from "src/components/Form"
 import CustomSwitch from "src/components/CustomSwitch"
-import { tagsIndex } from "src/helpers/algolia"
+import { suggestionsIndex } from "src/helpers/algolia"
 import { COLORS } from "src/constants"
+
+const SEARCH_OPTIONS = {
+  numericFilters: ["tag_popularity > 1"],
+}
 
 const Tag = styled.span`
   display: inline-block;
@@ -78,7 +82,7 @@ const TagsInput = ({ label }: Props) => {
       reset()
       return
     }
-    const { hits } = await tagsIndex.search<TagRecord>(text)
+    const { hits } = await suggestionsIndex.search<TagRecord>(text, SEARCH_OPTIONS)
     setSuggestions(hits.filter((value) => !values.includes(value.objectID)))
   }
 

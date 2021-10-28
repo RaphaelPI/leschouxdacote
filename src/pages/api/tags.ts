@@ -25,12 +25,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   })
 
-  const updates = Object.keys(tagCounts).map((objectID) => ({
-    objectID,
-    tag_popularity: tagCounts[objectID],
+  const updates = Object.keys(tagCounts).map((tag) => ({
+    objectID: tag,
+    query: tag,
+    tag_popularity: tagCounts[tag],
   }))
 
   suggestionsIndex.partialUpdateObjects(updates, { createIfNotExists: true })
+  suggestionsIndex.setSettings({ numericAttributesForFiltering: ["tag_popularity"] })
 
   res.end()
 }
