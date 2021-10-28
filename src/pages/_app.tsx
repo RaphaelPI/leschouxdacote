@@ -91,9 +91,9 @@ const ErrorComponent = ({ error }: FallbackProps) => (
     <h1>
       <span aria-hidden>🐞</span>
       <br />
-      An error happened
+      Une erreur est survenue
     </h1>
-    <h2>Try reloading the page</h2>
+    <h2>Essayez de recharger la page</h2>
     <code>{String(error)}</code>
   </ErrorContainer>
 )
