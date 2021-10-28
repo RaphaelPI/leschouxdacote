@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { FollowedProducer, User } from "src/types/model"
+import type { FollowedProducer, Follower, User } from "src/types/model"
 
 import { badRequest, respond } from "src/helpers-api"
 import { firestore, getObject, getToken, FieldValue } from "src/helpers-api/firebase"
@@ -24,11 +24,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const fields = req.body as FollowPayload
 
-    const producerId = fields.producerUid
-
-    const producerDoc = await firestore.collection("users").doc(producerId).get()
+    const producerDocRef = firestore.collection("users").doc(fields.producerUid)
+    const producerDoc = await producerDocRef.get()
     if (!producerDoc.exists) {
-      throw new Error("Producer not found: " + producerId)
+      throw new Error("Producer not found: " + fields.producerUid)
     }
     const producer = getObject(producerDoc) as User
 
@@ -49,13 +48,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         name: producer.name, // TODO: keep in sync with name updates (use double data fan-out)
         address: producer.address,
       }
-      await userDocRef.update({
-        [`followedProducers.${fields.producerUid}`]: item,
-      })
+      const follower: Follower = {
+        emailAlert: true,
+      }
+      await Promise.all([
+        userDocRef.update({
+          [`followedProducers.${fields.producerUid}`]: item,
+        }),
+        producerDocRef.update({
+          [`followers.${token.uid}`]: follower,
+        }),
+      ])
     } else {
-      await userDocRef.update({
-        [`followedProducers.${fields.producerUid}`]: FieldValue.delete(),
-      })
+      await Promise.all([
+        userDocRef.update({
+          [`followedProducers.${fields.producerUid}`]: FieldValue.delete(),
+        }),
+        producerDocRef.update({
+          [`followers.${token.uid}`]: FieldValue.delete(),
+        }),
+      ])
     }
 
     return respond(res)
@@ -65,9 +77,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const fields = req.body as EmailPayload
 
     const userDocRef = firestore.collection("users").doc(token.uid)
-    await userDocRef.update({
-      [`followedProducers.${fields.producerUid}.emailAlert`]: fields.active,
-    })
+    const producerDocRef = firestore.collection("users").doc(fields.producerUid)
+
+    await Promise.all([
+      userDocRef.update({
+        [`followedProducers.${fields.producerUid}.emailAlert`]: fields.active,
+      }),
+      producerDocRef.update({
+        [`followers.${token.uid}.emailAlert`]: fields.active,
+      }),
+    ])
 
     return respond(res)
   }

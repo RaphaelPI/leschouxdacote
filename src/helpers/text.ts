@@ -66,3 +66,5 @@ export const ellipsis = (text?: string, max = 20) => {
   }
   return text
 }
+
+export const s = (num: number) => (num > 1 ? "s" : "")
