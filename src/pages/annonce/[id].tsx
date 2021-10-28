@@ -7,7 +7,7 @@ import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
-import { COLORS, LAYOUT, SIZES, ISR_REVALIDATE } from "src/constants"
+import { COLORS, BIO, LAYOUT, SIZES, ISR_REVALIDATE } from "src/constants"
 import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink, formatPhone } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { Text } from "src/components/Text"
@@ -158,11 +158,22 @@ const DescriptionSection = styled.section`
     padding: 30px 10px;
   }
 `
-
 const DescriptionTitle = styled.h3`
   font-size: ${SIZES.large}px;
   font-weight: bold;
-  margin-top: 0;
+  &:first-of-type {
+    margin-top: 0;
+  }
+`
+const Tag = styled.strong`
+  display: inline-block;
+  font-weight: normal;
+  background-color: ${COLORS.green};
+  color: ${COLORS.white};
+  box-shadow: 0px 3px 3px ${COLORS.shadow.light};
+  border-radius: 12px;
+  margin: 4px 12px 8px 0;
+  padding: 4px 12px;
 `
 
 interface Params extends ParsedUrlQuery {
@@ -234,6 +245,14 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
               <Text $size={SIZES.card} $color={COLORS.input} $linebreaks>
                 {product.description}
               </Text>
+              {product._tags && (
+                <>
+                  <DescriptionTitle>Mots-clés</DescriptionTitle>
+                  {product._tags.map((tag) => (
+                    <Tag key={tag}>{tag === BIO ? "Bio ou raisonné" : tag}</Tag>
+                  ))}
+                </>
+              )}
             </DescriptionSection>
           </ProductColumn>
           <ProducerBox>
