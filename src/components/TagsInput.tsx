@@ -5,14 +5,12 @@ import styled from "@emotion/styled"
 import { Label, ErrorMessage } from "src/components/Form"
 import CustomSwitch from "src/components/CustomSwitch"
 import { tagsIndex } from "src/helpers/algolia"
-import { COLORS } from "src/constants"
-
-const BIO = "_bio"
+import { COLORS, BIO } from "src/constants"
 
 const Tag = styled.span`
   display: inline-block;
   background-color: #dcd9d9;
-  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 3px 3px ${COLORS.shadow.light};
   border-radius: 12px;
   margin: 4px 12px 8px 0;
   padding: 4px 8px 4px 10px;

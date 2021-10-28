@@ -29,6 +29,8 @@ export enum USER_ROLE {
   BUYER = "BUYER",
 }
 
+export const BIO = "_bio"
+
 export const SIZES = {
   price: 35,
   subtitle: 22,
