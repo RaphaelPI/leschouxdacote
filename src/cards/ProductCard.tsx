@@ -59,8 +59,8 @@ const Follow = styled.div`
   }
 `
 
-const Title = styled.h2`
-  margin: 0;
+const Title = styled.h2<{ $margin?: boolean }>`
+  margin: ${({ $margin }) => ($margin ? "0 70px 0 0" : "0")};
   font-size: 1.4em;
 `
 const Producer = styled.h3`
@@ -117,7 +117,7 @@ export const ProductInfos = ({ product, followButton }: Props) => {
           </>
         )}
 
-        <Title>{product.title}</Title>
+        <Title $margin={followButton}>{product.title}</Title>
         <Producer>{product.producer}</Producer>
         <Location>{product.city}</Location>
         <Price>{formatPrice(product)}</Price>

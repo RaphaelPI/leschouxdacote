@@ -27,4 +27,5 @@ NODE_ENV=production
 # m h dom mon dow command
 
 0 * * * * curl --silent --show-error --fail --data "{}" -H "x-trigger: crontab" https://leschouxdacote.fr/api/alerts > /dev/null
+0 * * * * curl --silent --show-error --fail --data "{}" -H "x-trigger: crontab" https://leschouxdacote.fr/api/tags > /dev/null
 ```
