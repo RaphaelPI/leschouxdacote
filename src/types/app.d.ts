@@ -12,7 +12,7 @@ type ParsedUrlQueryInput = import("querystring").ParsedUrlQueryInput
 interface SearchQuery extends ParsedUrlQueryInput {
   what?: string // product
   where?: string // place
-  type?: "city" | "dpt" | "region"
+  type?: "country" | "city" | "dpt" | "region"
   ll?: string // lat,lon
   r?: string // radius
   z?: string // zoom
