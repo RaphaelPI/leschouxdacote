@@ -1,4 +1,4 @@
-import type { Product, User } from "src/types/model"
+import type { Producer, Product } from "src/types/model"
 import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 
@@ -39,7 +39,7 @@ interface Params extends ParsedUrlQuery {
 }
 
 interface Props {
-  producer: User | null
+  producer: Producer | null
   products?: Product[]
 }
 
@@ -84,7 +84,7 @@ const ProducerPage = ({ producer, products }: Props) => {
 
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
   const { id } = params as Params
-  const producer = getObject<User>(await firestore.collection("users").doc(id).get())
+  const producer = getObject<Producer>(await firestore.collection("users").doc(id).get())
 
   const props: Props = { producer }
 

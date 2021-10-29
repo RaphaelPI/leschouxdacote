@@ -1,6 +1,6 @@
 import type { GetServerSideProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
-import type { Product, User } from "src/types/model"
+import type { Producer, Product } from "src/types/model"
 
 import { useEffect } from "react"
 import styled from "@emotion/styled"
@@ -171,7 +171,7 @@ interface Params extends ParsedUrlQuery {
 
 interface Props {
   product: Product | null
-  producer: User | null
+  producer: Producer | null
   otherProducts?: Product[]
 }
 
@@ -278,7 +278,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
 export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
   const { id } = params as Params
   const product = getObject<Product>(await firestore.collection("products").doc(id).get())
-  const producer = product && getObject<User>(await firestore.collection("users").doc(product.uid).get())
+  const producer = product && getObject<Producer>(await firestore.collection("users").doc(product.uid).get())
 
   const props: Props = { product, producer }
 

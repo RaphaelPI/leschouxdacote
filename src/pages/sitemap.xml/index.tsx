@@ -1,4 +1,4 @@
-import type { Product, User } from "src/types/model"
+import type { Producer, Product } from "src/types/model"
 
 import { getServerSideSitemap } from "next-sitemap"
 import { GetServerSideProps } from "next"
@@ -47,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   })
 
   producersSnapshot.forEach((doc) => {
-    const producer = getObject(doc) as User
+    const producer = getObject(doc) as Producer
     fields.push({
       loc: URL + "/producteur/" + doc.id,
       changefreq: "daily",

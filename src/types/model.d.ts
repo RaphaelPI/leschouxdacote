@@ -32,29 +32,35 @@ interface Follower {
   emailAlert: boolean
 }
 
-interface User extends Identified {
+interface BaseUser extends Identified {
   firstname: string
   lastname: string
   // _geoloc: Geoloc
   email: string
-  phone: string
   followedProducers: Record<string, FollowedProducer>
   role: USER_ROLE
-  // for producers:
-  siret?: string
-  name?: string // company name
-  description?: string
-  address?: string
+}
+interface Buyer extends BaseUser {
+  role: USER_ROLE.BUYER
+}
+interface Producer extends BaseUser {
+  role: USER_ROLE.PRODUCER
+  siret: string
+  name: string // company name
+  address: string
+  description: string
+  phone: string
   followers?: Record<string, Follower>
 }
+type User = Buyer | Producer
 
-interface RegisteringUser extends Registering<User> {
+interface RegisteringUser extends Registering<Producer> {
   created: Date
   password?: string
   nocheck?: boolean
 }
 
-interface UpdatingUser extends Omit<Updating<User>, "siret"> {
+interface UpdatingUser extends Omit<Updating<Producer>, "siret"> {
   updated: Date
 }
 

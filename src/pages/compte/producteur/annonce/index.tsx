@@ -1,4 +1,4 @@
-import type { AuthUser, Product, ProductPayload, Unit } from "src/types/model"
+import type { AuthUser, Producer, Product, ProductPayload, Unit } from "src/types/model"
 
 import { useRef, useState, useEffect } from "react"
 import { useFormContext, DefaultValues } from "react-hook-form"
@@ -35,7 +35,7 @@ const PriceInfos = () => {
 }
 
 const EditProductPage = () => {
-  const { authUser, user } = useUser()
+  const { authUser, user } = useUser<Producer>()
   const { query, push } = useRouter()
 
   const productId = Array.isArray(query.id) ? undefined : query.id

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { User, ProductPayload, RegisteringProduct, Product } from "src/types/model"
+import type { ProductPayload, RegisteringProduct, Product, Producer } from "src/types/model"
 
 import { addDays } from "date-fns"
 
@@ -53,7 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     if (!producerDoc.exists) {
       throw new Error("Producer not found: " + fields.uid)
     }
-    const producer = getObject(producerDoc) as User
+    const producer = getObject(producerDoc) as Producer
 
     let ref: FirebaseFirestore.DocumentReference
     let existing: Product | null

@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { RegisteringUser, UpdatingUser } from "src/types/model"
+import type { Producer, RegisteringUser, UpdatingUser } from "src/types/model"
 
 import fetch from "node-fetch"
 
-import { auth, firestore, getToken } from "src/helpers-api/firebase"
+import { auth, FieldValue, firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { badRequest, respond } from "src/helpers-api"
 import algolia from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
@@ -47,12 +47,19 @@ const checkCompany = async (siret: string, nocheck = false) => {
   }
 }
 
+const removeEmpty = (obj: Record<string, any>) => {
+  for (const key in obj) {
+    if (obj[key] === "" || obj[key] == null) {
+      delete obj[key]
+    }
+  }
+}
+
 const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<RegisteringUser>>) => {
   if (req.method === "POST") {
     // user registration
     const user = req.body as RegisteringUser // TODO: validate fields
-    const isProducer = user.role === USER_ROLE.PRODUCER
-    if (isProducer && user.siret) {
+    if (user.role === USER_ROLE.PRODUCER && user.siret) {
       user.siret = user.siret.replace(/\s+/g, "") // remove spaces
       const checkError = await checkCompany(user.siret, user.nocheck)
       if (checkError) {
@@ -62,8 +69,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       }
       user.phone = normalizeNumber(user.phone)
     }
+    if (!user.nocheck) {
+      delete user.nocheck
+    }
 
     user.created = new Date()
+    let uid: string
 
     try {
       const createdUser = await auth.createUser({
@@ -72,23 +83,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
         displayName: user.name,
         // phoneNumber: producer.phone.replace(/\s+/g, "").replace(/^0/, "+33"),
       })
-
-      delete user.password
-      await firestore
-        .collection("users")
-        .doc(createdUser.uid)
-        .set(
-          isProducer
-            ? user
-            : {
-                created: user.created,
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                nocheck: user.nocheck,
-                role: USER_ROLE.BUYER,
-              }
-        )
+      uid = createdUser.uid
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         return respond(res, {
@@ -109,6 +104,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       throw error
     }
 
+    delete user.password
+
+    if (user.role !== USER_ROLE.PRODUCER) {
+      removeEmpty(user)
+    }
+
+    await firestore.collection("users").doc(uid).set(user)
+
     return respond(res)
   }
 
@@ -124,14 +127,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       user.phone = normalizeNumber(user.phone)
     }
 
-    const snapshot = await firestore.collection("products").where("uid", "==", token.uid).get()
-    const updates: Readonly<Promise<any>>[] = []
-    snapshot.forEach((doc) => {
-      updates.push(doc.ref.update({ producer: user.name }))
-      updates.push(algolia.partialUpdateObject({ objectID: doc.id, producer: user.name }))
-    })
+    const usersCollection = firestore.collection("users")
+    const userRef = usersCollection.doc(token.uid)
+
+    const updates: Readonly<Promise<any>>[] = [userRef.update(user)]
+
+    if (user.role === USER_ROLE.PRODUCER) {
+      const userDoc = await userRef.get()
+      const userData = getObject(userDoc) as Producer
+      for (const uid in userData.followers) {
+        updates.push(usersCollection.doc(uid).update({ [`followedProducers.${token.uid}.name`]: user.name }))
+      }
+
+      const products = await firestore.collection("products").where("uid", "==", token.uid).get()
+      products.forEach((doc) => {
+        updates.push(doc.ref.update({ producer: user.name }))
+        updates.push(algolia.partialUpdateObject({ objectID: doc.id, producer: user.name }))
+      })
+    }
+
     await Promise.all(updates)
-    await firestore.collection("users").doc(token.uid).update(user)
 
     return respond(res)
   }
@@ -142,15 +157,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       return badRequest(res, 403)
     }
 
-    const snapshot = await firestore.collection("products").where("uid", "==", token.uid).get()
-    const deletions: Readonly<Promise<any>>[] = []
-    snapshot.forEach((doc) => {
-      deletions.push(doc.ref.delete())
-      deletions.push(algolia.deleteObject(doc.id))
-    })
-    await Promise.all(deletions)
-    await firestore.collection("users").doc(token.uid).delete()
-    await auth.deleteUser(token.uid)
+    const usersCollection = firestore.collection("users")
+    const userRef = usersCollection.doc(token.uid)
+
+    const updates: Readonly<Promise<any>>[] = [auth.deleteUser(token.uid)]
+
+    const userDoc = await userRef.get()
+    const userData = getObject(userDoc) as Producer
+    if (userData.role === USER_ROLE.PRODUCER) {
+      const products = await firestore.collection("products").where("uid", "==", token.uid).get()
+      products.forEach((doc) => {
+        updates.push(doc.ref.delete())
+        updates.push(algolia.deleteObject(doc.id))
+      })
+
+      for (const uid in userData.followers) {
+        updates.push(usersCollection.doc(uid).update({ [`followedProducers.${token.uid}`]: FieldValue.delete() }))
+      }
+    }
+
+    updates.push(userRef.delete())
+
+    await Promise.all(updates)
 
     return respond(res)
   }
