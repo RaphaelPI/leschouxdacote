@@ -1,4 +1,4 @@
-import type { Product } from "src/types/model"
+import type { Producer, Product } from "src/types/model"
 
 import { useState } from "react"
 import styled from "@emotion/styled"
@@ -7,9 +7,9 @@ import FavoriteIcon from "@mui/icons-material/FavoriteBorder"
 import Layout from "src/layout"
 import AccountProduct from "src/components/AccountProduct"
 import { useUser } from "src/helpers/auth"
-import { COLORS, SIZES, LAYOUT } from "src/constants"
 import { useQuery } from "src/helpers/firebase"
 import { s } from "src/helpers/text"
+import { COLORS, SIZES, LAYOUT } from "src/constants"
 
 type Tab = "all" | "online" | "disabled"
 
@@ -51,12 +51,12 @@ const TABS: { id: Tab; title: string }[] = [
 ]
 
 const MyAdsPage = () => {
-  const { user: producer } = useUser()
+  const { user } = useUser<Producer>()
   const [tab, setTab] = useState<Tab>("all")
 
-  const { data } = useQuery<Product>("products", producer ? ["uid", "==", producer.objectID] : false, true)
+  const { data } = useQuery<Product>("products", user ? ["uid", "==", user.objectID] : false, true)
 
-  const followers = producer?.followers ? Object.keys(producer.followers).length : null
+  const followers = user?.followers ? Object.keys(user.followers).length : null
 
   const now = Date.now()
   const tabsData: Record<Tab, Product[]> = {

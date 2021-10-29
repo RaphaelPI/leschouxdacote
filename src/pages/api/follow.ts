@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { FollowedProducer, Follower, User } from "src/types/model"
+import type { FollowedProducer, Follower, Producer, User } from "src/types/model"
 
 import { badRequest, respond } from "src/helpers-api"
 import { firestore, getObject, getToken, FieldValue } from "src/helpers-api/firebase"
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!producerDoc.exists) {
       throw new Error("Producer not found: " + fields.producerUid)
     }
-    const producer = getObject(producerDoc) as User
+    const producer = getObject(producerDoc) as Producer
 
     const userDocRef = firestore.collection("users").doc(token.uid)
     const userDoc = await userDocRef.get()

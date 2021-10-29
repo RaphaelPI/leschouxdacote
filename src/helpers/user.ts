@@ -16,8 +16,5 @@ export const getName = (user: User | null) => {
   if (user.role === USER_ROLE.PRODUCER) {
     return user.name
   }
-  if (user.role === USER_ROLE.BUYER) {
-    return `${user.firstname} ${user.lastname}`
-  }
-  return user.email
+  return `${user.firstname} ${user.lastname}`
 }

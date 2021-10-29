@@ -9,11 +9,11 @@ import api from "src/helpers/api"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
-export interface IUserContext {
+export interface IUserContext<T extends User = User> {
   loading: boolean
   wait: boolean
   authUser: AuthUser | null
-  user: User | null
+  user: T | null
   signin: (email: string, pass: string) => Promise<UserCredential>
   signout: () => void
   toggleFollow: (producerUid: string, follow: boolean) => Promise<void>
@@ -153,4 +153,6 @@ export const UserProvider: FC = ({ children }) => {
   )
 }
 
-export const useUser = () => useContext(UserContext)
+export function useUser<T extends User = User>() {
+  return useContext(UserContext) as IUserContext<T>
+}

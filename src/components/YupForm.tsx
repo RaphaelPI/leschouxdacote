@@ -2,7 +2,7 @@ import React from "react"
 import { FieldError } from "react-hook-form"
 import styled from "@emotion/styled"
 
-import { COLORS, LAYOUT } from "src/constants"
+import { COLORS, LAYOUT, SIZES } from "src/constants"
 import { ErrorMessage, Label, Row, Suffix } from "src/components/Form"
 
 export const StyledForm = styled.form`
@@ -20,28 +20,28 @@ export const Required = styled.p`
   margin: -1em 0 1em;
 `
 
-const RadioSpan = styled.span`
-  color: #0077cf;
-  padding: 0.7rem 3rem;
-  font-size: 14px;
+const RadioButton = styled.div`
+  color: ${COLORS.blue};
+  padding: 12px 16px;
+  font-size: ${SIZES.regular}px;
   border-radius: 5px;
-  background-color: white;
-  border: 0.1px solid rgb(0, 119, 207, 10%);
+  background-color: ${COLORS.white};
+  border: 1px solid ${COLORS.background.info};
   cursor: pointer;
-  display: inline-block;
+  text-align: center;
+  width: 100%;
+  position: relative;
 
   &:hover {
-    background-color: rgb(0, 119, 207, 10%);
+    background-color: ${COLORS.background.info};
   }
 `
-
 const RadioInput = styled.input`
   position: absolute;
-  opacity: 0;
-  cursor: pointer;
+  visibility: hidden;
 
-  &:checked + ${RadioSpan} {
-    background-color: rgb(0, 119, 207, 10%);
+  &:checked + ${RadioButton} {
+    background-color: ${COLORS.background.info};
   }
 `
 
@@ -57,7 +57,7 @@ interface InputProps {
   value?: string
 }
 
-export const YupInput: React.FC<InputProps & Record<string, any>> = ({
+export const Input: React.FC<InputProps & Record<string, any>> = ({
   label,
   error,
   required,
@@ -84,18 +84,25 @@ export const YupInput: React.FC<InputProps & Record<string, any>> = ({
   )
 }
 
-export const YupRadioInput: React.FC<InputProps & Record<string, any>> = ({
-  label,
-  id,
-  name,
-  value,
-  register,
-  ...rest
-}) => {
+export const Radio: React.FC<InputProps & Record<string, any>> = ({ label, id, name, value, register, ...rest }) => {
   return (
     <label>
       <RadioInput id={id} type="radio" name="role" {...register(name)} value={value} {...rest} />
-      <RadioSpan>{label}</RadioSpan>
+      <RadioButton>{label}</RadioButton>
     </label>
   )
 }
+
+export const Radios = styled.div`
+  margin: 48px 0;
+  display: flex;
+  gap: 16px;
+
+  > * {
+    flex: 1;
+  }
+
+  @media (max-width: ${LAYOUT.mobile}px) {
+    flex-direction: column;
+  }
+`

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { Product, User } from "src/types/model"
+import type { Producer, Product } from "src/types/model"
 
 import { formatISO9075 } from "date-fns"
 
@@ -24,7 +24,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
 
     const producersSnapshot = await firestore.collection("users").where("role", "==", USER_ROLE.PRODUCER).get()
     const producers = producersSnapshot.docs.map((doc) => {
-      const producer = getObject(doc) as User
+      const producer = getObject(doc) as Producer
       return [
         producer.siret,
         producer.name,
