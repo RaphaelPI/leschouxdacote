@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from "next"
+import type { GetStaticPaths, GetStaticProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
 import type { Producer, Product } from "src/types/model"
 
@@ -7,7 +7,7 @@ import styled from "@emotion/styled"
 
 import ErrorPage from "src/pages/_error"
 import Layout from "src/layout"
-import { COLORS, LAYOUT, SIZES, SSR_CACHE_HEADER } from "src/constants"
+import { COLORS, LAYOUT, SIZES, ISR_REVALIDATE } from "src/constants"
 import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink, formatPhone } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
 import { Text } from "src/components/Text"
@@ -275,26 +275,36 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
+export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   const { id } = params as Params
   const product = getObject<Product>(await firestore.collection("products").doc(id).get())
-  const producer = product && getObject<Producer>(await firestore.collection("users").doc(product.uid).get())
+  if (!product) {
+    return { notFound: true }
+  }
+
+  const producer = getObject<Producer>(await firestore.collection("users").doc(product.uid).get())
+  if (!producer) {
+    return { notFound: true }
+  }
 
   const props: Props = { product, producer }
 
-  if (product && producer) {
-    const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
-    const now = Date.now()
-    props.otherProducts = (docs.map(getObject) as Product[]).filter(
-      ({ objectID, expires }) => objectID !== product.objectID && expires && expires > now
-    )
-  } else {
-    res.statusCode = 404
+  const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
+  const now = Date.now()
+  props.otherProducts = (docs.map(getObject) as Product[]).filter(
+    ({ objectID, expires }) => objectID !== product.objectID && expires && expires > now
+  )
+
+  return { props, revalidate: ISR_REVALIDATE }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const products = await firestore.collection("products").get()
+
+  return {
+    paths: products.docs.map((doc) => ({ params: { id: doc.id } })),
+    fallback: "blocking",
   }
-
-  res.setHeader("cache-control", SSR_CACHE_HEADER)
-
-  return { props }
 }
 
 export default ProductPage

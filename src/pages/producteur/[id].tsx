@@ -1,6 +1,6 @@
-import type { Producer, Product } from "src/types/model"
-import type { GetServerSideProps } from "next"
+import type { GetStaticPaths, GetStaticProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
+import type { Producer, Product } from "src/types/model"
 
 import styled from "@emotion/styled"
 
@@ -11,7 +11,7 @@ import FollowButton from "src/components/FollowButton"
 import ProductCard from "src/cards/ProductCard"
 import { formatPhone, getMapsLink } from "src/helpers/text"
 import { firestore, getObject } from "src/helpers-api/firebase"
-import { COLORS, SIZES, LAYOUT, SSR_CACHE_HEADER } from "src/constants"
+import { COLORS, SIZES, LAYOUT, USER_ROLE, ISR_REVALIDATE } from "src/constants"
 
 import PinIcon from "src/assets/pin.svg"
 
@@ -82,23 +82,29 @@ const ProducerPage = ({ producer, products }: Props) => {
   )
 }
 
-export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ params, res }) => {
+export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   const { id } = params as Params
   const producer = getObject<Producer>(await firestore.collection("users").doc(id).get())
+  if (!producer) {
+    return { notFound: true }
+  }
 
   const props: Props = { producer }
 
-  if (producer) {
-    const { docs } = await firestore.collection("products").where("uid", "==", id).get()
-    const now = Date.now()
-    props.products = (docs.map(getObject) as Product[]).filter(({ expires }) => expires && expires > now)
-  } else {
-    res.statusCode = 404
+  const { docs } = await firestore.collection("products").where("uid", "==", id).get()
+  const now = Date.now()
+  props.products = (docs.map(getObject) as Product[]).filter(({ expires }) => expires && expires > now)
+
+  return { props, revalidate: ISR_REVALIDATE }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const producers = await firestore.collection("users").where("role", "==", USER_ROLE.PRODUCER).get()
+
+  return {
+    paths: producers.docs.map((doc) => ({ params: { id: doc.id } })),
+    fallback: "blocking",
   }
-
-  res.setHeader("cache-control", SSR_CACHE_HEADER)
-
-  return { props }
 }
 
 export default ProducerPage

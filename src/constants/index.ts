@@ -57,5 +57,9 @@ export const SEARCH_RADIUS = {
   country: 500_000,
 }
 
-// TODO: https://vercel.com/docs/concepts/next.js/incremental-static-regeneration
+// https://nextjs.org/docs/going-to-production#caching
 export const SSR_CACHE_HEADER = "max-age=3600, s-maxage=60, stale-while-revalidate=86400"
+
+// https://vercel.com/docs/concepts/next.js/incremental-static-regeneration
+// https://nextjs.org/docs/basic-features/data-fetching#incremental-static-regeneration
+export const ISR_REVALIDATE = 60 // seconds
