@@ -71,6 +71,13 @@ const EditProductPage = () => {
       throw new ValidationError("address", "Veuillez sélectionner l'adresse dans la liste déroulante")
     }
 
+    if (payload.get("days") === "0") {
+      const ok = confirm("Êtes-vous sûr·e de ne pas vouloir publier cette annonce ?\n(durée renseignée : 0 jours)")
+      if (!ok) {
+        return
+      }
+    }
+
     payload.append("placeId", place.id)
     payload.append("lat", String(place.lat))
     payload.append("lng", String(place.lng))
@@ -81,8 +88,10 @@ const EditProductPage = () => {
     if (productId) {
       payload.append("id", productId)
       await api.put("product", payload)
+      alert("Votre annonce a bien été modifiée. La modification sera visible dans quelques minutes.")
     } else {
       await api.post("product", payload)
+      alert("Votre annonce a bien été créée. Elle sera visible dans quelques minutes.")
     }
 
     push("/compte/producteur/annonces") // TODO: confirmation message
@@ -121,7 +130,7 @@ const EditProductPage = () => {
         lat: location.lat(),
         lng: location.lng(),
         city: city.short_name,
-        dpt: Number(postCode.short_name.substr(0, 2)),
+        dpt: Number(postCode.short_name.substr(0, 2)), // TODO: bug
       })
     })
   }

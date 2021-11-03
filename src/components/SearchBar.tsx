@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import SearchInput from "src/components/SearchInput"
 import { Button } from "src/components/Button"
 import { loadGmaps } from "src/helpers/scripts"
-import { suggestionsIndex } from "src/helpers/algolia"
+import { tagsIndex } from "src/helpers/algolia"
 import { LAYOUT } from "src/constants"
 
 import SearchIcon from "src/assets/search.svg"
@@ -76,7 +76,7 @@ const SearchBar = ({ className }: Props) => {
 
   const [query, setQuery] = useState<SearchQuery>(router.query)
   const [focus, setFocus] = useState(false)
-  const [suggestions, setSuggestions] = useState<QuerySuggestion[]>([])
+  const [suggestions, setSuggestions] = useState<AlgoliaTag[]>([])
 
   useEffect(() => {
     setQuery(router.query)
@@ -141,7 +141,7 @@ const SearchBar = ({ className }: Props) => {
     setQuery(newQuery)
     if (name === "what") {
       if (value) {
-        suggestionsIndex.search<QuerySuggestion>(value).then((result) => {
+        tagsIndex.search<AlgoliaTag>(value).then((result) => {
           setSuggestions(result.hits)
         })
       } else {
@@ -199,9 +199,9 @@ const SearchBar = ({ className }: Props) => {
         />
         {focus && suggestions.length > 0 && (
           <Suggestions className="pac-container">
-            {suggestions.map((hit) => (
-              <div className="pac-item" key={hit.objectID} onClick={handleSuggestion(hit.query)}>
-                <span className="pac-item-query">{hit.query}</span>
+            {suggestions.map(({ objectID, tag }) => (
+              <div className="pac-item" key={objectID} onClick={handleSuggestion(tag)}>
+                <span className="pac-item-query">{tag}</span>
               </div>
             ))}
           </Suggestions>
