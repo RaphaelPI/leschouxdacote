@@ -4,12 +4,8 @@ import styled from "@emotion/styled"
 
 import { Label } from "src/components/Form"
 import CustomSwitch from "src/components/CustomSwitch"
-import { suggestionsIndex } from "src/helpers/algolia"
+import { tagsIndex } from "src/helpers/algolia"
 import { COLORS } from "src/constants"
-
-const SEARCH_OPTIONS = {
-  numericFilters: ["tag_popularity > 1"],
-}
 
 const Tag = styled.span`
   display: inline-block;
@@ -52,7 +48,7 @@ interface Props {
 const TagsInput = ({ label }: Props) => {
   const { register, getValues, setValue, watch } = useFormContext()
   const inputRef = useRef<HTMLInputElement>(null)
-  const [suggestions, setSuggestions] = useState<QuerySuggestion[]>([])
+  const [suggestions, setSuggestions] = useState<AlgoliaTag[]>([])
   register("_tags")
   const values: string[] = watch("_tags") || []
 
@@ -78,21 +74,18 @@ const TagsInput = ({ label }: Props) => {
       reset()
       return
     }
-    const { hits } = await suggestionsIndex.search<QuerySuggestion>(text, SEARCH_OPTIONS)
-    setSuggestions(hits.filter((value) => !values.includes(value.query)))
+    const { hits } = await tagsIndex.search<AlgoliaTag>(text)
+    setSuggestions(hits.filter(({ tag }) => !values.includes(tag)))
   }
 
   const handleKey = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key !== "Enter") {
-      return
+    if (event.key === "Enter") {
+      event.preventDefault()
+      if (suggestions.length === 1) {
+        add(suggestions[0].tag)
+        reset()
+      }
     }
-    event.preventDefault()
-    const text = event.currentTarget.value.trim().toLowerCase()
-    if (!text || values.includes(text)) {
-      return
-    }
-    add(text)
-    reset()
   }
 
   const handleSelect = (tag: string) => () => {
@@ -122,14 +115,14 @@ const TagsInput = ({ label }: Props) => {
         onChange={handleChange}
         ref={inputRef}
         onKeyPress={handleKey}
-        placeholder="Exemples : légume, miel, fromage… (ajoutez en tapant Entrée)"
+        placeholder="Exemples : légume, miel, fromage…"
         autoComplete="off"
       />
       {suggestions.length > 0 && (
         <Suggestions>
-          {suggestions.map(({ objectID, query }) => (
-            <button key={objectID} onClick={handleSelect(query)} type="button">
-              {query}
+          {suggestions.map(({ objectID, tag }) => (
+            <button key={objectID} onClick={handleSelect(tag)} type="button">
+              {tag}
             </button>
           ))}
         </Suggestions>

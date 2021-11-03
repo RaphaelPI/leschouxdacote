@@ -1,7 +1,5 @@
-interface QuerySuggestion {
+interface AlgoliaTag {
   objectID: string
-  query: string
-  // popularity
-  // tag_popularity
-  // nb_words
+  tag: string
+  num?: number
 }

@@ -9,8 +9,8 @@ const handler = async () => {
   const tagCounts: Record<string, number> = {}
 
   list.forEach((doc) => {
-    const product = getObject(doc) as Product & { _tags: string[] }
-    const tags = product._tags
+    const product = getObject(doc) as Product
+    const tags = product._tags as string[]
 
     tags.forEach((tag) => {
       if (!tagCounts[tag]) {
