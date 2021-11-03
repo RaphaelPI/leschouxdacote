@@ -20,16 +20,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error("Product not found: " + id)
     }
 
-    await ref.update({
-      views: FieldValue.increment(1),
-    })
-
     const product = getObject(doc) as Product
 
-    await productsIndex.partialUpdateObject({
-      objectID: id,
-      views: (product.views || 0) + 1,
-    })
+    await Promise.all([
+      ref.update({
+        views: FieldValue.increment(1),
+      }),
+      productsIndex.partialUpdateObject({
+        objectID: id,
+        views: (product.views || 0) + 1,
+      }),
+    ])
 
     return respond(res)
   }

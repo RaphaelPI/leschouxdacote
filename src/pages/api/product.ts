@@ -122,8 +122,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       product.updated = now
     }
 
-    await ref.set(product)
-
     const record: Product = {
       ...product,
       objectID: ref.id,
@@ -134,7 +132,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       _geoloc: position,
     }
 
-    await productsIndex.saveObject(record)
+    await Promise.all([ref.set(product), productsIndex.saveObject(record)])
 
     return respond(res)
   }

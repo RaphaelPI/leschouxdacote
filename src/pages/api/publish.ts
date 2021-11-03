@@ -33,35 +33,39 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     const online = product.expires != null && product.expires > now.getTime()
     const expires = addDays(product.expires && online ? product.expires : now, days)
     const published = online ? getDate(product.published) : now
-    await ref.update({
-      updated: now,
-      published,
-      expires,
-    })
     product.updated = now.getTime()
     product.published = published && published.getTime()
     product.expires = expires.getTime()
-    await productsIndex.saveObject(product)
+
+    await Promise.all([
+      ref.update({
+        updated: now,
+        published,
+        expires,
+      }),
+      productsIndex.saveObject(product),
+    ])
 
     return respond(res)
   }
 
   // unpublish
   if (req.method === "PUT") {
-    await ref.update({
-      updated: now,
-      published: null,
-      expires: null,
-    })
-    await productsIndex.deleteObject(product.objectID)
+    await Promise.all([
+      ref.update({
+        updated: now,
+        published: null,
+        expires: null,
+      }),
+      productsIndex.deleteObject(product.objectID),
+    ])
 
     return respond(res)
   }
 
   // delete
   if (req.method === "DELETE") {
-    await ref.delete()
-    await productsIndex.deleteObject(product.objectID)
+    await Promise.all([ref.delete(), productsIndex.deleteObject(product.objectID)])
 
     return respond(res)
   }
