@@ -2,7 +2,6 @@ import { ErrorInfo } from "react"
 import styled from "@emotion/styled"
 import { css, Global } from "@emotion/react"
 import { AppProps } from "next/app"
-import { GoogleFonts } from "next-google-fonts"
 import Head from "next/head"
 
 import "src/components/Nprogress"
@@ -102,8 +101,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const children = (
     <>
       <Global styles={globalStyle} />
-      <GoogleFonts href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
       <Head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+        />
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
