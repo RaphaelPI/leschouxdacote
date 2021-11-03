@@ -27,7 +27,8 @@
     "dev": "next dev",
     "lint": "lint-staged",
     "build": "next build",
-    "serve": "next start"
+    "serve": "next start",
+    "update-tags": "ts-node --files -r dotenv/config src/scripts/tags.ts"
   },
   "dependencies": {
     "@bugsnag/js": "^7.5.1",
@@ -54,6 +55,7 @@
     "algoliasearch": "^4.8.5",
     "csv-stringify": "^5.6.2",
     "date-fns": "^2.16.1",
+    "dotenv": "^10.0.0",
     "firebase": "^8.10.0",
     "firebase-admin": "^9.12.0",
     "formidable": "^1.2.2",
@@ -71,6 +73,7 @@
     "react-hook-form": "^7.1.0",
     "sharp": "^0.29.0",
     "standard-http-error": "^2.0.1",
+    "ts-node": "^10.4.0",
     "typescript": "^4.1.2",
     "yup": "^0.32.9"
   },

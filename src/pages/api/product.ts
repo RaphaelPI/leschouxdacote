@@ -8,7 +8,7 @@ import { respond, badRequest } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
 import { normalizeNumber } from "src/helpers/validators"
-import algolia from "src/helpers-api/algolia"
+import { productsIndex } from "src/helpers-api/algolia"
 
 const checkRequired = (data: Record<string, any>, fields: string[]) => {
   const found = fields.find((field) => !data[field])
@@ -131,7 +131,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       _geoloc: position,
     }
 
-    await algolia.saveObject(record)
+    await productsIndex.saveObject(record)
 
     return respond(res)
   }

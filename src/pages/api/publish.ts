@@ -5,7 +5,7 @@ import { addDays } from "date-fns"
 
 import { firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { respond, badRequest } from "src/helpers-api"
-import algolia from "src/helpers-api/algolia"
+import { productsIndex } from "src/helpers-api/algolia"
 
 const getDate = (ts?: number | null) => (ts ? new Date(ts) : null)
 
@@ -41,7 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     product.updated = now.getTime()
     product.published = published && published.getTime()
     product.expires = expires.getTime()
-    await algolia.saveObject(product)
+    await productsIndex.saveObject(product)
 
     return respond(res)
   }
@@ -53,7 +53,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       published: null,
       expires: null,
     })
-    await algolia.deleteObject(product.objectID)
+    await productsIndex.deleteObject(product.objectID)
 
     return respond(res)
   }
@@ -61,7 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
   // delete
   if (req.method === "DELETE") {
     await ref.delete()
-    await algolia.deleteObject(product.objectID)
+    await productsIndex.deleteObject(product.objectID)
 
     return respond(res)
   }

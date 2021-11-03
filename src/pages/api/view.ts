@@ -3,7 +3,7 @@ import type { Product } from "src/types/model"
 
 import { badRequest, respond } from "src/helpers-api"
 import { firestore, FieldValue, getObject } from "src/helpers-api/firebase"
-import algolia from "src/helpers-api/algolia"
+import { productsIndex } from "src/helpers-api/algolia"
 
 interface Payload {
   id: string
@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const product = getObject(doc) as Product
 
-    await algolia.partialUpdateObject({
+    await productsIndex.partialUpdateObject({
       objectID: id,
       views: (product.views || 0) + 1,
     })

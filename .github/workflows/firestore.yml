@@ -1,13 +1,15 @@
 name: Firestore Backups
+
 on:
   workflow_dispatch:
     inputs:
       name:
-        description: 'Backup'
-        default: 'Backup'
+        description: "Backup"
+        default: "Backup"
         required: false
   schedule:
-    - cron: '0 4 * * *'
+    - cron: "0 4 * * *"
+
 jobs:
   backup:
     runs-on: ubuntu-latest

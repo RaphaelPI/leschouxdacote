@@ -12,7 +12,7 @@ import ListIcon from "@mui/icons-material/ViewList"
 import Layout from "src/layout"
 import ResultsMap from "src/components/ResultsMap"
 import ResultsList from "src/components/ResultsList"
-import algolia from "src/helpers/algolia"
+import { productsIndex } from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
 import { HoverProvider } from "src/helpers/hover"
 import { COLORS, SEARCH_RADIUS } from "src/constants"
@@ -70,7 +70,7 @@ const SearchPage = () => {
     if (!isReady) {
       return
     }
-    algolia
+    productsIndex
       .search<Product>(what || "", getOptions(radius, ll))
       .then(({ hits }) => setResults(hits))
       .catch(handleError)
