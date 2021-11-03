@@ -5,7 +5,7 @@ import fetch from "node-fetch"
 
 import { auth, FieldValue, firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { badRequest, respond } from "src/helpers-api"
-import algolia from "src/helpers-api/algolia"
+import { productsIndex } from "src/helpers-api/algolia"
 import { normalizeNumber } from "src/helpers/validators"
 import { CONTACT_EMAIL, USER_ROLE } from "src/constants"
 
@@ -142,7 +142,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       const products = await firestore.collection("products").where("uid", "==", token.uid).get()
       products.forEach((doc) => {
         updates.push(doc.ref.update({ producer: user.name }))
-        updates.push(algolia.partialUpdateObject({ objectID: doc.id, producer: user.name }))
+        updates.push(productsIndex.partialUpdateObject({ objectID: doc.id, producer: user.name }))
       })
     }
 
@@ -168,7 +168,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       const products = await firestore.collection("products").where("uid", "==", token.uid).get()
       products.forEach((doc) => {
         updates.push(doc.ref.delete())
-        updates.push(algolia.deleteObject(doc.id))
+        updates.push(productsIndex.deleteObject(doc.id))
       })
 
       for (const uid in userData.followers) {
