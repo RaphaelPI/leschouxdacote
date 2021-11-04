@@ -76,7 +76,7 @@ interface Product extends Identified {
   _tags: string[] | null
   placeId: string // from Google places
   city: string
-  dpt: number
+  dpt: string
   description: string
   photo: string
   email: string | null

@@ -107,7 +107,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
       _tags: fields._tags ? fields._tags.split(",") : null,
       placeId: fields.placeId,
       city: fields.city,
-      dpt: Number(fields.dpt),
+      dpt: fields.dpt,
       description: fields.description,
       photo,
       email: fields.email || null,
