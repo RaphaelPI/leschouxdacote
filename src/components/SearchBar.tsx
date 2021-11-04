@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 
 import SearchInput from "src/components/SearchInput"
 import { Button } from "src/components/Button"
-import { loadGmaps } from "src/helpers/scripts"
+import { loadGmaps } from "src/helpers/google"
 import { tagsIndex } from "src/helpers/algolia"
 import { LAYOUT } from "src/constants"
 

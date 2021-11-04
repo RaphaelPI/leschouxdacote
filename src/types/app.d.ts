@@ -23,7 +23,7 @@ interface Place {
   lat: number
   lng: number
   city: string
-  dpt: number
+  dpt: string
 }
 
 interface Publish {

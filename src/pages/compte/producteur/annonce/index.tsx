@@ -14,7 +14,7 @@ import { useUser } from "src/helpers/auth"
 import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
 import { useObjectQuery } from "src/helpers/firebase"
-import { loadGmaps } from "src/helpers/scripts"
+import { loadGmaps, getCity, getDpt } from "src/helpers/google"
 import TagsInput from "src/components/TagsInput"
 
 // https://sharp.pixelplumbing.com/#formats
@@ -46,7 +46,7 @@ const EditProductPage = () => {
   const [place, setPlace] = useState<Place | null>()
 
   useEffect(() => {
-    if (!place && data) {
+    if (place === undefined && data) {
       setPlace({ id: data.placeId, city: data.city, dpt: data.dpt, lat: data._geoloc.lat, lng: data._geoloc.lng })
     }
   }, [place, data])
@@ -82,7 +82,7 @@ const EditProductPage = () => {
     payload.append("lat", String(place.lat))
     payload.append("lng", String(place.lng))
     payload.append("city", place.city)
-    payload.append("dpt", String(place.dpt))
+    payload.append("dpt", place.dpt)
     payload.append("uid", (authUser as AuthUser).uid)
 
     if (productId) {
@@ -103,14 +103,12 @@ const EditProductPage = () => {
       return
     }
 
-    // TODO: reset place on text change
-
     await loadGmaps()
 
     autocomplete.current = new google.maps.places.Autocomplete(el, {
       componentRestrictions: { country: "fr" },
       fields: ["geometry", "address_components", "place_id"], // TODO: get more infos?
-      types: ["geocode", "establishment"], // https://developers.google.com/places/web-service/supported_types#table3
+      // types: ["geocode", "establishment"], // https://developers.google.com/places/web-service/supported_types#table3
     })
     autocomplete.current.addListener("place_changed", () => {
       const res = autocomplete.current?.getPlace()
@@ -118,19 +116,21 @@ const EditProductPage = () => {
         setPlace(null)
         return
       }
-      const city = res.address_components.find((c) => c.types.includes("locality"))
-      const postCode = res.address_components.find((c) => c.types.includes("postal_code"))
-      if (!city || !postCode) {
+
+      const city = getCity(res)
+      const dpt = getDpt(res)
+      if (!city || !dpt) {
         setPlace(null)
         return
       }
+
       const { location } = res.geometry
       setPlace({
         id: res.place_id,
         lat: location.lat(),
         lng: location.lng(),
-        city: city.short_name,
-        dpt: Number(postCode.short_name.substr(0, 2)), // TODO: bug
+        city,
+        dpt,
       })
     })
   }
