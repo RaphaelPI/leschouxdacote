@@ -167,15 +167,22 @@ const SearchBar = ({ className }: Props) => {
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!input.current) {
+    /*
+    if (focus && suggestions.length === 1) {
+      setQuery((previous) => ({
+        ...previous,
+        what: suggestions[0].tag,
+      }))
+      input.current?.focus()
       return
     }
+    */
     if (query.where && !query.ll) {
       setQuery((previous) => ({
         ...previous,
         where: "",
       }))
-      input.current.focus()
+      input.current?.focus()
       return
     }
 

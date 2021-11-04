@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useRef, KeyboardEvent } from "react"
+import { useState, ChangeEvent, useRef, KeyboardEvent, FocusEvent } from "react"
 import { useFormContext } from "react-hook-form"
 import styled from "@emotion/styled"
 
@@ -88,6 +88,15 @@ const TagsInput = ({ label }: Props) => {
     }
   }
 
+  const handleBlur = ({ currentTarget }: FocusEvent<HTMLInputElement>) => {
+    if (suggestions.length === 1) {
+      add(suggestions[0].tag)
+      reset()
+    } else if (currentTarget.value) {
+      currentTarget.focus()
+    }
+  }
+
   const handleSelect = (tag: string) => () => {
     add(tag)
     reset()
@@ -115,6 +124,7 @@ const TagsInput = ({ label }: Props) => {
         onChange={handleChange}
         ref={inputRef}
         onKeyPress={handleKey}
+        onBlur={handleBlur}
         placeholder="Exemples : légume, miel, fromage…"
         autoComplete="off"
       />
