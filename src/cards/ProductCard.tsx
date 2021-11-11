@@ -108,7 +108,7 @@ export const ProductInfos = ({ product, followButton }: Props) => {
   return (
     <CardLink href={`/annonce/${product.objectID}`}>
       <Image src={product.photo} alt="" />
-      {product.bio && <FloatingTag>Bio / raisonné</FloatingTag>}
+      {product.bio && <FloatingTag>Bio / raisonnée</FloatingTag>}
       <Content>
         {followButton && (
           <>
