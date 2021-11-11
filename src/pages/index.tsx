@@ -57,7 +57,7 @@ const SearchGroup = styled(SearchBar)`
       padding: 0 20px;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
       justify-content: space-between;
-      order: 2;
+      order: 2; // Move below the "bio" switch
       span {
         display: block;
         font-size: 1.2em;
@@ -75,7 +75,7 @@ const SearchGroup = styled(SearchBar)`
   }
   ${BioSwitchLabelContainer} {
     @media (max-width: ${LAYOUT.mobile}px) {
-      order: 1;
+      order: 1; // Move above the submit button
       background: white;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
       margin: 8px auto;
