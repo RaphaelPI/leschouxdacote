@@ -1,21 +1,19 @@
-import type { Product } from "src/types/model"
-
-import { useState } from "react"
 import styled from "@emotion/styled"
-import { IconButton } from "@mui/material"
-import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
-
+import EditIcon from "@mui/icons-material/Edit"
+import { IconButton } from "@mui/material"
+import { useState } from "react"
+import PointerIcon from "src/assets/pointer.svg"
 import { Button } from "src/components/Button"
+import { BasicInput, Form, SubmitButton } from "src/components/Form"
 import Link from "src/components/Link"
 import Modal from "src/components/Modal"
-import { Form, BasicInput, SubmitButton } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
-import { formatAmount, formatQuantity } from "src/helpers/text"
-import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
+import { COLORS, LAYOUT, SIZES } from "src/constants"
 import api from "src/helpers/api"
-import { COLORS, SIZES, LAYOUT } from "src/constants"
-import PointerIcon from "src/assets/pointer.svg"
+import { daysFromNow, formatDate, formatDateTime } from "src/helpers/date"
+import { formatAmount, formatQuantity } from "src/helpers/text"
+import type { Product } from "src/types/model"
 import { SocialShareBar } from "./SocialShareBar/SocialShareBar"
 
 const Container = styled.div<{ $odd?: boolean }>`
@@ -159,7 +157,7 @@ const Input = styled(BasicInput)`
 
 const StyledSocialBar = styled(SocialShareBar)`
   position: absolute;
-  right: 0;
+  right: -12px;
   top: -13px;
   @media (min-width: ${LAYOUT.mobile}px) {
     top: 20px;
