@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import LogoSvg from "src/assets/logo.svg"
-import SearchBar, { BioSwitchLabelContainer } from "src/components/SearchBar"
+import SearchBar from "src/components/SearchBar"
 import { COLORS, LAYOUT } from "src/constants"
 import Layout from "src/layout"
 
@@ -57,7 +57,6 @@ const SearchGroup = styled(SearchBar)`
       padding: 0 20px;
       box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
       justify-content: space-between;
-      order: 2;
       span {
         display: block;
         font-size: 1.2em;
@@ -73,19 +72,9 @@ const SearchGroup = styled(SearchBar)`
       top: 7px;
     }
   }
-  ${BioSwitchLabelContainer} {
-    @media (max-width: ${LAYOUT.mobile}px) {
-      order: 1;
-      background: white;
-      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
-      margin: 8px auto;
-      padding-left: 20px;
-    }
-
-    .MuiFormControlLabel-label {
-      font-weight: 300;
-      font-size: 1.2rem;
-    }
+  .MuiFormControlLabel-label {
+    font-weight: 300;
+    font-size: 1.2rem;
   }
 `
 
