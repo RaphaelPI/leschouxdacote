@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { FormControlLabel } from "@mui/material"
 import { useRouter } from "next/router"
-import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react"
 import SearchIcon from "src/assets/search.svg"
 import { Button } from "src/components/Button"
 import SearchInput from "src/components/SearchInput"
@@ -169,6 +169,10 @@ const SearchBar = ({ className }: Props) => {
     }
   }
 
+  const handleBioChange = useCallback((event: React.SyntheticEvent, checked: boolean) => {
+    setQuery((q) => ({ ...q, bio: checked }))
+  }, [])
+
   const handleSuggestion = (tag: string) => () => {
     setQuery((previous) => ({
       ...previous,
@@ -251,6 +255,7 @@ const SearchBar = ({ className }: Props) => {
         <BioSwitchLabel
           control={<CustomSwitch name="bio" />}
           label="Uniquement des produits Bio ou issus de l'Agriculture raisonnée"
+          onChange={handleBioChange}
         />
       </BioSwitchLabelContainer>
     </Form>
