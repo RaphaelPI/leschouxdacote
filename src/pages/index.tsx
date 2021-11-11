@@ -1,10 +1,8 @@
 import styled from "@emotion/styled"
-
-import Layout from "src/layout"
+import LogoSvg from "src/assets/logo.svg"
 import SearchBar from "src/components/SearchBar"
 import { COLORS, LAYOUT } from "src/constants"
-
-import LogoSvg from "src/assets/logo.svg"
+import Layout from "src/layout"
 
 const Logo = styled(LogoSvg)`
   display: block;
@@ -73,6 +71,10 @@ const SearchGroup = styled(SearchBar)`
       right: 10px;
       top: 7px;
     }
+  }
+  .MuiFormControlLabel-label {
+    font-weight: 300;
+    font-size: 1.2rem;
   }
 `
 
