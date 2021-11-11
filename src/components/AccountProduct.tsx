@@ -16,6 +16,7 @@ import { formatDate, formatDateTime, daysFromNow } from "src/helpers/date"
 import api from "src/helpers/api"
 import { COLORS, SIZES, LAYOUT } from "src/constants"
 import PointerIcon from "src/assets/pointer.svg"
+import { SocialShareBar } from "./SocialShareBar/SocialShareBar"
 
 const Container = styled.div<{ $odd?: boolean }>`
   position: relative;
@@ -156,6 +157,15 @@ const Input = styled(BasicInput)`
   padding: 10px;
 `
 
+const StyledSocialBar = styled(SocialShareBar)`
+  position: absolute;
+  right: 0;
+  top: -13px;
+  @media (min-width: ${LAYOUT.mobile}px) {
+    top: 20px;
+  }
+`
+
 interface Props {
   product: Product
   odd?: boolean
@@ -189,6 +199,11 @@ const AccountProduct = ({ product, odd }: Props) => {
 
   const handleClose = () => setModal(null)
 
+  const productShareData: ShareData = {
+    // TODO Is that safe?
+    url: `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`,
+  }
+
   return (
     <Container $odd={odd}>
       <Ad>
@@ -221,6 +236,7 @@ const AccountProduct = ({ product, odd }: Props) => {
       {active ? (
         <Bottom>
           <Status $active={true}>Annonce en ligne</Status>
+          <StyledSocialBar shareData={productShareData} />
           <End>
             La publication se termine le {formatDateTime(product.expires)} ({daysFromNow(product.expires)})
           </End>

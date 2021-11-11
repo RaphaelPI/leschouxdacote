@@ -11,6 +11,8 @@ interface ShareButtonProps {
 
 const StyledButton = styled(Button)`
   border: none;
+  background: none;
+  padding: 0.5em;
 `
 
 export const ShareButton = ({ title, onClick, children }: ShareButtonProps) => {

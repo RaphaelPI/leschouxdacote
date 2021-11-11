@@ -11,20 +11,20 @@ const Root = styled.div`
   flex-direction: row;
   justify-items: center;
   justify-content: center;
-
-  & > button {
-    margin: 0.5em;
-  }
+  padding: 0.5em;
+  font-size: 0.5em;
+  transform: translate(1.8em);
 `
 
 interface Props {
   shareData: ShareData
+  className?: string
 }
 
-export const SocialShareBar = ({ shareData }: Props) => {
+export const SocialShareBar = ({ shareData, className }: Props) => {
   const hasShareApi = isBrowser() && "share" in navigator
   return (
-    <Root>
+    <Root className={className}>
       {hasShareApi ? (
         <NavigatorShareButton shareData={shareData} />
       ) : (
