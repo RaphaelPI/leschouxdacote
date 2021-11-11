@@ -12,9 +12,11 @@ import CustomSwitch from "./CustomSwitch"
 
 const Form = styled.form`
   position: relative;
+  display: flex;
+  flex-direction: column;
 `
 
-const BioSwitchLabelContainer = styled.div`
+export const BioSwitchLabelContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
