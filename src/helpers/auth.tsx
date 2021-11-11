@@ -2,10 +2,12 @@ import type { AuthUser, User } from "src/types/model"
 
 import { useRouter } from "next/router"
 import React, { createContext, FC, useContext, useEffect, useState } from "react"
+import Bugsnag from "@bugsnag/js"
 
 import { auth, firestore, getObject } from "src/helpers/firebase"
-import { USER_ROLE } from "src/constants"
 import api from "src/helpers/api"
+import { getName } from "src/helpers/user"
+import { USER_ROLE } from "src/constants"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 
@@ -55,6 +57,14 @@ export const UserProvider: FC = ({ children }) => {
       setUser(null)
     }
   }, [authUser])
+
+  useEffect(() => {
+    if (user) {
+      Bugsnag.setUser(user.objectID, user.email, getName(user))
+    } else {
+      Bugsnag.setUser()
+    }
+  }, [user])
 
   const signin = (email: string, password: string) => auth.signInWithEmailAndPassword(email, password)
 
