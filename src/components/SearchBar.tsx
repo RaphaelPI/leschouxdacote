@@ -5,7 +5,7 @@ import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } fr
 import SearchIcon from "src/assets/search.svg"
 import { Button } from "src/components/Button"
 import SearchInput from "src/components/SearchInput"
-import { LAYOUT } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 import { tagsIndex } from "src/helpers/algolia"
 import { loadGmaps } from "src/helpers/google"
 import CustomSwitch from "./CustomSwitch"
@@ -26,6 +26,7 @@ const BioSwitchLabel = styled(FormControlLabel)`
   .MuiFormControlLabel-label {
     font-weight: 300;
     font-size: 0.75em;
+    color: ${COLORS.input};
   }
 `
 
