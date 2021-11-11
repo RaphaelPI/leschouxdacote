@@ -1,25 +1,39 @@
+import { lighten } from "polished"
+
 export const CONTACT_EMAIL = "contact@leschouxdacote.fr"
 
-export const COLORS = {
+const BASE_COLORS = {
   white: "#ffffff",
   dark: "#101010",
+  grey: "#a6a6a6",
+  green: "#47D25B",
+  red: "#DF3D3D",
+  lightDark: "#272D3B",
+  blue: "#0077CF",
+}
+
+export const COLORS = {
+  ...BASE_COLORS,
   menu: "#4A4A4A",
   divider: "#666666",
-  grey: "#a6a6a6",
   input: "#686666",
   border: "#D6D6D6",
   odd: "#F9F9F9",
-  green: "#47D25B",
-  red: "#DF3D3D",
+  background: {
+    success: "rgb(71, 210, 91, 10%)",
+    info: "rgb(0, 119, 207, 10%)",
+  },
   shadow: {
     light: "#0000001A",
     regular: "#0000004A",
   },
-  lightDark: "#272D3B",
-  blue: "#0077CF",
-  background: {
-    success: "rgb(71, 210, 91, 10%)",
-    info: "rgb(0, 119, 207, 10%)",
+  producer: {
+    link: {
+      color: {
+        default: BASE_COLORS.green,
+        hover: lighten(0.2, BASE_COLORS.green),
+      },
+    },
   },
 }
 
