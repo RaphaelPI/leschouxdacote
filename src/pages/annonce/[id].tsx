@@ -20,7 +20,6 @@ import api from "src/helpers/api"
 
 import PinIcon from "src/assets/pin.svg"
 import { SocialShare } from "src/components/SocialShare/SocialShare"
-import { useRouter } from "next/router"
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -203,6 +202,10 @@ const ProductPage = ({ product, producer, otherProducts, productUrl }: Props) =>
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
 
+  const productShareData: ShareData = {
+    url: productUrl,
+  }
+
   return (
     <Layout title={product.title} description={description} image={product.photo} fullWidth={true}>
       <Wrapper>
@@ -276,7 +279,7 @@ const ProductPage = ({ product, producer, otherProducts, productUrl }: Props) =>
 
             <ControlPanel>
               <FollowButton producer={producer.objectID} />
-              <SocialShare facebookShare={{}} copyLink={productUrl} />
+              <SocialShare shareData={productShareData} />
             </ControlPanel>
           </ProducerBox>
         </TopSection>

@@ -18,7 +18,7 @@ const BUTTON_VARIANT: Record<ButtonVariant, string[]> = {
   red: [COLORS.red, COLORS.white, COLORS.red, COLORS.red],
 }
 
-const getButtonCss = ($variant: ButtonVariant) => css`
+export const getButtonCss = ($variant: ButtonVariant) => css`
   background-color: ${BUTTON_VARIANT[$variant][0]};
   color: ${BUTTON_VARIANT[$variant][1]};
   padding: 8px 16px;
@@ -49,6 +49,7 @@ const getButtonCss = ($variant: ButtonVariant) => css`
 export const Button = styled.button<ButtonProps>`
   ${({ $variant }) => getButtonCss($variant || "white")}
 `
+
 export const LinkButton = styled.a<ButtonProps>`
   ${({ $variant }) => getButtonCss($variant || "white")}
   display: inline-block;
