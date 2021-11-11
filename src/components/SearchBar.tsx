@@ -1,14 +1,12 @@
-import { ChangeEvent, KeyboardEvent, useState, FormEvent, useRef, useEffect } from "react"
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
-
-import SearchInput from "src/components/SearchInput"
-import { Button } from "src/components/Button"
-import { loadGmaps } from "src/helpers/google"
-import { tagsIndex } from "src/helpers/algolia"
-import { LAYOUT } from "src/constants"
-
+import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 import SearchIcon from "src/assets/search.svg"
+import { Button } from "src/components/Button"
+import SearchInput from "src/components/SearchInput"
+import { LAYOUT } from "src/constants"
+import { tagsIndex } from "src/helpers/algolia"
+import { loadGmaps } from "src/helpers/google"
 
 const Form = styled.form`
   position: relative;
@@ -18,6 +16,10 @@ const Suggestions = styled.div`
   .pac-item-query {
     font-weight: 400;
     padding-left: 5px;
+  }
+  @media (max-width: ${LAYOUT.mobile}px) {
+    width: 100%;
+    margin-top: -8px;
   }
 `
 const Submit = styled(Button)`
@@ -122,9 +124,7 @@ const SearchBar = ({ className }: Props) => {
     setFocus(true)
   }
   const handleBlur = () => {
-    setTimeout(() => {
-      setFocus(false)
-    }, 100)
+    setFocus(false)
   }
 
   const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
@@ -156,7 +156,9 @@ const SearchBar = ({ className }: Props) => {
       what: tag,
     }))
     setSuggestions([])
-    input.current?.focus()
+    setTimeout(() => {
+      input.current?.focus()
+    }, 90)
   }
 
   const handleKey = (event: KeyboardEvent) => {
@@ -207,7 +209,7 @@ const SearchBar = ({ className }: Props) => {
         {focus && suggestions.length > 0 && (
           <Suggestions className="pac-container">
             {suggestions.map(({ objectID, tag }) => (
-              <div className="pac-item" key={objectID} onClick={handleSuggestion(tag)}>
+              <div className="pac-item" key={objectID} onMouseDown={handleSuggestion(tag)}>
                 <span className="pac-item-query">{tag}</span>
               </div>
             ))}
