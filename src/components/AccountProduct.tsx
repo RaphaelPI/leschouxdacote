@@ -200,7 +200,6 @@ const AccountProduct = ({ product, odd }: Props) => {
   const handleClose = () => setModal(null)
 
   const productShareData: ShareData = {
-    // TODO Is that safe?
     url: `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`,
   }
 
