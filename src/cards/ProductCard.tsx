@@ -56,13 +56,13 @@ const Follow = styled.div`
 `
 
 const Title = styled.h2<{ $margin?: boolean }>`
-  padding: 8px 10px 6px;
+  padding: 0.2em 10px 0;
   margin: ${({ $margin }) => ($margin ? "0 70px 0 0" : "0")};
   font-size: 1.4em;
 `
 const ProducerLink = styled.a`
   display: block;
-  padding: 2px 10px 2px;
+  padding: 0.2em 10px 0.2em;
   font-weight: 300;
   color: ${COLORS.producer.link.color.default};
   &:hover {
@@ -70,8 +70,8 @@ const ProducerLink = styled.a`
   }
 `
 const Location = styled.h4`
-  margin: 5px 0;
-  padding: 2px 10px 2px;
+  margin: 0;
+  padding: 0 10px 0.2em;
   font-weight: 300;
 `
 const Price = styled.div`
