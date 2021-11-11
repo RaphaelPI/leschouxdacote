@@ -1,14 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-import type { ProductPayload, RegisteringProduct, Product, Producer } from "src/types/model"
-
 import { addDays } from "date-fns"
-
+import type { NextApiRequest, NextApiResponse } from "next"
+import { badRequest, respond } from "src/helpers-api"
+import { productsIndex } from "src/helpers-api/algolia"
 import { firestore, GeoPoint, getObject, getToken } from "src/helpers-api/firebase"
-import { respond, badRequest } from "src/helpers-api"
 import { getFormData } from "src/helpers-api/form"
 import { resize, upload } from "src/helpers-api/image"
 import { normalizeNumber } from "src/helpers/validators"
-import { productsIndex } from "src/helpers-api/algolia"
+import type { Producer, Product, ProductPayload, RegisteringProduct } from "src/types/model"
 
 const checkRequired = (data: Record<string, any>, fields: string[]) => {
   const found = fields.find((field) => !data[field])

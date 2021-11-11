@@ -137,6 +137,12 @@ const ProducerTitle = styled.h2`
   font-size: 20px;
   font-weight: bold;
   text-align: center;
+  a {
+    color: ${COLORS.producer.link.color.default};
+    &:hover {
+      color: ${COLORS.producer.link.color.hover};
+    }
+  }
 `
 
 const Label = styled.div`

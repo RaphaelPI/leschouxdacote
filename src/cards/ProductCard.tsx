@@ -1,23 +1,19 @@
-import type { Product } from "src/types/model"
-
-import React from "react"
 import styled from "@emotion/styled"
-
-import { COLORS } from "src/constants"
-import Link from "src/components/Link"
-import { FloatingTag } from "src/components/Tag"
-import { formatPricePerUnit, formatQuantity, formatPrice } from "src/helpers/text"
-import { useHover } from "src/helpers/hover"
-import { isFollowed } from "src/helpers/user"
-import { useUser } from "src/helpers/auth"
-
+import React from "react"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
+import { FloatingTag } from "src/components/Tag"
+import { COLORS } from "src/constants"
+import { useUser } from "src/helpers/auth"
+import { useHover } from "src/helpers/hover"
+import { formatPrice, formatPricePerUnit, formatQuantity } from "src/helpers/text"
+import { isFollowed } from "src/helpers/user"
+import type { Product } from "src/types/model"
 
 const Container = styled.div<{ $hover: boolean }>`
   box-shadow: 0px 3px 3px ${({ $hover }) => ($hover ? COLORS.green : COLORS.shadow.light)};
 `
-const CardLink = styled(Link)`
+const CardLink = styled.div`
   position: relative;
   display: block;
 `
@@ -28,7 +24,6 @@ const Image = styled.img`
   object-fit: cover;
 `
 const Content = styled.div`
-  padding: 8px 10px 6px;
   position: relative;
 `
 
@@ -54,26 +49,33 @@ const Follow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   &:hover + ${FollowHover} {
     display: block;
   }
 `
 
 const Title = styled.h2<{ $margin?: boolean }>`
+  padding: 8px 10px 6px;
   margin: ${({ $margin }) => ($margin ? "0 70px 0 0" : "0")};
   font-size: 1.4em;
 `
-const Producer = styled.h3`
-  margin: 0.4em 0 0;
+const ProducerLink = styled.a`
+  display: block;
+  padding: 2px 10px 2px;
   font-weight: 300;
-  color: ${COLORS.green};
+  color: ${COLORS.producer.link.color.default};
+  &:hover {
+    color: ${COLORS.producer.link.color.hover};
+  }
 `
 const Location = styled.h4`
-  margin: 0.1em 0 0;
+  margin: 5px 0;
+  padding: 2px 10px 2px;
   font-weight: 300;
 `
 const Price = styled.div`
-  margin: 0.4em 0 0;
+  padding: 2px 10px 2px;
   font-size: 1.2em;
 `
 const PPU = styled.div`
@@ -105,10 +107,15 @@ export const ProductInfos = ({ product, followButton }: Props) => {
     toggleFollow(product.uid, !followed)
   }
 
+  const productUrl = `/annonce/${product.objectID}`
+  const producerUrl = `/producteur/${product.uid}`
+
   return (
-    <CardLink href={`/annonce/${product.objectID}`}>
-      <Image src={product.photo} alt="" />
-      {product.bio && <FloatingTag>Bio / raisonnée</FloatingTag>}
+    <CardLink>
+      <a href={productUrl}>
+        <Image src={product.photo} alt="" />
+        {product.bio && <FloatingTag>Bio / raisonnée</FloatingTag>}
+      </a>
       <Content>
         {followButton && (
           <>
@@ -116,20 +123,23 @@ export const ProductInfos = ({ product, followButton }: Props) => {
             <FollowHover>{followed ? "Ne plus suivre le producteur" : "Suivre le producteur"}</FollowHover>
           </>
         )}
-
-        <Title $margin={followButton}>{product.title}</Title>
-        <Producer>{product.producer}</Producer>
-        <Location>
-          {product.city}
-          {product.dpt && <> ({product.dpt})</>}
-        </Location>
-        <Price>{formatPrice(product)}</Price>
-        {product.quantity && product.unit && (
-          <>
-            <PPU>{formatPricePerUnit(product)}</PPU>
-            <Quantity>{formatQuantity(product)}</Quantity>
-          </>
-        )}
+        <a href={productUrl}>
+          <Title $margin={followButton}>{product.title}</Title>
+        </a>
+        <ProducerLink href={producerUrl}>{product.producer}</ProducerLink>
+        <a href={productUrl}>
+          <Location>
+            {product.city}
+            {product.dpt && <> ({product.dpt})</>}
+          </Location>
+          <Price>{formatPrice(product)}</Price>
+          {product.quantity && product.unit && (
+            <>
+              <PPU>{formatPricePerUnit(product)}</PPU>
+              <Quantity>{formatQuantity(product)}</Quantity>
+            </>
+          )}
+        </a>
       </Content>
     </CardLink>
   )
