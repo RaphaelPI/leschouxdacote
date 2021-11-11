@@ -5,6 +5,7 @@ import { isBrowser } from "src/helpers/window"
 import { Button } from "../Button"
 import { CopyLinkButton } from "./CopyLinkButton"
 import { FacebookShareButton } from "./FacebookShareButton"
+import { WhatsAppShareButton } from "./WhatsAppShareButton"
 
 const Root = styled.div`
   display: flex;
@@ -31,6 +32,7 @@ export const SocialShare = ({ shareData }: Props) => {
         </>
       ) : (
         <>
+          <WhatsAppShareButton shareData={shareData} />
           <FacebookShareButton shareData={shareData} />
         </>
       )}
