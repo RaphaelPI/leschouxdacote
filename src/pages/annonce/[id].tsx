@@ -19,6 +19,8 @@ import ProductCard from "src/cards/ProductCard"
 import api from "src/helpers/api"
 
 import PinIcon from "src/assets/pin.svg"
+import { SocialShare } from "src/components/SocialShare/SocialShare"
+import { useRouter } from "next/router"
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -146,6 +148,11 @@ const Label = styled.div`
   margin-top: 30px;
 `
 
+const ControlPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const Info = styled.p``
 
 const DescriptionSection = styled.section`
@@ -175,9 +182,10 @@ interface Props {
   product: Product | null
   producer: Producer | null
   otherProducts?: Product[]
+  productUrl: string
 }
 
-const ProductPage = ({ product, producer, otherProducts }: Props) => {
+const ProductPage = ({ product, producer, otherProducts, productUrl }: Props) => {
   useEffect(() => {
     if (product) {
       api.post("view", { id: product.objectID })
@@ -266,7 +274,10 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
               </Info>
             </div>
 
-            <FollowButton producer={producer.objectID} />
+            <ControlPanel>
+              <FollowButton producer={producer.objectID} />
+              <SocialShare facebookShare={{}} copyLink={productUrl} />
+            </ControlPanel>
           </ProducerBox>
         </TopSection>
         <BottomSection>
@@ -298,7 +309,9 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
     return { notFound: true }
   }
 
-  const props: Props = { product, producer }
+  const productUrl = `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`
+
+  const props: Props = { product, producer, productUrl }
 
   const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
   const now = Date.now()
