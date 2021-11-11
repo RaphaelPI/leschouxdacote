@@ -1,25 +1,22 @@
+import styled from "@emotion/styled"
 import type { GetStaticPaths, GetStaticProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
-import type { Producer, Product } from "src/types/model"
-
 import { useEffect } from "react"
-import styled from "@emotion/styled"
-
-import ErrorPage from "src/pages/_error"
-import Layout from "src/layout"
-import { COLORS, LAYOUT, SIZES, ISR_REVALIDATE } from "src/constants"
-import { formatPricePerUnit, formatPrice, formatQuantity, getMapsLink, formatPhone } from "src/helpers/text"
-import { firestore, getObject } from "src/helpers-api/firebase"
-import { Text } from "src/components/Text"
-import Products from "src/components/Products"
-import Tag, { FloatingTag } from "src/components/Tag"
-import Link from "src/components/Link"
-import FollowButton from "src/components/FollowButton"
-import ProductCard from "src/cards/ProductCard"
-import api from "src/helpers/api"
-
 import PinIcon from "src/assets/pin.svg"
+import ProductCard from "src/cards/ProductCard"
+import FollowButton from "src/components/FollowButton"
+import Link from "src/components/Link"
+import Products from "src/components/Products"
 import { SocialShareBar } from "src/components/SocialShareBar/SocialShareBar"
+import Tag, { FloatingTag } from "src/components/Tag"
+import { Text } from "src/components/Text"
+import { COLORS, ISR_REVALIDATE, LAYOUT, SIZES } from "src/constants"
+import { firestore, getObject } from "src/helpers-api/firebase"
+import api from "src/helpers/api"
+import { formatPhone, formatPrice, formatPricePerUnit, formatQuantity, getMapsLink } from "src/helpers/text"
+import Layout from "src/layout"
+import ErrorPage from "src/pages/_error"
+import type { Producer, Product } from "src/types/model"
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -207,7 +204,13 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   }
 
   return (
-    <Layout title={product.title} description={description} image={product.photo} fullWidth={true}>
+    <Layout
+      title={product.title}
+      ogTitle={product.title}
+      description={description}
+      image={product.photo}
+      fullWidth={true}
+    >
       <Wrapper>
         <TopSection>
           <ProductColumn>

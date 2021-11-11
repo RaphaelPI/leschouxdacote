@@ -16,9 +16,10 @@ export interface SEOProps {
   description?: string
   image?: string
   noindex?: boolean
+  ogTitle?: string
 }
 
-const SEO = ({ title, description, image, noindex }: SEOProps) => {
+const SEO = ({ title, description, image, noindex, ogTitle }: SEOProps) => {
   const pageTitle = title ? `${title} | ${CONFIG.title}` : `${CONFIG.title} | ${CONFIG.tagline}`
   const pageDesc = description || CONFIG.description
 
@@ -27,7 +28,7 @@ const SEO = ({ title, description, image, noindex }: SEOProps) => {
       <title>{pageTitle}</title>
       <meta name="description" content={pageDesc} />
       <meta property="og:type" content="website" />
-      <meta property="og:title" content={pageTitle} />
+      <meta property="og:title" content={ogTitle || pageTitle} />
       <meta property="og:description" content={pageDesc} />
       <meta property="og:site_name" content={CONFIG.title} />
       <meta property="og:image" content={image || CONFIG.image} />
