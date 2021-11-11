@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 
 import Layout from "src/layout"
 import SearchBar from "src/components/SearchBar"
-import { LAYOUT } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 
 import LogoSvg from "src/assets/logo.svg"
 
@@ -17,8 +17,20 @@ const Logo = styled(LogoSvg)`
 `
 const Title = styled.h1`
   text-align: center;
+  font-size: 1.7em;
+  font-weight: 500;
+  @media (max-width: ${LAYOUT.mobile}px) {
+    font-size: 14px;
+    margin: 0.5em -16px;
+  }
+`
+const Introduction = styled.p`
+  text-align: center;
   font-size: 1.2em;
-  font-weight: 400;
+  strong,
+  b {
+    color: ${COLORS.green};
+  }
   @media (max-width: ${LAYOUT.mobile}px) {
     font-size: 14px;
     margin: 0.5em -16px;
@@ -68,11 +80,15 @@ const HomePage = () => {
   return (
     <Layout bgImage>
       <Logo />
-      <Title>
-        <strong>Producteurs artisans</strong>, publiez des annonces de vos produits.
-        <br />
-        Acheteurs, découvrez les <strong>produits locaux</strong> autour de chez vous.
-      </Title>
+      <Title>Vente directe : Le circuit plus court des produits alimentaires</Title>
+      <a href="https://info.leschouxdacote.fr/" target="_blank" rel="noreferrer">
+        <Introduction>
+          <strong>Producteurs de produits alimentaires</strong>, augmentez vos <strong>ventes directes</strong> en
+          publiant gratuitement des annonces.
+          <br />
+          <b>Acheteurs</b>, découvrez les <strong>produits locaux en circuit court </strong> près de chez vous.
+        </Introduction>
+      </a>
       <SearchGroup />
     </Layout>
   )
