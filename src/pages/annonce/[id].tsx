@@ -19,7 +19,7 @@ import ProductCard from "src/cards/ProductCard"
 import api from "src/helpers/api"
 
 import PinIcon from "src/assets/pin.svg"
-import { SocialShare } from "src/components/SocialShare/SocialShare"
+import { SocialShareBar } from "src/components/SocialShareBar/SocialShareBar"
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -279,7 +279,7 @@ const ProductPage = ({ product, producer, otherProducts, productUrl }: Props) =>
 
             <ControlPanel>
               <FollowButton producer={producer.objectID} />
-              <SocialShare shareData={productShareData} />
+              <SocialShareBar shareData={productShareData} />
             </ControlPanel>
           </ProducerBox>
         </TopSection>

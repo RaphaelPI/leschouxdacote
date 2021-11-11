@@ -1,10 +1,9 @@
 import styled from "@emotion/styled"
-import ShareIcon from "@mui/icons-material/Share"
 
 import { isBrowser } from "src/helpers/window"
-import { Button } from "../Button"
 import { CopyLinkButton } from "./CopyLinkButton"
 import { FacebookShareButton } from "./FacebookShareButton"
+import { NavigatorShareButton } from "./NavigatorShareButton"
 import { WhatsAppShareButton } from "./WhatsAppShareButton"
 
 const Root = styled.div`
@@ -22,29 +21,19 @@ interface Props {
   shareData: ShareData
 }
 
-export const SocialShare = ({ shareData }: Props) => {
+export const SocialShareBar = ({ shareData }: Props) => {
   const hasShareApi = isBrowser() && "share" in navigator
   return (
     <Root>
       {hasShareApi ? (
-        <>
-          <NavigatorShareButton shareData={shareData} />
-        </>
+        <NavigatorShareButton shareData={shareData} />
       ) : (
         <>
           <WhatsAppShareButton shareData={shareData} />
           <FacebookShareButton shareData={shareData} />
+          {shareData.url && <CopyLinkButton url={shareData.url} />}
         </>
       )}
-      {shareData.url && <CopyLinkButton url={shareData.url} />}
     </Root>
-  )
-}
-
-const NavigatorShareButton = ({ shareData }: { shareData: ShareData }) => {
-  return (
-    <Button onClick={() => navigator.share(shareData)}>
-      <ShareIcon />
-    </Button>
   )
 }

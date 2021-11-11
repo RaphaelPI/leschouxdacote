@@ -1,10 +1,9 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp"
 import { useCallback } from "react"
-import { Tooltip } from "@mui/material"
 
-import { Button } from "../Button"
 import { queryString } from "src/helpers/url"
 import { openPopup } from "src/helpers/window"
+import { ShareButton } from "./ShareButton"
 
 export interface WhatsAppShareButtonProps {
   shareData: ShareData
@@ -19,10 +18,8 @@ export const WhatsAppShareButton = ({ shareData }: WhatsAppShareButtonProps) => 
   }, [shareData])
 
   return (
-    <Tooltip title="Partager sur WhatsApp">
-      <Button onClick={handleClick}>
-        <WhatsAppIcon />
-      </Button>
-    </Tooltip>
+    <ShareButton title="Partager sur WhatsApp" onClick={handleClick}>
+      <WhatsAppIcon />
+    </ShareButton>
   )
 }
