@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-
 import { isBrowser } from "src/helpers/window"
 import { CopyLinkButton } from "./CopyLinkButton"
 import { FacebookShareButton } from "./FacebookShareButton"
@@ -13,7 +12,6 @@ const Root = styled.div`
   justify-content: center;
   padding: 0.5em;
   font-size: 0.5em;
-  transform: translate(1.8em);
 `
 
 interface Props {
