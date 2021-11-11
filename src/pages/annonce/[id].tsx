@@ -203,7 +203,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             <ProductSection>
               <ImageContainer>
                 <img src={product.photo} alt={product.title} />
-                {product.bio && <FloatingTag>Bio / raisonné</FloatingTag>}
+                {product.bio && <FloatingTag>Bio / raisonnée</FloatingTag>}
               </ImageContainer>
               <ProductInfo>
                 <ProductTitle>{product.title}</ProductTitle>
