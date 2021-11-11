@@ -93,6 +93,12 @@ const Quantity = styled.div`
   font-weight: 400;
 `
 
+const StyledFloatingTag = styled(FloatingTag)`
+  position: absolute;
+  right: 0;
+  left: auto;
+`
+
 interface Props {
   product: Product
   followButton?: boolean
@@ -114,7 +120,7 @@ export const ProductInfos = ({ product, followButton }: Props) => {
     <CardLink>
       <a href={productUrl}>
         <Image src={product.photo} alt="" />
-        {product.bio && <FloatingTag>Bio / raisonnée</FloatingTag>}
+        {product.bio && <StyledFloatingTag>Bio / raisonnée</StyledFloatingTag>}
       </a>
       <Content>
         {followButton && (
