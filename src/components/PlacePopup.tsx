@@ -1,14 +1,11 @@
-import type { Product } from "src/types/model"
-
-import { forwardRef, useEffect, useState } from "react"
 import styled from "@emotion/styled"
-
 import PrevIcon from "@mui/icons-material/NavigateBefore"
 import NextIcon from "@mui/icons-material/NavigateNext"
-
-import { useHover } from "src/helpers/hover"
-import { COLORS, LAYOUT } from "src/constants"
+import { forwardRef, useEffect, useState } from "react"
 import { ProductInfos } from "src/cards/ProductCard"
+import { COLORS, LAYOUT } from "src/constants"
+import { useHover } from "src/helpers/hover"
+import type { Product } from "src/types/model"
 
 const PopupContent = styled.div`
   width: ${LAYOUT.mapPopupWidth}px;
@@ -17,7 +14,7 @@ const PopupContent = styled.div`
 `
 const Slider = styled.div`
   transition: transform 200ms ease-in-out;
-  > a {
+  > div {
     white-space: normal;
     display: inline-block;
     vertical-align: top;
