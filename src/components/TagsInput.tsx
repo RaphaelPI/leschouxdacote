@@ -1,11 +1,10 @@
-import { useState, ChangeEvent, useRef, KeyboardEvent, FocusEvent } from "react"
-import { useFormContext } from "react-hook-form"
 import styled from "@emotion/styled"
-
-import { Label } from "src/components/Form"
+import { ChangeEvent, FocusEvent, KeyboardEvent, useRef, useState } from "react"
+import { useFormContext } from "react-hook-form"
 import CustomSwitch from "src/components/CustomSwitch"
-import { tagsIndex } from "src/helpers/algolia"
+import { Label } from "src/components/Form"
 import { COLORS } from "src/constants"
+import { tagsIndex } from "src/helpers/algolia"
 
 const Tag = styled.span`
   display: inline-block;
@@ -27,6 +26,7 @@ const Suggestions = styled.div`
   position: absolute;
   left: 0;
   right: 0;
+  z-index: 2;
   background-color: white;
   border: 1px solid ${COLORS.border};
   padding: 4px 0;
