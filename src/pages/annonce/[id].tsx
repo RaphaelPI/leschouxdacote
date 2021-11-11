@@ -181,10 +181,9 @@ interface Props {
   product: Product | null
   producer: Producer | null
   otherProducts?: Product[]
-  productUrl: string
 }
 
-const ProductPage = ({ product, producer, otherProducts, productUrl }: Props) => {
+const ProductPage = ({ product, producer, otherProducts }: Props) => {
   useEffect(() => {
     if (product) {
       api.post("view", { id: product.objectID })
@@ -202,6 +201,7 @@ const ProductPage = ({ product, producer, otherProducts, productUrl }: Props) =>
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
 
+  const productUrl = `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`
   const productShareData: ShareData = {
     url: productUrl,
   }
@@ -312,9 +312,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
     return { notFound: true }
   }
 
-  const productUrl = `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`
-
-  const props: Props = { product, producer, productUrl }
+  const props: Props = { product, producer }
 
   const { docs } = await firestore.collection("products").where("uid", "==", product.uid).get()
   const now = Date.now()
