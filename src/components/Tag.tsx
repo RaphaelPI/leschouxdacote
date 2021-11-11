@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-
 import { COLORS } from "src/constants"
 
 const Tag = styled.strong`
@@ -16,9 +15,10 @@ const Tag = styled.strong`
 export default Tag
 
 export const FloatingTag = styled(Tag)`
+  display: block;
   position: absolute;
   top: 0;
-  right: 0;
+  left: -150px;
   margin: 10px 8px;
   pointer-events: none;
 `
