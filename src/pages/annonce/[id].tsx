@@ -19,6 +19,7 @@ import ProductCard from "src/cards/ProductCard"
 import api from "src/helpers/api"
 
 import PinIcon from "src/assets/pin.svg"
+import { SocialShareBar } from "src/components/SocialShareBar/SocialShareBar"
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -146,6 +147,11 @@ const Label = styled.div`
   margin-top: 30px;
 `
 
+const ControlPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 const Info = styled.p``
 
 const DescriptionSection = styled.section`
@@ -194,6 +200,11 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
   const price = formatPrice(product)
   const pricePerUnit = formatPricePerUnit(product)
   const description = `${pricePerUnit || price} chez ${producer.name} à ${product.city}`
+
+  const productUrl = `${process.env.NEXT_PUBLIC_URL}/annonce/${product.objectID}`
+  const productShareData: ShareData = {
+    url: productUrl,
+  }
 
   return (
     <Layout title={product.title} description={description} image={product.photo} fullWidth={true}>
@@ -266,7 +277,10 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
               </Info>
             </div>
 
-            <FollowButton producer={producer.objectID} />
+            <ControlPanel>
+              <FollowButton producer={producer.objectID} />
+              <SocialShareBar shareData={productShareData} />
+            </ControlPanel>
           </ProducerBox>
         </TopSection>
         <BottomSection>
