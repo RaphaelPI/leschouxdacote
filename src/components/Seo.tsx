@@ -4,7 +4,7 @@ const CONFIG = {
   title: "Les Choux d'à Côté",
   tagline: "L'alimentaire sans intermédiaire",
   description:
-    "1ère plateforme d’annonces alimentaire pour la vente directe. Achetez directement aux producteurs locaux. Vendez directement aux clients.",
+    "Les Choux d'à Côté - Producteurs, publiez gratuitement des annonces de vos produits. Acheteurs, découvrez les produits locaux près de chez vous.",
   image: process.env.NEXT_PUBLIC_URL + "/opengraph.jpg",
   social: {
     twitter: "https://twitter.com/leschouxdacote",
