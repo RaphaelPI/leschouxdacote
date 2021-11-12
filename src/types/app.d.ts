@@ -16,7 +16,7 @@ interface SearchQuery extends ParsedUrlQueryInput {
   ll?: string // lat,lon
   r?: string // radius
   z?: string // zoom
-  bio?: boolean // Bio or Agriculture raisonnée
+  bio?: "1" // Bio or Agriculture raisonnée
 }
 
 interface Place {

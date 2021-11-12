@@ -170,7 +170,15 @@ const SearchBar = ({ className }: Props) => {
   }
 
   const handleBioChange = useCallback((event: React.SyntheticEvent, checked: boolean) => {
-    setQuery((q) => ({ ...q, bio: checked }))
+    setQuery((q) => {
+      const newQuery = { ...q }
+      if (checked) {
+        newQuery.bio = "1"
+      } else {
+        delete newQuery.bio
+      }
+      return newQuery
+    })
   }, [])
 
   const handleSuggestion = (tag: string) => () => {
@@ -255,6 +263,7 @@ const SearchBar = ({ className }: Props) => {
         <BioSwitchLabel
           control={<CustomSwitch name="bio" />}
           label="Uniquement des produits Bio ou issus de l'Agriculture raisonnée"
+          checked={Boolean(query.bio)}
           onChange={handleBioChange}
         />
       </BioSwitchLabelContainer>
