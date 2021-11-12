@@ -51,6 +51,7 @@ interface Producer extends BaseUser {
   description: string
   phone: string
   followers?: Record<string, Follower>
+  alertsExpired?: boolean
 }
 type User = Buyer | Producer
 

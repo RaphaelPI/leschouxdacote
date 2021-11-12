@@ -28,6 +28,8 @@
     "lint": "lint-staged",
     "build": "next build",
     "serve": "next start",
+    "email-alerts": "ts-node --files -r dotenv/config src/scripts/alerts.ts",
+    "email-expired": "ts-node --files -r dotenv/config src/scripts/expired.ts",
     "update-tags": "ts-node --files -r dotenv/config src/scripts/tags.ts"
   },
   "dependencies": {
@@ -74,6 +76,7 @@
     "sharp": "^0.29.0",
     "standard-http-error": "^2.0.1",
     "ts-node": "^10.4.0",
+    "tsconfig-paths": "^3.11.0",
     "typescript": "^4.1.2",
     "yup": "^0.32.9"
   },

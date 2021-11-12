@@ -1,16 +1,15 @@
-import type { FollowedProducer } from "src/types/model"
-
-import { TableRow, TableHead, TableContainer, TableCell, TableBody, Table, IconButton } from "@mui/material"
 import styled from "@emotion/styled"
-
-import Layout from "src/layout"
-import { COLORS } from "src/constants"
-import { useUser } from "src/helpers/auth"
+import { IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material"
+import type { ChangeEvent } from "react"
+import DeleteIcon from "src/assets/delete.svg"
 import CustomSwitch from "src/components/CustomSwitch"
 import Link from "src/components/Link"
+import { COLORS, USER_ROLE } from "src/constants"
+import api from "src/helpers/api"
+import { useUser } from "src/helpers/auth"
 import { getMapsLink, s } from "src/helpers/text"
-
-import DeleteIcon from "src/assets/delete.svg"
+import Layout from "src/layout"
+import type { FollowedProducer } from "src/types/model"
 
 const Container = styled.div`
   padding: 32px 4rem;
@@ -62,6 +61,9 @@ const Tooltip = styled.div`
   color: white;
   font-size: 10px;
 `
+const Label = styled.label`
+  cursor: pointer;
+`
 
 interface TableItem extends FollowedProducer {
   uid: string
@@ -91,10 +93,14 @@ const AlertsPage = () => {
 
   items.sort(sortByName)
 
+  const handleAlertsExpired = async (_: ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    await api.post("alerts", { type: "expired", value: checked })
+  }
+
   return (
     <Layout title="Mes alertes" noindex fullWidth>
       <Container>
-        <Title>Mes alertes</Title>
+        <Title>Mes alertes utilisateur</Title>
         <Card>
           <CardTitle>Liste des producteurs favoris</CardTitle>
           <Content>
@@ -146,6 +152,17 @@ const AlertsPage = () => {
           </Content>
         </Card>
       </Container>
+      {user?.role === USER_ROLE.PRODUCER && (
+        <Container>
+          <Title>Mes alertes producteur</Title>
+          <Card>
+            <Label>
+              <CustomSwitch defaultChecked={user.alertsExpired !== false} onChange={handleAlertsExpired} />
+              Recevoir des alertes lorsque mes annonces expirent
+            </Label>
+          </Card>
+        </Container>
+      )}
     </Layout>
   )
 }

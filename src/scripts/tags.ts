@@ -1,7 +1,6 @@
-import type { Product } from "../types/model"
-
-import { firestore, getObject } from "../helpers-api/firebase"
-import { tagsIndex } from "../helpers-api/algolia"
+import { tagsIndex } from "src/helpers-api/algolia"
+import { firestore, getObject } from "src/helpers-api/firebase"
+import type { Product } from "src/types/model"
 
 const handler = async () => {
   const list = await firestore.collection("products").where("_tags", "!=", null).get()

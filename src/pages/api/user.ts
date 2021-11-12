@@ -1,13 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { Producer, RegisteringUser, UpdatingUser } from "src/types/model"
-
 import fetch from "node-fetch"
-
-import { auth, FieldValue, firestore, getObject, getToken } from "src/helpers-api/firebase"
+import { CONTACT_EMAIL, USER_ROLE } from "src/constants"
 import { badRequest, respond } from "src/helpers-api"
 import { productsIndex } from "src/helpers-api/algolia"
+import { auth, FieldValue, firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { normalizeNumber } from "src/helpers/validators"
-import { CONTACT_EMAIL, USER_ROLE } from "src/constants"
+import type { Producer, RegisteringUser, UpdatingUser } from "src/types/model"
 
 const checkCompany = async (siret: string, nocheck = false) => {
   const response = await fetch("https://api.insee.fr/entreprises/sirene/V3/siret/" + siret, {
@@ -59,7 +57,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
   if (req.method === "POST") {
     // user registration
     const user = req.body as RegisteringUser // TODO: validate fields
-    if (user.role === USER_ROLE.PRODUCER && user.siret) {
+    if (user.role === USER_ROLE.PRODUCER) {
       user.siret = user.siret.replace(/\s+/g, "") // remove spaces
       const checkError = await checkCompany(user.siret, user.nocheck)
       if (checkError) {
@@ -68,6 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
         })
       }
       user.phone = normalizeNumber(user.phone)
+      user.alertsExpired = true
     }
     if (!user.nocheck) {
       delete user.nocheck
