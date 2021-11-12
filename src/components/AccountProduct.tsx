@@ -9,12 +9,12 @@ import { BasicInput, Form, SubmitButton } from "src/components/Form"
 import Link from "src/components/Link"
 import Modal from "src/components/Modal"
 import ProductEndDate from "src/components/ProductEndDate"
+import { SocialShareBar } from "src/components/SocialShareBar/SocialShareBar"
 import { COLORS, LAYOUT, SIZES } from "src/constants"
 import api from "src/helpers/api"
 import { daysFromNow, formatDate, formatDateTime } from "src/helpers/date"
 import { formatAmount, formatQuantity } from "src/helpers/text"
 import type { Product } from "src/types/model"
-import { SocialShareBar } from "./SocialShareBar/SocialShareBar"
 
 const Container = styled.div<{ $odd?: boolean }>`
   position: relative;

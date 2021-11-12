@@ -15,10 +15,9 @@ const Tag = styled.strong`
 export default Tag
 
 export const FloatingTag = styled(Tag)`
-  display: block;
   position: absolute;
   top: 0;
-  left: -150px;
+  left: 0;
   margin: 10px 8px;
   pointer-events: none;
 `

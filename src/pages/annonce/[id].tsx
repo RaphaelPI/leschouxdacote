@@ -65,9 +65,8 @@ const ProductSection = styled.section`
 `
 
 const ImageContainer = styled.div`
+  position: relative;
   flex: 1;
-  display: flex;
-  flex-direction: row;
   min-width: 250px;
 
   img {
@@ -83,11 +82,6 @@ const ImageContainer = styled.div`
       max-height: 50vh;
     }
   }
-`
-const FloatingTagContainer = styled.div`
-  /* This container allows to position the tag according to the previous element (the product image) */
-  flex: 0;
-  position: relative;
 `
 
 const ProductInfo = styled.div`
@@ -229,11 +223,7 @@ const ProductPage = ({ product, producer, otherProducts }: Props) => {
             <ProductSection>
               <ImageContainer>
                 <img src={product.photo} alt={product.title} />
-                {product.bio && (
-                  <FloatingTagContainer>
-                    <FloatingTag>Bio / raisonnée</FloatingTag>
-                  </FloatingTagContainer>
-                )}
+                {product.bio && <FloatingTag>Bio / raisonnée</FloatingTag>}
               </ImageContainer>
               <ProductInfo>
                 <ProductTitle>{product.title}</ProductTitle>

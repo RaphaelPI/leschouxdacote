@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 import { Tooltip } from "@mui/material"
 import { ReactElement } from "react"
-import { Button } from "../Button"
+import { Button } from "src/components/Button"
 
 interface ShareButtonProps {
   title: string
