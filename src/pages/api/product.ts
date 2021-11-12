@@ -73,7 +73,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse<Reg
     let photo: string
     if (files.photo?.size) {
       try {
-        const resized = await resize(files.photo.path)
+        const resized = await resize(files.photo.filepath)
         photo = await upload(resized, ref.id)
       } catch (error) {
         return respond(res, {
