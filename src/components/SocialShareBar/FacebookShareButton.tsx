@@ -1,6 +1,5 @@
 import FacebookIcon from "@mui/icons-material/Facebook"
 import { useCallback } from "react"
-
 import { queryString } from "src/helpers/url"
 import { openPopup } from "src/helpers/window"
 import { ShareButton } from "./ShareButton"
