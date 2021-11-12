@@ -12,5 +12,6 @@
   },
   "[yaml]": {
     "editor.formatOnSave": true
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }
