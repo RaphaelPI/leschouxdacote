@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
 import { useEffect, useState } from "react"
+import { isWindows } from "src/helpers/window"
 import { CopyLinkButton } from "./CopyLinkButton"
 import { FacebookShareButton } from "./FacebookShareButton"
 import { NavigatorShareButton } from "./NavigatorShareButton"
@@ -24,7 +25,7 @@ export const SocialShareBar = ({ shareData, className }: Props) => {
 
   useEffect(() => {
     // We need to figure that out client-side, and not during NextJS rendering.
-    setHasShareApi("share" in navigator)
+    setHasShareApi("share" in navigator && !isWindows())
   }, [])
 
   return (

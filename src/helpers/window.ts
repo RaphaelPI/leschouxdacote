@@ -1,5 +1,16 @@
 export const isBrowser = () => typeof window !== "undefined"
 
+const WINDOWS = /^win/i
+export const isWindows = () => {
+  if (!isBrowser()) {
+    return false
+  }
+  if ("userAgentData" in navigator) {
+    return WINDOWS.test(navigator.userAgentData.platform)
+  }
+  return WINDOWS.test(navigator.platform)
+}
+
 const getSize = (avail: number, min: number, max: number) => Math.max(Math.min(min, avail), Math.min(max, avail / 2))
 
 const getPosition = (avail: number, size: number) => Math.round(avail / 2 - size / 2)

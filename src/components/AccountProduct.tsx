@@ -157,10 +157,10 @@ const Input = styled(BasicInput)`
 
 const StyledSocialBar = styled(SocialShareBar)`
   position: absolute;
-  right: -12px;
-  top: -13px;
+  right: -10px;
+  top: -12px;
   @media (min-width: ${LAYOUT.mobile}px) {
-    top: 20px;
+    top: 26px;
   }
 `
 
