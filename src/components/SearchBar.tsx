@@ -1,16 +1,35 @@
 import styled from "@emotion/styled"
+import { FormControlLabel } from "@mui/material"
 import { useRouter } from "next/router"
-import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react"
 import SearchIcon from "src/assets/search.svg"
 import { Button } from "src/components/Button"
 import SearchInput from "src/components/SearchInput"
-import { LAYOUT } from "src/constants"
+import { COLORS, LAYOUT } from "src/constants"
 import { tagsIndex } from "src/helpers/algolia"
 import { loadGmaps } from "src/helpers/google"
+import CustomSwitch from "./CustomSwitch"
 
 const Form = styled.form`
   position: relative;
+  display: flex;
+  flex-direction: column;
 `
+
+export const BioSwitchLabelContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
+
+const BioSwitchLabel = styled(FormControlLabel)`
+  .MuiFormControlLabel-label {
+    font-weight: 300;
+    font-size: 0.75em;
+    color: ${COLORS.input};
+  }
+`
+
 const Suggestions = styled.div`
   width: 50%;
   .pac-item-query {
@@ -150,6 +169,18 @@ const SearchBar = ({ className }: Props) => {
     }
   }
 
+  const handleBioChange = useCallback((event: React.SyntheticEvent, checked: boolean) => {
+    setQuery((q) => {
+      const newQuery = { ...q }
+      if (checked) {
+        newQuery.bio = "1"
+      } else {
+        delete newQuery.bio
+      }
+      return newQuery
+    })
+  }, [])
+
   const handleSuggestion = (tag: string) => () => {
     setQuery((previous) => ({
       ...previous,
@@ -228,6 +259,14 @@ const SearchBar = ({ className }: Props) => {
         <span>Rechercher</span>
         <SearchIcon />
       </Submit>
+      <BioSwitchLabelContainer>
+        <BioSwitchLabel
+          control={<CustomSwitch name="bio" />}
+          label="Uniquement des produits Bio ou issus de l'Agriculture raisonnée"
+          checked={Boolean(query.bio)}
+          onChange={handleBioChange}
+        />
+      </BioSwitchLabelContainer>
     </Form>
   )
 }
