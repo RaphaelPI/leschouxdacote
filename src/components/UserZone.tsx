@@ -1,16 +1,14 @@
-import styled from "@emotion/styled"
 import { css } from "@emotion/react"
-
-import { useUser } from "src/helpers/auth"
-import Loader from "src/components/Loader"
+import styled from "@emotion/styled"
+import DownIcon from "src/assets/down.svg"
 import { Button } from "src/components/Button"
 import Link, { ButtonLink } from "src/components/Link"
+import Loader from "src/components/Loader"
+import { COLORS, USER_ROLE } from "src/constants"
+import { useUser } from "src/helpers/auth"
 import { useMenu } from "src/helpers/menu"
 import { ellipsis } from "src/helpers/text"
 import { getName } from "src/helpers/user"
-import { COLORS, USER_ROLE } from "src/constants"
-
-import DownIcon from "src/assets/down.svg"
 
 const Name = styled.span`
   min-width: 100px;

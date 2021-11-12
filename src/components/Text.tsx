@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-
 import { SIZES } from "src/constants"
 
 interface TextProps {

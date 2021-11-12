@@ -1,13 +1,11 @@
-import type { AuthUser, User } from "src/types/model"
-
+import Bugsnag from "@bugsnag/js"
 import { useRouter } from "next/router"
 import React, { createContext, FC, useContext, useEffect, useState } from "react"
-import Bugsnag from "@bugsnag/js"
-
-import { auth, firestore, getObject } from "src/helpers/firebase"
-import api from "src/helpers/api"
-import { getName } from "src/helpers/user"
 import { USER_ROLE } from "src/constants"
+import api from "src/helpers/api"
+import { auth, firestore, getObject } from "src/helpers/firebase"
+import { getName } from "src/helpers/user"
+import type { AuthUser, User } from "src/types/model"
 
 const ANONYMOUS_ROUTES = ["/connexion", "/inscription", "/confirmation", "/mot-de-passe-oublie"]
 

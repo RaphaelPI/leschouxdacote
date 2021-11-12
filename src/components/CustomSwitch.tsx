@@ -1,6 +1,5 @@
-import Switch from "@mui/material/Switch"
 import styled from "@emotion/styled"
-
+import Switch from "@mui/material/Switch"
 import { COLORS } from "src/constants"
 
 const CustomSwitch = styled(Switch)`

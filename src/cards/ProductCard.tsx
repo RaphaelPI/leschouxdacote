@@ -62,7 +62,7 @@ const Title = styled.h2<{ $margin?: boolean }>`
 `
 const ProducerLink = styled.a`
   display: block;
-  padding: 0.2em 10px 0.2em;
+  margin: 0.2em 10px;
   font-weight: 300;
   color: ${COLORS.producer.link.color.default};
   &:hover {
@@ -75,7 +75,7 @@ const Location = styled.h4`
   font-weight: 300;
 `
 const Price = styled.div`
-  padding: 2px 10px 2px;
+  padding: 2px 10px 6px;
   font-size: 1.2em;
 `
 const PPU = styled.div`

@@ -1,15 +1,13 @@
-import type { UpdatingUser } from "src/types/model"
-
-import { DefaultValues } from "react-hook-form"
 import styled from "@emotion/styled"
-
-import Layout from "src/layout"
-import { Form, TextInput, SubmitButton } from "src/components/Form"
+import { DefaultValues } from "react-hook-form"
 import { Button } from "src/components/Button"
+import { Form, SubmitButton, TextInput } from "src/components/Form"
+import { USER_ROLE } from "src/constants"
+import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
 import { validatePhoneNumber } from "src/helpers/validators"
-import api from "src/helpers/api"
-import { USER_ROLE } from "src/constants"
+import Layout from "src/layout"
+import type { UpdatingUser } from "src/types/model"
 
 const DangerZone = styled.div`
   margin-top: 4em;

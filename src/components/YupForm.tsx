@@ -1,9 +1,8 @@
+import styled from "@emotion/styled"
 import React from "react"
 import { FieldError } from "react-hook-form"
-import styled from "@emotion/styled"
-
-import { COLORS, LAYOUT, SIZES } from "src/constants"
 import { ErrorMessage, Label, Row, Suffix } from "src/components/Form"
+import { COLORS, LAYOUT, SIZES } from "src/constants"
 
 export const StyledForm = styled.form`
   width: 100%;

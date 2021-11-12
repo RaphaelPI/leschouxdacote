@@ -1,4 +1,4 @@
-import { MutableRefObject, FC, useRef, useEffect } from "react"
+import { FC, MutableRefObject, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
 
 const usePortal = (): HTMLDivElement => {

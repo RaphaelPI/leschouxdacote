@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { Product } from "src/types/model"
-
 import { badRequest, respond } from "src/helpers-api"
-import { firestore, FieldValue, getObject } from "src/helpers-api/firebase"
 import { productsIndex } from "src/helpers-api/algolia"
+import { FieldValue, firestore, getObject } from "src/helpers-api/firebase"
+import type { Product } from "src/types/model"
 
 interface Payload {
   id: string

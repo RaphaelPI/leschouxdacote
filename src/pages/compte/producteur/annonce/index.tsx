@@ -1,21 +1,19 @@
-import type { AuthUser, Producer, Product, ProductPayload, Unit } from "src/types/model"
-
-import { useRef, useState, useEffect } from "react"
-import { useFormContext, DefaultValues } from "react-hook-form"
-import { differenceInCalendarDays } from "date-fns"
 import styled from "@emotion/styled"
+import { differenceInCalendarDays } from "date-fns"
 import { useRouter } from "next/router"
-
-import Layout from "src/layout"
-import { Form, TextInput, SubmitButton, SelectInput, Row, ValidationError } from "src/components/Form"
+import { useEffect, useRef, useState } from "react"
+import { DefaultValues, useFormContext } from "react-hook-form"
+import { Form, Row, SelectInput, SubmitButton, TextInput, ValidationError } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
+import TagsInput from "src/components/TagsInput"
 import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
+import { useObjectQuery } from "src/helpers/firebase"
+import { getCity, getDpt, loadGmaps } from "src/helpers/google"
 import { formatPricePerUnit } from "src/helpers/text"
 import { validatePhoneNumber } from "src/helpers/validators"
-import { useObjectQuery } from "src/helpers/firebase"
-import { loadGmaps, getCity, getDpt } from "src/helpers/google"
-import TagsInput from "src/components/TagsInput"
+import Layout from "src/layout"
+import type { AuthUser, Producer, Product, ProductPayload, Unit } from "src/types/model"
 
 // https://sharp.pixelplumbing.com/#formats
 const ACCEPTED_MIMETYPES = ["image/jpeg", "image/png", "image/webp", "image/tiff"]

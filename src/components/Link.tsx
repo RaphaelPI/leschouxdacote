@@ -1,7 +1,6 @@
-import { FC, AnchorHTMLAttributes } from "react"
 import NextLink, { LinkProps } from "next/link"
-
-import { LinkButton, ButtonProps } from "src/components/Button"
+import { AnchorHTMLAttributes, FC } from "react"
+import { ButtonProps, LinkButton } from "src/components/Button"
 
 type Props = Pick<LinkProps, "href"> & AnchorHTMLAttributes<HTMLAnchorElement>
 

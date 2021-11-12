@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export const useMenu = () => {
   const [open, setOpen] = useState(false)

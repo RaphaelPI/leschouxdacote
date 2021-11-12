@@ -1,10 +1,9 @@
-import React, { useState } from "react"
 import styled from "@emotion/styled"
-
-import { COLORS, LAYOUT, SIZES } from "src/constants"
+import React, { useState } from "react"
 import CheckIcon from "src/assets/check-circle.svg"
-import CloseCirce from "src/assets/x-circle.svg"
 import InfoIcon from "src/assets/info.svg"
+import CloseCirce from "src/assets/x-circle.svg"
+import { COLORS, LAYOUT, SIZES } from "src/constants"
 
 type MessageType = "success" | "info"
 

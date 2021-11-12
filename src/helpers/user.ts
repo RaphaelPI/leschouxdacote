@@ -1,6 +1,5 @@
-import type { User } from "src/types/model"
-
 import { USER_ROLE } from "src/constants"
+import type { User } from "src/types/model"
 
 export const isFollowed = (producerUid: string, currentUser: User | null) => {
   if (!currentUser || !currentUser.followedProducers) {

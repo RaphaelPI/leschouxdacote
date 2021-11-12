@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { FollowedProducer, Follower, Producer, User } from "src/types/model"
-
 import { badRequest, respond } from "src/helpers-api"
-import { firestore, getObject, getToken, FieldValue } from "src/helpers-api/firebase"
+import { FieldValue, firestore, getObject, getToken } from "src/helpers-api/firebase"
 import { isFollowed } from "src/helpers/user"
+import type { FollowedProducer, Follower, Producer, User } from "src/types/model"
 
 interface FollowPayload {
   producerUid: string

@@ -1,19 +1,16 @@
+import styled from "@emotion/styled"
 import type { GetStaticPaths, GetStaticProps } from "next"
 import type { ParsedUrlQuery } from "querystring"
-import type { Producer, Product } from "src/types/model"
-
-import styled from "@emotion/styled"
-
-import ErrorPage from "src/pages/_error"
-import Layout from "src/layout"
-import Products from "src/components/Products"
-import FollowButton from "src/components/FollowButton"
-import ProductCard from "src/cards/ProductCard"
-import { formatPhone, getMapsLink } from "src/helpers/text"
-import { firestore, getObject } from "src/helpers-api/firebase"
-import { COLORS, SIZES, LAYOUT, USER_ROLE, ISR_REVALIDATE } from "src/constants"
-
 import PinIcon from "src/assets/pin.svg"
+import ProductCard from "src/cards/ProductCard"
+import FollowButton from "src/components/FollowButton"
+import Products from "src/components/Products"
+import { COLORS, ISR_REVALIDATE, LAYOUT, SIZES, USER_ROLE } from "src/constants"
+import { firestore, getObject } from "src/helpers-api/firebase"
+import { formatPhone, getMapsLink } from "src/helpers/text"
+import Layout from "src/layout"
+import ErrorPage from "src/pages/_error"
+import type { Producer, Product } from "src/types/model"
 
 const Title = styled.h1`
   a {

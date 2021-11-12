@@ -1,10 +1,9 @@
 import { useState } from "react"
-
-import Layout from "src/layout"
-import { Form, TextInput, SubmitButton, ValidationError } from "src/components/Form"
+import { Form, SubmitButton, TextInput, ValidationError } from "src/components/Form"
 import Link from "src/components/Link"
 import { auth } from "src/helpers/firebase"
 import { getAbsoluteUrl } from "src/helpers/text"
+import Layout from "src/layout"
 import { Register } from "src/pages/connexion"
 
 const LostPasswordPage = () => {

@@ -1,13 +1,12 @@
-import { ErrorInfo } from "react"
-import styled from "@emotion/styled"
 import { css, Global } from "@emotion/react"
+import styled from "@emotion/styled"
 import { AppProps } from "next/app"
 import Head from "next/head"
-
+import { ErrorInfo } from "react"
 import "src/components/Nprogress"
-import { ErrorBoundary } from "src/helpers/bugsnag"
 import { FONT, LAYOUT } from "src/constants"
 import { UserProvider } from "src/helpers/auth"
+import { ErrorBoundary } from "src/helpers/bugsnag"
 
 const globalStyle = css`
   :root {

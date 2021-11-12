@@ -1,6 +1,6 @@
-import React from "react"
 import Bugsnag from "@bugsnag/js"
 import BugsnagReact from "@bugsnag/plugin-react"
+import React from "react"
 
 const apiKey = process.env.NEXT_PUBLIC_BUGSNAG
 

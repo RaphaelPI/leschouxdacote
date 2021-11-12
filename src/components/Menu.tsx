@@ -1,23 +1,20 @@
-import { FC } from "react"
 import styled from "@emotion/styled"
-import NextLink from "next/link"
-import { useRouter } from "next/router"
-
+import AddCircleIcon from "@mui/icons-material/AddCircle"
+import CollectionsIcon from "@mui/icons-material/Collections"
+import LoginIcon from "@mui/icons-material/Login"
+import LogoutIcon from "@mui/icons-material/Logout"
+import PersonIcon from "@mui/icons-material/Person"
+import Divider from "@mui/material/Divider"
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
 import ListItemText from "@mui/material/ListItemText"
-import Divider from "@mui/material/Divider"
-
-import AddCircleIcon from "@mui/icons-material/AddCircle"
-import PersonIcon from "@mui/icons-material/Person"
-import LoginIcon from "@mui/icons-material/Login"
-import LogoutIcon from "@mui/icons-material/Logout"
-import CollectionsIcon from "@mui/icons-material/Collections"
-
+import NextLink from "next/link"
+import { useRouter } from "next/router"
+import { FC } from "react"
 import Loader from "src/components/Loader"
+import { COLORS, USER_ROLE } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import { getName } from "src/helpers/user"
-import { COLORS, USER_ROLE } from "src/constants"
 
 const Container = styled.nav`
   width: 300px;

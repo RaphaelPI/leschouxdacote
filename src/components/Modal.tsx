@@ -1,8 +1,7 @@
-import { FC, MouseEvent, useEffect } from "react"
 import styled from "@emotion/styled"
-
-import { COLORS, LAYOUT } from "src/constants"
+import { FC, MouseEvent, useEffect } from "react"
 import Portal from "src/components/Portal"
+import { COLORS, LAYOUT } from "src/constants"
 
 const Overlay = styled.div`
   position: fixed;

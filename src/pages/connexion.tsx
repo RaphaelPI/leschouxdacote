@@ -1,12 +1,11 @@
 import styled from "@emotion/styled"
 import { useRouter } from "next/router"
-
 import { Form, SubmitButton, TextInput, ValidationError } from "src/components/Form"
 import Link from "src/components/Link"
+import Message from "src/components/Message"
 import { COLORS, LAYOUT } from "src/constants"
 import { useUser } from "src/helpers/auth"
 import Layout from "src/layout"
-import Message from "src/components/Message"
 
 const LostPassword = styled.div`
   font-size: 0.8em;

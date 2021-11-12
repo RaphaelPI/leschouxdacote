@@ -1,14 +1,12 @@
-import type { Product } from "src/types/model"
-
-import { useEffect, useRef, useState } from "react"
 import styled from "@emotion/styled"
-import "mapbox-gl/dist/mapbox-gl.css"
-import mapboxgl, { AnyLayer, GeoJSONSource, Map, MapboxEvent, PopupOptions } from "mapbox-gl"
 import MapboxLanguage from "@mapbox/mapbox-gl-language"
+import mapboxgl, { AnyLayer, GeoJSONSource, Map, MapboxEvent, PopupOptions } from "mapbox-gl"
+import "mapbox-gl/dist/mapbox-gl.css"
 import { useRouter } from "next/router"
-
+import { useEffect, useRef, useState } from "react"
 import PlacePopup from "src/components/PlacePopup"
 import { LAYOUT } from "src/constants"
+import type { Product } from "src/types/model"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 

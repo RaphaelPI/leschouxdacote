@@ -1,6 +1,5 @@
-import Layout from "src/layout"
-
 import { ErrorProps } from "next/error"
+import Layout from "src/layout"
 
 const ErrorPage = ({ statusCode, title }: ErrorProps) => {
   return (

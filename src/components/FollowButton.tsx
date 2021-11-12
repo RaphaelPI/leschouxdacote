@@ -1,11 +1,9 @@
-import { Button } from "@mui/material"
 import styled from "@emotion/styled"
-
-import { useUser } from "src/helpers/auth"
-import { isFollowed } from "src/helpers/user"
-
+import { Button } from "@mui/material"
 import IconHeartEmpty from "src/assets/icon-heart-empty.svg"
 import IconHeart from "src/assets/icon-heart.svg"
+import { useUser } from "src/helpers/auth"
+import { isFollowed } from "src/helpers/user"
 
 const Container = styled(Button)`
   margin: 20px auto 10px;

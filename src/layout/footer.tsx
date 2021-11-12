@@ -1,10 +1,8 @@
 import styled from "@emotion/styled"
-
-import { COLORS } from "src/constants"
-
 import Facebook from "src/assets/facebook.svg"
-import Twitter from "src/assets/twitter.svg"
 import Linkedin from "src/assets/linkedin.svg"
+import Twitter from "src/assets/twitter.svg"
+import { COLORS } from "src/constants"
 
 const Container = styled.footer`
   border-top: 1px solid ${COLORS.border};
