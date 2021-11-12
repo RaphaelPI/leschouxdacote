@@ -1,21 +1,18 @@
-import type { Product } from "src/types/model"
-
-import { useEffect, useState } from "react"
-import styled from "@emotion/styled"
-import { useRouter } from "next/router"
 import { SearchOptions } from "@algolia/client-search"
-import Fab from "@mui/material/Fab"
-
+import styled from "@emotion/styled"
 import MapIcon from "@mui/icons-material/Map"
 import ListIcon from "@mui/icons-material/ViewList"
-
-import Layout from "src/layout"
-import ResultsMap from "src/components/ResultsMap"
+import Fab from "@mui/material/Fab"
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
 import ResultsList from "src/components/ResultsList"
+import ResultsMap from "src/components/ResultsMap"
+import { COLORS, SEARCH_RADIUS } from "src/constants"
 import { productsIndex } from "src/helpers/algolia"
 import { handleError } from "src/helpers/errors"
 import { HoverProvider } from "src/helpers/hover"
-import { COLORS, SEARCH_RADIUS } from "src/constants"
+import Layout from "src/layout"
+import type { Product } from "src/types/model"
 
 const Row = styled.div`
   display: flex;
@@ -41,13 +38,16 @@ const MobileSwitches = styled.div`
   }
 `
 
-const getOptions = (radius: number, latlng?: string) => {
+const getOptions = (radius: number, latlng?: string, bio?: "1") => {
   const options: Mutable<SearchOptions> = {
     numericFilters: `expires > ${Date.now()}`,
   }
   if (latlng) {
     options.aroundLatLng = latlng
     options.aroundRadius = radius
+  }
+  if (bio) {
+    options.facetFilters = ["bio:true"]
   }
   return options
 }
@@ -56,7 +56,7 @@ const SearchPage = () => {
   const { query, isReady } = useRouter()
   const [view, setView] = useState<"list" | "map" | "both">("list")
   const [results, setResults] = useState<Product[]>()
-  const { what, ll, r, type } = query as SearchQuery
+  const { what, ll, r, type, bio } = query as SearchQuery
 
   const radius = Number(r) || SEARCH_RADIUS[type || "dpt"]
 
@@ -71,10 +71,10 @@ const SearchPage = () => {
       return
     }
     productsIndex
-      .search<Product>(what || "", getOptions(radius, ll))
+      .search<Product>(what || "", getOptions(radius, ll, bio))
       .then(({ hits }) => setResults(hits))
       .catch(handleError)
-  }, [isReady, what, radius, ll])
+  }, [isReady, what, radius, ll, bio])
 
   return (
     <Layout title="Recherche" fullWidth loading={!results}>
