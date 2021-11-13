@@ -42,6 +42,8 @@ jobs:
         env:
           FIREBASE_EMAIL: ${{ secrets.FIREBASE_EMAIL_DEV }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY_DEV }}
+          MAILJET_PUBLIC_KEY: ${{ secrets.MAILJET_PUBLIC_KEY }}
+          MAILJET_PRIVATE_KEY: ${{ secrets.MAILJET_PRIVATE_KEY }}
           NEXT_PUBLIC_FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_DEV }}
 
   prod:
@@ -80,4 +82,6 @@ jobs:
         env:
           FIREBASE_EMAIL: ${{ secrets.FIREBASE_EMAIL_PROD }}
           FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY_PROD }}
+          MAILJET_PUBLIC_KEY: ${{ secrets.MAILJET_PUBLIC_KEY }}
+          MAILJET_PRIVATE_KEY: ${{ secrets.MAILJET_PRIVATE_KEY }}
           NEXT_PUBLIC_FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_PROD }}
