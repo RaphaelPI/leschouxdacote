@@ -1,5 +1,4 @@
 import styled from "@emotion/styled"
-import Head from "next/head"
 import { FC } from "react"
 import { Loading } from "src/components/Loader"
 import SEO, { SEOProps } from "src/components/Seo"
@@ -50,10 +49,6 @@ const Layout: FC<Props & SEOProps> = ({ bgImage, fullWidth, loading, children, .
   return (
     <>
       <SEO {...props} />
-      <Head>
-        {/* Override the homepage title away from the default SEO logic */}
-        <title>Vente directe : Le circuit plus court des produits alimentaires</title>
-      </Head>
       <Header />
       <Container>
         <Main>{loading || wait ? <Loading /> : children}</Main>

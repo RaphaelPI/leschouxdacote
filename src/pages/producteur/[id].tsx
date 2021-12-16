@@ -95,7 +95,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
   return { props, revalidate: ISR_REVALIDATE }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const producers = await firestore.collection("users").where("role", "==", USER_ROLE.PRODUCER).get()
 
   return {

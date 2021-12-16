@@ -332,7 +332,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
   return { props, revalidate: ISR_REVALIDATE }
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const products = await firestore.collection("products").get()
 
   return {
