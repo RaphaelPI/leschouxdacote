@@ -50,6 +50,7 @@ jobs:
           NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           NEXT_PUBLIC_ALGOLIA_INDEX: ${{ secrets.ALGOLIA_INDEX_DEV }}
           NEXT_PUBLIC_ALGOLIA_TAGS: ${{ secrets.ALGOLIA_TAGS }}
+          NEXT_PUBLIC_URL: https://develop.leschouxdacote.fr/
 
   prod:
     runs-on: ubuntu-latest
@@ -95,3 +96,4 @@ jobs:
           NEXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.ALGOLIA_APP_ID }}
           NEXT_PUBLIC_ALGOLIA_INDEX: ${{ secrets.ALGOLIA_INDEX_PROD }}
           NEXT_PUBLIC_ALGOLIA_TAGS: ${{ secrets.ALGOLIA_TAGS }}
+          NEXT_PUBLIC_URL: https://leschouxdacote.fr

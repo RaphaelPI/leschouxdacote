@@ -45,6 +45,7 @@ jobs:
           MAILJET_PUBLIC_KEY: ${{ secrets.MAILJET_PUBLIC_KEY }}
           MAILJET_PRIVATE_KEY: ${{ secrets.MAILJET_PRIVATE_KEY }}
           NEXT_PUBLIC_FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_DEV }}
+          NEXT_PUBLIC_URL: https://develop.leschouxdacote.fr/
 
   prod:
     runs-on: ubuntu-latest
@@ -85,3 +86,4 @@ jobs:
           MAILJET_PUBLIC_KEY: ${{ secrets.MAILJET_PUBLIC_KEY }}
           MAILJET_PRIVATE_KEY: ${{ secrets.MAILJET_PRIVATE_KEY }}
           NEXT_PUBLIC_FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_PROD }}
+          NEXT_PUBLIC_URL: https://leschouxdacote.fr
