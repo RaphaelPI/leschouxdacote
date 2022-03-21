@@ -10,7 +10,7 @@ import Link from "src/components/Link"
 import Modal from "src/components/Modal"
 import ProductEndDate from "src/components/ProductEndDate"
 import { SocialShareBar } from "src/components/SocialShareBar/SocialShareBar"
-import { COLORS, LAYOUT, SIZES } from "src/constants"
+import { COLORS, LAYOUT, MAX_PUBLICATION_DAYS, SIZES } from "src/constants"
 import api from "src/helpers/api"
 import { daysFromNow, formatDate, formatDateTime } from "src/helpers/date"
 import { formatAmount, formatQuantity } from "src/helpers/text"
@@ -262,7 +262,8 @@ const AccountProduct = ({ product, odd }: Props) => {
             <Form title={product.title} onSubmit={handlePublish}>
               <p>
                 Publier l’annonce pour une durée de{" "}
-                <Input type="number" name="days" min={0} step={1} defaultValue={0} /> jour(s) supplémentaires
+                <Input type="number" name="days" min={0} max={MAX_PUBLICATION_DAYS} step={1} defaultValue={0} /> jour(s)
+                supplémentaires
               </p>
               <ProductEndDate start={active ? product.expires : null} />
               <SubmitButton />

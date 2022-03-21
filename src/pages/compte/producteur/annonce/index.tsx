@@ -6,6 +6,7 @@ import { DefaultValues, useFormContext } from "react-hook-form"
 import { Form, Row, SelectInput, SubmitButton, TextInput, ValidationError } from "src/components/Form"
 import ProductEndDate from "src/components/ProductEndDate"
 import TagsInput from "src/components/TagsInput"
+import { MAX_PUBLICATION_DAYS } from "src/constants"
 import api from "src/helpers/api"
 import { useUser } from "src/helpers/auth"
 import { useObjectQuery } from "src/helpers/firebase"
@@ -186,6 +187,7 @@ const EditProductPage = () => {
           label="Publier maintenant pour une durée de :"
           type="number"
           min={0}
+          max={MAX_PUBLICATION_DAYS}
           step={1}
           defaultValue={0}
           suffix="jour(s)"
